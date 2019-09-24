@@ -12,9 +12,9 @@
           <label class="block text-md mb-2" for="username">
             Username or Email
           </label>
-          {{ login_user_form.email(type="email", class="shadow appearance-none border border-secondary rounded w-full py-2 px-3 text-grey", placeholder="Username or Email") }}
+          {{ login_user_form.email(type="email", class="form-input", placeholder="Username or Email") }}
             {% for error in login_user_form.email.errors %}
-                <p class="text-red text-xs italic "> {{ error }}</p>
+                <p class="form-error "> {{ error }}</p>
             {% endfor %}
         </div>
 
@@ -22,10 +22,10 @@
           <label class="block text-md  mb-2" for="password">
             Password
           </label>
-            {{ login_user_form.password(class="", type="password", class="shadow appearance-none border border-secondary rounded w-full py-2 px-3 text-grey mb-3", placeholder="******") }}
+            {{ login_user_form.password(class="", type="password", class="form-input", placeholder="******") }}
 
             {% for error in login_user_form.password.errors %}
-                <p class="text-red text-xs italic "> {{ error }}</p>
+                <p class="form-error "> {{ error }}</p>
            {% endfor %}
         </div>
 
@@ -33,12 +33,14 @@
           <label> <input type="checkbox"> Save password </label>
         </div>#}
         <div class="flex items-center justify-between">
-          <button class="bg-teal-600 hover:bg-teal-900 text-white font-bold py-2 px-4 rounded" type="submit">
-            Sign In
-          </button>
-          <a class="inline-block align-baseline font-bold text-sm text-blue hover:underline" href="#">
+          <a class="btn-gray btn">
             Forgot Password?
           </a>
+
+          <button class="btn-teal btn" type="submit">
+            Sign In
+          </button>
+
         </div>
     </form>
 </div>

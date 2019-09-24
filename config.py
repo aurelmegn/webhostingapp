@@ -17,7 +17,7 @@ CSRF_ENABLED = True
 
 # Use a secure, unique and absolutely secret key for
 # signing the data.
-CSRF_SESSION_KEY = "secret"
+CSRF_SESSION_KEY = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
 
 # Secret key for signing cookies
 SECRET_KEY = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
@@ -31,3 +31,8 @@ SECURITY_TRACKABLE = True
 
 SECURITY_PASSWORD_HASH = "bcrypt"
 SECURITY_PASSWORD_SALT = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
+SECURITY_POST_LOGIN_VIEW = "/dashboard"
+SECURITY_REGISTERABLE = False
+SECURITY_UNAUTHORIZED_VIEW = "/login"
+
+DEBUG_TB_INTERCEPT_REDIRECTS = False

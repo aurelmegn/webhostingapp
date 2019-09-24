@@ -9,8 +9,10 @@ Encore
     .cleanupOutputBeforeBuild()
 
     .addEntry('js/app', './assets/js/index.js')
+    .addEntry('js/dashboard', './assets/js/dashboard.js')
 
     .addStyleEntry('css/app', './assets/scss/index.scss')
+    // .addStyleEntry('css/dashboard', './assets/scss/dashboard.scss')
 
     .enableSassLoader(function (options) { }, {
         resolveUrlLoader: false

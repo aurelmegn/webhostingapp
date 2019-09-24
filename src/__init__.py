@@ -5,8 +5,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_webpackext import FlaskWebpackExt
 from src.utils.format_datetime import date_format_datetime
 from flask_security import Security, SQLAlchemyUserDatastore
+from flask_webpackext import WebpackBundleProject
+
+myproject = WebpackBundleProject(
+    __name__, project_folder="assets", config_path="./public/entrypoint.json"
+)
 
 app = Flask(__name__, static_folder="public")
+
+app.config.update(dict(WEBPACKEXT_PROJECT=myproject))
 
 # Configurations
 app.config.from_object("config")
@@ -22,6 +29,7 @@ toolbar = DebugToolbarExtension(app)
 FlaskWebpackExt(app)
 
 from src.controllers import *
+from src.models.Application import Application
 from src.models.User import User
 from src.models.Role import Role
 

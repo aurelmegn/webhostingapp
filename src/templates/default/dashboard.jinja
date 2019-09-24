@@ -1,0 +1,73 @@
+{% extends "base.jinja"%}
+
+{% block body %}
+    <div id="modalContainer" class="bg-gray-100 fixed w-full flex flex-col justify-start items-center h-full pt-10 hidden">
+        <form id="caForm"  class="shadow-lg bg-white w-full md:w-1/4 flex flex-col p-3 rounded hidden modal_close">
+            {{ caform.hidden_tag() }}
+
+            <div class="mb-4">
+              <label class="block text-md mb-2" for="name">
+                Application name
+              </label>
+              {{ caform.name(class="form-input") }}
+                {% for error in caform.name.errors %}
+                    <p class="form-error "> {{ error }}</p>
+                {% endfor %}
+
+                <p id="nameExistError" class="form-error hidden"> The name already exists</p>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-md mb-2" for="description">
+                Description
+              </label>
+              {{ caform.description(class="form-input") }}
+                {% for error in caform.description.errors %}
+                    <p class="form-error "> {{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center content-between justify-center w-full">
+                <button class="btn-red-out text-red-600 btn w-full" type="reset" id="caFormCloseBtn">
+                    Close
+                </button>
+
+                <button id="caFormSubmitBtn" class="btn-teal btn w-full" type="submit">
+                Create
+              </button>
+            </div>
+        </form>
+
+        <div id="message" class="hidden message shadow-lg bg-white w-full md:w-1/4 flex flex-col p-3 rounded hidden">
+            <div class="flex w-full message-content p-4"></div>
+            <button class="btn-gray btn w-full mt-2 close" >
+                Close
+          </button>
+        </div>
+
+    </div>
+
+    <div class="flex flex-row w-full">
+        <div>My Apps</div>
+    </div>
+
+    <a id="addApp" href="#" >Add app</a>
+    <ul>
+        {% for app in user.applications %}
+            <li>{{ app.name }} <a id="reloadApp" href="#">Reload</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+    {{ webpack['public/js/dashboard.js'] }}
+
+{% endblock %}
+
+{% block css %}
+    {{ super() }}
+{#    {{ webpack['public/css/dashboard.css'] }}#}
+
+{% endblock %}
