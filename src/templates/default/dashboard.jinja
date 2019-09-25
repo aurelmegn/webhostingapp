@@ -47,17 +47,27 @@
 
     </div>
 
-    <div class="flex flex-row w-full">
-        <div>My Apps</div>
+{#    content of the page#}
+
+    <div class="flex flex-col items-start content-center">
+        <div class="flex-col flex w-full md:w-1/3 py-10">
+            <div class="flex flex-row w-full w-full bg-secondary text-white p-2 font-bold">
+                <div class="flex w-2/3 p-1">My Apps</div>
+                <a id="addApp" href="#" class="w-1/3 btn text-center bg-white text-primary p-1">Add app</a>
+
+            </div>
+
+            <ul class="flex flex-col px-1">
+                {% for app in user.applications %}
+                    <li class="w-full flex flex-row mt-0 p-1 hover:bg-gray-300">
+                        <span class="appname w-4/6 break-words">{{ app.name }}</span>
+                        <a id="reloadApp" class="w-2/6 bg-gray-500 text-center rounded text-white p-1" href="#">Reload</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div>
     </div>
-
-    <a id="addApp" href="#" >Add app</a>
-    <ul>
-        {% for app in user.applications %}
-            <li>{{ app.name }} <a id="reloadApp" href="#">Reload</a></li>
-        {% endfor %}
-    </ul>
-
 {% endblock %}
 
 {% block js %}

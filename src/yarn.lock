@@ -4059,7 +4059,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.5, lodash@~4.17.10:
+"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.5, lodash@~4.17.10:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
@@ -6565,6 +6565,20 @@ svgo@^1.0.0:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+tailwindcss-transforms@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/tailwindcss-transforms/-/tailwindcss-transforms-2.2.0.tgz#3e0e594a2b34a056714d5fe539e2ace3226edf28"
+  integrity sha512-0HPzE1QgGi94lNOgsIKA0AWaQern+JR0XNJkRmpyjFybpSLtQ5HkupF/caAmUW+pTt4cguDzd5gw09uw1oaG3A==
+  dependencies:
+    lodash "^4.17.11"
+
+tailwindcss-transitions@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tailwindcss-transitions/-/tailwindcss-transitions-2.1.0.tgz#54ca6c293a197300c5eb1ab3775dc29f083432f1"
+  integrity sha512-WafCC+ujZk2rUECdBoFeF8lKTmrrpNudrHxSHNikYfaYyVR7BRRqpB2n49/wxzg8/YWy8OK42MvQnFuJBb2yxw==
+  dependencies:
+    lodash "^4.17.15"
 
 tailwindcss@^1.1.2:
   version "1.1.2"

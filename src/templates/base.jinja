@@ -13,7 +13,11 @@
     </title>
 </head>
 <body>
-    {% block navbar %}{% endblock %}
+
+
+    {% block navbar %}
+        {% include 'nav.jinja' %}
+    {% endblock %}
 
     {% block body %}{% endblock %}
 

@@ -19,6 +19,8 @@
     "webpack-notifier": "^1.6.0"
   },
   "dependencies": {
-    "tailwindcss": "^1.1.2"
+    "tailwindcss": "^1.1.2",
+    "tailwindcss-transforms": "^2.2.0",
+    "tailwindcss-transitions": "^2.1.0"
   }
 }

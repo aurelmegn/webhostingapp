@@ -1,0 +1,13 @@
+.nav-item{
+  @apply block mt-4 text-primary text-white font-bold;
+  
+  &:hover{
+    @apply text-primary;
+  }
+}
+
+@screen lg {
+  .nav-item {
+    @apply inline-block mt-0;
+  }
+}
