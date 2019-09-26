@@ -7,4 +7,4 @@ geckodriver.log
 .idea
 *.log
 src/node_modules
-
+supervisord.*

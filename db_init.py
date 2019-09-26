@@ -10,9 +10,11 @@ u = User(username="admin", email="admin@mail.com")
 u.active = True
 
 r = Role(name="admin")
+r1 = Role(name="user")
 u.roles.append(r)
+u.roles.append(r1)
 
-apps = [Application("app_"+x) for x in range(1, 10)]
+apps = [Application(name="app_"+str(x)) for x in range(1, 10)]
 with app.app_context():
     u.password = hash_password("shift")
 

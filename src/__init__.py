@@ -28,6 +28,15 @@ app.jinja_env.filters["datetime"] = date_format_datetime
 toolbar = DebugToolbarExtension(app)
 FlaskWebpackExt(app)
 
+# additionnal configurations for the app
+
+# supervisor api var
+from xmlrpc.client import ServerProxy
+
+server = ServerProxy("http://localhost:9001/RPC2")
+supervisor = server.supervisor
+
+
 from src.controllers import *
 from src.models.Application import Application
 from src.models.User import User
@@ -37,7 +46,10 @@ from src.models.Role import Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
+
 # Sample HTTP error handling
+
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template("errors/404.jinja"), 404

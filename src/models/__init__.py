@@ -16,8 +16,11 @@ class AlchemyEncoder(json.JSONEncoder):
         if isinstance(o.__class__, DeclarativeMeta):
             # an SqlAlchemy class
             fields = {}
-            for field in [x for x in dir(o) if not (x.startswith('_') or
-                                                    x.startswith('query')) and x != 'metadata']:
+            for field in [
+                x
+                for x in dir(o)
+                if not (x.startswith("_") or x.startswith("query")) and x != "metadata"
+            ]:
                 data = o.__getattribute__(field)
                 try:
                     json.dumps(data)
@@ -31,6 +34,5 @@ class AlchemyEncoder(json.JSONEncoder):
 
 
 class AlchemySerializable:
-
     def __json__(self):
         return json.dumps(self, cls=AlchemyEncoder)

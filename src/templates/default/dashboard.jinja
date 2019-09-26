@@ -61,7 +61,14 @@
                 {% for app in user.applications %}
                     <li class="w-full flex flex-row mt-0 p-1 hover:bg-gray-300">
                         <span class="appname w-4/6 break-words">{{ app.name }}</span>
-                        <a id="reloadApp" class="w-2/6 bg-gray-500 text-center rounded text-white p-1" href="#">Reload</a>
+
+                        {% if app.enabled %}
+                            <a id="startApp" class="w-2/6 bg-gray-500 text-center rounded text-white p-1" href="{{ url_for('app_action', action='start' ,name=app.name) }}">Start</a>
+                            <a id="reloadApp" class="w-2/6 bg-gray-500 text-center rounded text-white p-1" href="{{ url_for('app_action', action='restart' ,name=app.name) }}">Reload</a>
+                            <a id="stopApp" class="w-2/6 bg-gray-500 text-center rounded text-white p-1" href="{{ url_for('app_action', action='stop' ,name=app.name) }}">Stop</a>
+                        {% else %}
+                            <span>Not enabled</span>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
