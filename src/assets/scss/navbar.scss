@@ -1,13 +1,23 @@
 .nav-item{
-  @apply block mt-4 text-primary text-white font-bold;
-  
+  @apply block mt-4 text-primary text-white
+  font-bold border border-b-2 border-transparent ;
   &:hover{
-    @apply text-primary;
+    @apply bg-secondary text-white;
+  }
+
+  &.active{
+    @apply bg-secondary text-white;
   }
 }
 
 @screen lg {
   .nav-item {
     @apply inline-block mt-0;
+  }
+}
+
+@screen md {
+  .nav-item {
+    @apply py-2 px-3;
   }
 }
