@@ -11,6 +11,8 @@ class Application(db.Model, AlchemySerializable):
     enabled = db.Column(db.Boolean(), default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    type = db.Column(db.String(), nullable=False)
+
 
     @hybrid_method
     def get_supervisor_name(self):

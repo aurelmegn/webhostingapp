@@ -66,7 +66,10 @@ def app_action():
 
     actions = ["start", "stop", "restart"]
 
-    if not (app_name or action or action.lower() not in actions):
+    if not action:
+        abort(400)
+
+    if not (app_name or action.lower() not in actions):
         flash(f"An error occured", "dashboard_error")
         return redirect(url_for("dashboard"))
 
