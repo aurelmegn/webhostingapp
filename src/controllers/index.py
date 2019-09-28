@@ -20,22 +20,19 @@ from src.models.Application import Application
 @login_required
 @roles_required("user")
 def index():
-    # return render_template("default/index.jinja")
-    return "Hello world"
+    return render_template("default/index.jinja")
 
 
 @app.route("/docs")
 def docs():
-    # return render_template("default/index.jinja")
-    return "Hello world"
+    return render_template("default/docs.jinja")
 
 
 @app.route("/blog")
 @login_required
 @roles_required("user")
 def blog():
-    # return render_template("default/index.jinja")
-    return "Hello world"
+    return render_template("default/blog.jinja")
 
 
 @app.route("/dashboard")
