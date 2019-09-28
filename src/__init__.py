@@ -1,11 +1,13 @@
 # Import flask and template operators
 from flask import Flask, render_template
+from flask_admin.contrib.sqla import ModelView
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 from flask_webpackext import FlaskWebpackExt
 from src.utils.format_datetime import date_format_datetime
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_webpackext import WebpackBundleProject
+from flask_admin import Admin
 
 myproject = WebpackBundleProject(
     __name__, project_folder="assets", config_path="./public/entrypoint.json"
@@ -28,7 +30,11 @@ app.jinja_env.filters["datetime"] = date_format_datetime
 toolbar = DebugToolbarExtension(app)
 FlaskWebpackExt(app)
 
-# additionnal configurations for the app
+# flask admin
+
+admin = Admin(app, name='myapp', template_mode='bootstrap3', url='/wtf')
+
+# additional configurations for the app
 
 # supervisor api var
 from xmlrpc.client import ServerProxy
@@ -46,6 +52,7 @@ from src.models.Role import Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
+import src.admin_views
 
 # Sample HTTP error handling
 
@@ -58,3 +65,16 @@ def not_found(error):
 @app.errorhandler(500)
 def not_found(error):
     return render_template("errors/500.jinja"), 500
+
+
+@app.before_first_request
+def before_first_request():
+
+    # Create any database tables that don't exist yet.
+    db.create_all()
+
+    # Create the Roles "admin" and "end-user" -- unless they already exist
+    user_datastore.find_or_create_role(name='admin', description='Administrator')
+    user_datastore.find_or_create_role(name='user', description='End user')
+
+    db.session.commit()

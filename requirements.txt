@@ -7,6 +7,7 @@ blinker==1.4
 cffi==1.12.3
 Click==7.0
 Flask==1.1.1
+Flask-Admin==1.5.3
 Flask-BabelEx==0.9.3
 Flask-DebugToolbar==0.10.1
 Flask-Login==0.4.1
