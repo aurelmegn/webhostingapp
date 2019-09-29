@@ -1,7 +1,7 @@
 from pyftpdlib.handlers import FTPHandler
 from pyftpdlib.servers import FTPServer
 
-from AppAuthorizer import AppAuthorizer
+from .AppAuthorizer import AppAuthorizer
 
 
 def main():
