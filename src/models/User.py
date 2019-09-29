@@ -1,8 +1,11 @@
+from os.path import join as join_path, abspath
+
 from datetime import datetime
 
 from flask_security import UserMixin
+from sqlalchemy.ext.hybrid import hybrid_method
 
-from src import db
+from src import db, app
 from . import roles_users, AlchemySerializable
 
 
@@ -32,3 +35,10 @@ class User(db.Model, UserMixin, AlchemySerializable):
 
     def __repr__(self):
         return "<User %r>" % self.username
+
+    @hybrid_method
+    def get_ftp_home_dir(self):
+        base_path = app.config.get('FTP_BASE_DIR')
+        base_path = abspath(base_path)
+
+        return join_path(base_path, self.username)

@@ -1,6 +1,8 @@
-from typing import List, Union
+from typing import List
 
-import os
+from os.path import abspath, isdir
+from os import mkdir
+
 import sys
 
 sys.path.append(".")
@@ -8,7 +10,6 @@ sys.path.append("../")
 
 from flask_security.utils import verify_password
 from pyftpdlib.authorizers import DummyAuthorizer
-from pyftpdlib.handlers import DTPHandler
 from src import app, User
 
 
@@ -19,29 +20,24 @@ class AppAuthorizer(DummyAuthorizer):
         self.msg_anon_not_allowed = "Anonymous access not allowed."
 
     def add_user(
-        self,
-        username,
-        password,
-        homedir,
-        perm="elr",
-        msg_login="Login successful.",
-        msg_quit="Goodbye.",
+            self,
+            username,
+            password,
+            homedir,
+            perm="elr",
+            msg_login="Login successful.",
+            msg_quit="Goodbye.",
     ):
-        # todo throw an error
-        pass
+        raise ShouldNotBeCalledException()
 
     def add_anonymous(self, homedir, **kwargs):
-        # todo throw an error
-
-        pass
+        raise ShouldNotBeCalledException()
 
     def remove_user(self, username):
-        # todo throw an error
-
-        pass
+        raise ShouldNotBeCalledException()
 
     def override_perm(self, username, directory, perm, recursive=False):
-        pass
+        raise ShouldNotBeCalledException()
 
     def validate_authentication(self, username, password, handler):
         with app.app_context():
@@ -52,6 +48,8 @@ class AppAuthorizer(DummyAuthorizer):
 
             if not user:
                 raise AuthenticationFailed(self.msg_no_such_user)
+            elif not user.is_active:
+                raise AccountNotEnableException()
 
             if not verify_password(password, user.password):
                 raise AuthenticationFailed(self.msg_wrong_password)
@@ -61,21 +59,19 @@ class AppAuthorizer(DummyAuthorizer):
         with app.app_context():
             user = User.query.filter_by(username=username).first()
 
-            base_path = app.config.get('FTP_BASE_DIR')
-            home_path = base_path + user.username
+            home_path = user.get_ftp_home_dir()
 
             # if the user ftp directory don't exist create it
-            if not os.path.isdir(home_path):
-                os.mkdir(home_path)
+            if not isdir(home_path):
+                mkdir(home_path)
 
             applications_paths: List[str] = [
-                os.path.abspath(os.path.join(home_path, a.name))
-                for a in user.applications
+                a.get_app_ftp_dir() for a in user.applications
             ]
             # create the directories of the application of the user
             for application_path in applications_paths:
-                if not os.path.isdir(application_path):
-                    os.mkdir(os.path.join(application_path))
+                if not isdir(application_path):
+                    mkdir(abspath(application_path))
 
             return home_path
 
@@ -104,24 +100,14 @@ class AppAuthorizer(DummyAuthorizer):
         """
 
         user_home = self.get_home_dir(username)
-        user_home_abs = os.path.abspath(user_home)
-        given_path_abs = os.path.abspath(path)
+        user_home_abs = abspath(user_home)
+        given_path_abs = abspath(path)
 
         # user should not delete directory of application
 
         if given_path_abs.startswith(user_home_abs):
-            """if the given path start with the current user home path, check if it is an application directory path"""
-            with app.app_context():
-                user = User.query.filter_by(username=username).first()
 
-                applications_paths = [
-                    os.path.abspath(os.path.join(user_home, a.name))
-                    for a in user.applications
-                ]
-                if given_path_abs in applications_paths:
-                    return "elrafmwMT"
-
-                return "elrafdmwMT"
+            return self.read_perms + self.write_perms
 
         return ""
 
@@ -151,3 +137,11 @@ class AuthorizerError(Exception):
 
 class AuthenticationFailed(Exception):
     """Exception raised when authentication fails for any reason."""
+
+
+class ShouldNotBeCalledException(Exception):
+    """should not be called"""
+
+
+class AccountNotEnableException(Exception):
+    """should not be called"""
