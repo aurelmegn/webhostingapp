@@ -3,8 +3,8 @@ from unittest import TestCase
 
 # from tests import app
 
-class IndexController(TestCase):
 
+class IndexController(TestCase):
     def setUp(self):
         pass
 

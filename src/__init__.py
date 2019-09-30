@@ -4,10 +4,9 @@ from flask_admin import Admin
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
-from flask_webpackext import FlaskWebpackExt
-from flask_webpackext import WebpackBundleProject
+from flask_webpackext import FlaskWebpackExt, WebpackBundleProject
 
-from src.utils.format_datetime import date_format_datetime
+from .utils.format_datetime import date_format_datetime
 
 myproject = WebpackBundleProject(
     __name__, project_folder="assets", config_path="./public/entrypoint.json"
