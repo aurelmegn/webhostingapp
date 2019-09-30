@@ -23,11 +23,11 @@ CSRF_SESSION_KEY = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
 SECRET_KEY = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
 
 SQLALCHEMY_DATABASE_URI = "sqlite:///./var/data.db"
+# SQLALCHEMY_DATABASE_URI = "postgresql://aurel:shift@localhost/clientapp"
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 WEBPACKEXT_MANIFEST_PATH = "manifest.json"
 
-
-SERVER_NAME='localhost:8000'
+SERVER_NAME = "localhost:8000"
 SECURITY_LOGIN_USER_TEMPLATE = "security/login.jinja"
 SECURITY_TRACKABLE = True
 
@@ -39,7 +39,10 @@ SECURITY_UNAUTHORIZED_VIEW = "/login"
 
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-FTP_BASE_DIR = "/tmp/www/"
+FTP_BASE_DIR = "/tmp/"
 FTP_PORT = 2121
 
 # FLASK_ADMIN_SWATCH= 'flaty'
+
+SUPERVISOR_CONFIG_DIR = "./supervisor"
+SUPERVISOR_PROGRAM_TEMPLATE_PATH = "./supervisor/programtemplate.ini"
