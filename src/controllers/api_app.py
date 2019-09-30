@@ -1,9 +1,7 @@
-import json
-from flask import jsonify, request, Response, make_response, abort
+from flask import jsonify, request, make_response, abort
 from flask_security import current_user, login_required, roles_required
 
 from src import app, db
-from src.models.User import User
 from src.models.Application import Application
 
 

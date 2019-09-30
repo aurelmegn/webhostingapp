@@ -1,13 +1,13 @@
 # Import flask and template operators
 from flask import Flask, render_template
-from flask_admin.contrib.sqla import ModelView
+from flask_admin import Admin
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 from flask_webpackext import FlaskWebpackExt
-from src.utils.format_datetime import date_format_datetime
-from flask_security import Security, SQLAlchemyUserDatastore
 from flask_webpackext import WebpackBundleProject
-from flask_admin import Admin
+
+from src.utils.format_datetime import date_format_datetime
 
 myproject = WebpackBundleProject(
     __name__, project_folder="assets", config_path="./public/entrypoint.json"
@@ -42,9 +42,6 @@ from xmlrpc.client import ServerProxy
 server = ServerProxy("http://localhost:9001/RPC2")
 supervisor = server.supervisor
 
-
-from src.controllers import *
-from src.models.Application import Application
 from src.models.User import User
 from src.models.Role import Role
 
@@ -52,7 +49,6 @@ from src.models.Role import Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
-import src.admin_views
 
 # Sample HTTP error handling
 
