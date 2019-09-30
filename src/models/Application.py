@@ -45,3 +45,10 @@ class Application(db.Model, AlchemySerializable):
     def get_app_ftp_dir(self):
         user_home = self.user.get_ftp_home_dir()
         return abspath(join_path(user_home, self.name))
+
+    @hybrid_method
+    def get_supervisor_conf_path(self):
+        """
+        return the path to the supervisor conf file of this application
+         """
+        return join_path(self.user.get_supervisor_conf_dir(), self.username, f"{self.name}.ini")
