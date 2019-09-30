@@ -7,7 +7,9 @@ from unittest import TestSuite
 sys.path.append(".")
 sys.path.append("../")
 
-from tests.TestAppAuthorizer import TestAppAuthorizer
+from ftpserver.TestAppAuthorizer import TestAppAuthorizer
+from src.controllers import TestIndex
+
 
 #
 # def suite():
@@ -15,6 +17,6 @@ from tests.TestAppAuthorizer import TestAppAuthorizer
 #     s.addTest(TestAppAuthorizer)
 #     return s
 
-
+# TestIndex
 if __name__ == "__main__":
     unittest.main()
