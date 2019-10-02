@@ -45,6 +45,7 @@ def api_app_get():
     return jsonify([app.__json__() for app in apps])
 
 
+# todo update or delete this part of the code
 @app.route("/api/app", methods=["put"])
 @login_required
 @roles_required("user")

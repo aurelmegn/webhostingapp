@@ -17,7 +17,9 @@ CSRF_ENABLED = True
 
 # Use a secure, unique and absolutely secret key for
 # signing the data.
-CSRF_SESSION_KEY = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
+# CSRF_SESSION_KEY = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
+
+WTF_CSRF_CHECK_DEFAULT = False
 
 # Secret key for signing cookies
 SECRET_KEY = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
