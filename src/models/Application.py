@@ -51,4 +51,4 @@ class Application(db.Model, AlchemySerializable):
         """
         return the path to the supervisor conf file of this application
          """
-        return join_path(self.user.get_supervisor_conf_dir(), self.username, f"{self.name}.ini")
+        return join_path(self.user.get_supervisor_conf_dir(), f"{self.name}.ini")

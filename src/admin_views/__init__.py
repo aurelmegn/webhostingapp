@@ -4,7 +4,7 @@ from flask_login import current_user
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
-from src import app, admin, db, security
+from src import app, admin, db
 
 from src.models.User import User
 from src.models.Application import Application
