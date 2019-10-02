@@ -1,15 +1,5 @@
 from src import app
-
-
-def find_or_create(directory: str):
-    from os import mkdir
-    from os.path import exists, abspath
-
-    abs_path = abspath(directory)
-
-    if not exists(abs_path):
-        mkdir(abs_path)
-
+from src.utils.find_or_create import find_or_create
 
 if __name__ == "__main__":
     # make sure the some directories exists

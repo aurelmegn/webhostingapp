@@ -36,3 +36,9 @@ class AlchemyEncoder(json.JSONEncoder):
 class AlchemySerializable:
     def __json__(self):
         return json.dumps(self, cls=AlchemyEncoder)
+
+
+# import this later to avoid cyclic import
+from .User import User
+from .Application import Application
+from .Role import Role

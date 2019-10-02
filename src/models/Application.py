@@ -8,7 +8,7 @@ from src.models import AlchemySerializable
 
 
 class AppState(Enum):
-    not_enabled = 'not enabled'
+    never_started = 'never started'
     running = 'running'
     stopped = 'stop'
     stopping = 'stopping'
@@ -35,7 +35,7 @@ class Application(db.Model, AlchemySerializable):
     entry_point = db.Column(db.String(), nullable=True)
     port = db.Column(db.Integer())
 
-    state = db.Column(db.Enum(AppState), default=AppState.not_enabled)
+    state = db.Column(db.Enum(AppState), default=AppState.never_started)
 
     @hybrid_method
     def get_supervisor_name(self):
