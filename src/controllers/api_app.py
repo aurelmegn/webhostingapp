@@ -1,6 +1,7 @@
 from flask import jsonify, request, make_response, abort
 from flask_security import current_user, login_required, roles_required
 
+from src.forms.ApplicationForm import ApplicationForm
 from src import app, db
 from src.models.Application import Application
 
@@ -9,25 +10,36 @@ from src.models.Application import Application
 @login_required
 @roles_required("user")
 def api_app_post():
-    # if request.headers
-    application = Application()
-    # print(request.json)
-    application.name = request.json["name"]
+    application_form = ApplicationForm()
 
-    # search for the same app name in the database
+    if application_form.validate_on_submit():
+        print(application_form.data)
+        # print(application_form.object_data)
 
-    count = application.query.filter_by(
-        user=current_user, name=application.name
-    ).count()
+        # if request.headers
+        application = Application()
 
-    if count != 0:
-        err = {"message": "You already have an application of the same name"}
-        return make_response(jsonify(err), 400)
+        application_form.populate_obj(application)
 
-    current_user.applications.append(application)
-    db.session.commit()
+        print(application.__json__())
 
-    return jsonify(application.__json__())
+        # search for the same app name in the database
+
+        count = application.query.filter_by(
+            user=current_user, name=application.name
+        ).count()
+
+        if count != 0:
+            err = {"message": "You already have an application of the same name"}
+            return make_response(jsonify(err), 400)
+
+        current_user.applications.append(application)
+        db.session.commit()
+
+        return jsonify(application.__json__())
+
+    else:
+        abort(401)
 
 
 @app.route("/api/app", methods=["get"])

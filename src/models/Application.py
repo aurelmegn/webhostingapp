@@ -8,7 +8,7 @@ from src.models import AlchemySerializable
 
 
 class AppState(Enum):
-    never_started = 'never started'
+    never_started = 'never_started'
     running = 'running'
     stopped = 'stop'
     stopping = 'stopping'
@@ -32,7 +32,7 @@ class Application(db.Model, AlchemySerializable):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     type = db.Column(db.Enum(AppType), nullable=False)
 
-    entry_point = db.Column(db.String(), nullable=True)
+    entry_point = db.Column(db.String())
     port = db.Column(db.Integer())
 
     state = db.Column(db.Enum(AppState), default=AppState.never_started)

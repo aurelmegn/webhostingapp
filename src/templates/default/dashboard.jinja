@@ -9,7 +9,7 @@
 
             <div class="mb-4">
               <label class="block text-md mb-2" for="name">
-                Application name
+                {{ caform.name.label }}
               </label>
               {{ caform.name(class="form-input") }}
                 {% for error in caform.name.errors %}
@@ -20,8 +20,20 @@
             </div>
 
             <div class="mb-4">
+              <label class="block text-md mb-2 " for="type">
+                {{ caform.type.label }}
+              </label>
+              {{ caform.type(class="form-select") }}
+                {% for error in caform.type.errors %}
+                    <p class="form-error "> {{ error }}</p>
+                {% endfor %}
+
+                <p id="nameExistError" class="form-error hidden"> The name already exists</p>
+            </div>
+
+            <div class="mb-4">
               <label class="block text-md mb-2" for="description">
-                Description
+                {{ caform.description.label}}
               </label>
               {{ caform.description(class="form-input") }}
                 {% for error in caform.description.errors %}

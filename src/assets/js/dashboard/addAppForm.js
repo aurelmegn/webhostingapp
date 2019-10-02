@@ -28,10 +28,12 @@ module.exports.handleCaFormSubmit = (e) => {
     e.preventDefault();
     let appName = caForm.querySelector("#name");
     let appDescription = caForm.querySelector("#description");
+    let appType = caForm.querySelector("#type");
+    let csrfTokenField = caForm.querySelector("#csrf_token");
 
     fetch("/api/app", {
         method: "post",
-        body: JSON.stringify({name: appName.value, description: appDescription.value}),
+        body: JSON.stringify({name: appName.value, description: appDescription.value, type: appType.value, csrf_token: csrfTokenField.value}),
         credentials: "include",
         headers: {
             "content-type": "application/json; charset=utf-8"
