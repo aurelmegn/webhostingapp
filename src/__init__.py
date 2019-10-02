@@ -65,8 +65,8 @@ app.logger.setLevel(logging.DEBUG)
 # app.logger.error("++++++" )
 
 # from admin interface
-
 import src.admin_views
+
 
 @app.errorhandler(404)
 def not_found(error):
@@ -82,7 +82,6 @@ def not_found(error):
 
 @app.before_first_request
 def before_first_request():
-
     # Create any database tables that don't exist yet.
     db.create_all()
 

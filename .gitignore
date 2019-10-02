@@ -14,3 +14,4 @@ supervisor/programs/*
 htmlcov
 .vscode
 *,cover
+tmp

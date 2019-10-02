@@ -107,7 +107,7 @@ def app_action():
                     f.write(config)
 
                 supervisor.reloadConfig()
-                supervisor.addProcess(user_app.get_supervisor_name())
+                supervisor.addProcessGroup(user_app.get_supervisor_name())
 
             else:  # if the app have been started
                 supervisor.startProcess(user_app.get_supervisor_name())
