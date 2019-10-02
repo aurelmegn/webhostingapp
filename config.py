@@ -29,7 +29,7 @@ SQLALCHEMY_DATABASE_URI = "sqlite:///./var/data.db"
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 WEBPACKEXT_MANIFEST_PATH = "manifest.json"
 
-SERVER_NAME = "localhost:8000"
+# SERVER_NAME = "localhost:8000"
 SECURITY_LOGIN_USER_TEMPLATE = "security/login.jinja"
 SECURITY_TRACKABLE = True
 

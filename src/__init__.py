@@ -1,4 +1,5 @@
 # Import flask and template operators
+import logging
 from flask import Flask, render_template
 from flask_admin import Admin
 from flask_debugtoolbar import DebugToolbarExtension
@@ -49,19 +50,32 @@ from src.models.Role import Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
+# log handlers
+
+# logging.basic_config(level=os.environ.get("LOGLEVEL", "CRITICAL"), handlers=)
+app_log_handler = logging.StreamHandler()
+app_log_handler.setLevel(logging.DEBUG)
+
+# app_filelog_handler = logging.FileHandler("./src/var/log/app.log")
+# app_filelog_handler.setLevel(logging.INFO)
+# app.logger.addHandler(app_filelog_handler)
+
+app.logger.setLevel(logging.DEBUG)
+# app.logger.addHandler(app_log_handler)
 
 # Sample HTTP error handling
+# app.logger.error("++++++" )
 
 
 @app.errorhandler(404)
 def not_found(error):
-    print(error)
+    app.logger.error(error)
     return render_template("errors/404.jinja"), 404
 
 
 @app.errorhandler(500)
 def not_found(error):
-    print(error)
+    app.logger.error(error)
     return render_template("errors/500.jinja"), 500
 
 

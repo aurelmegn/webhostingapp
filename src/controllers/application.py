@@ -20,7 +20,7 @@ def app_info():
     app_name = request.args.get("name")
 
     if not app_name:
-        flash(f"An error occured", "dashboard_error")
+        flash(f"An error occurred", "error")
         return redirect(url_for("dashboard"))
     # check if the user own an application of the same name
 
@@ -45,7 +45,6 @@ def app_info():
         print(e)
     except Fault as e:
         app.logger.info(str(e))
-        print(e)
         abort(500)
 
 
@@ -63,7 +62,7 @@ def app_action():
         abort(400)
 
     if not (app_name or action.lower() not in actions):
-        flash(f"An error occurred", "dashboard_error")
+        flash(f"An error occurred", "error")
         return redirect(url_for("dashboard"))
     # check if the user own an application of the same name
 
@@ -94,7 +93,7 @@ def app_action():
             if user_app.state is AppState.never_started:
                 path = app.config.get("SUPERVISOR_PROGRAM_TEMPLATE_PATH")
                 config = create_supervisor_config(current_user, user_app, path)
-                print(config)
+                # print(config)
                 # move the config into the correct directory
 
                 user_conf_dir = current_user.get_supervisor_conf_dir()
@@ -104,11 +103,11 @@ def app_action():
 
                 # create the file and fill it with the config file
                 app_conf_path = user_app.get_supervisor_conf_path()
-                with open(app_conf_path, 'x') as f:
+                with open(app_conf_path, 'w') as f:
                     f.write(config)
 
                 supervisor.reloadConfig()
-                supervisor.addProcessGroup(user_app.get_supervisor_name())
+                supervisor.addProcess(user_app.get_supervisor_name())
 
             else:  # if the app have been started
                 supervisor.startProcess(user_app.get_supervisor_name())
@@ -116,25 +115,30 @@ def app_action():
             user_app.state = AppState.starting
 
         elif action == "stop":
-            supervisor.stop(user_app.get_supervisor_name())
+            supervisor.stopProcess(user_app.get_supervisor_name())
             user_app.state = AppState.stopping
         elif action == "restart":
-            supervisor.restart(user_app.get_supervisor_name())
+            supervisor.reloadConfig()
+            supervisor.stopProcess(user_app.get_supervisor_name())
+            supervisor.startProcess(user_app.get_supervisor_name())
+
             user_app.state = AppState.starting
 
         db.session.add(user_app)
         db.session.commit()
 
-        flash(f"Application {app_name} {action}ed", "dashboard_info")
+        action = "stopped" if action == "stop" else action + "ed"
+        flash(f"Application {app_name} {action}", "dashboard:info")
 
     except ConnectionRefusedError as e:
-        app.logger.info(str(e) + "unable to connect to supervisor instance")
-        abort(500)
+        app.logger.critical(str(e) + "unable to connect to supervisor instance")
+        abort(500, e)
         print(e)
     except Fault as e:
-        app.logger.info(str(e))
-        print(e)
-        abort(500)
+        app.logger.critical(e)
+        # print(e)
+        flash(f"Error durring application {action} operation: {e.faultString}", "error")
+        # abort(500, e)
 
     return redirect(url_for("dashboard"))
 
@@ -151,7 +155,7 @@ def create_supervisor_config(user: User, application: Application, path: str) ->
     parameters = {
         "supervisor_program_name": application.get_supervisor_name(),
         "entrypoint": application.entry_point,
-        "program_ftpdir": application.get_app_ftp_dir,
+        "program_ftpdir": application.get_app_ftp_dir(),
         "username": user.username,
         "program_name": application.name,
     }
