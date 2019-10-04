@@ -53,7 +53,7 @@ def app_info():
 @roles_required("user")
 def app_action():
     # get the app name from the request
-    app_name = request.args.get("name")
+    app_name = request.args.get("appname")
     action = request.args.get("action")
 
     actions = ["start", "stop", "restart"]
