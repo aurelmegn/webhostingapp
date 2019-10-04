@@ -7,6 +7,7 @@ geckodriver.log
 .idea
 *.log
 src/node_modules
+src/public/
 supervisor/*.log
 supervisor/*.pid
 supervisor/programs/*
@@ -15,3 +16,5 @@ htmlcov
 .vscode
 *,cover
 tmp
+*.___
+src/var/data.db

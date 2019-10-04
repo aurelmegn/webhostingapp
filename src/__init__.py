@@ -40,7 +40,7 @@ from xmlrpc.client import ServerProxy
 server = ServerProxy("http://localhost:9001/RPC2")
 supervisor = server.supervisor
 
-from src.controllers import *
+from src.controllers import dashboard
 from src.models.User import User
 from src.models.Role import Role
 
@@ -71,13 +71,13 @@ import src.admin_views
 @app.errorhandler(404)
 def not_found(error):
     app.logger.error(error)
-    return render_template("errors/404.jinja"), 404
+    return render_template("errors/404.jinja", error=error), 404
 
 
 @app.errorhandler(500)
 def not_found(error):
     app.logger.error(error)
-    return render_template("errors/500.jinja"), 500
+    return render_template("errors/500.jinja", error=error), 500
 
 
 @app.before_first_request

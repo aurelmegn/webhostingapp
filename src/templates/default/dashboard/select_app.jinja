@@ -1,0 +1,43 @@
+{% extends 'default/dashboard_base.jinja' %}
+
+{% block dashboard_content %}
+
+    <div class="flex w-full border-b p-3 ">
+        <div class="flex w-1/2 text-2xl">
+            {{ application.name | capitalize}}
+        </div>
+
+        <div class="md:w-1/4 ml-auto bg-green-500 rounded italic text-center text-white font-bold py-2">{{ application.state.value | capitalize }}</div>
+    </div>
+    <div class="flex w-full p-3">
+        {% if application.enabled %}
+            {% if application.state == AppState.never_started %}
+                lorem
+            {% endif %}
+            <a id="startApp" class="w-1/6 mx-1 border text-center rounded p-1 bg-gray-200 hover:bg-gray-300 text-gray-500" href="{{ url_for('app_action', action='start' ,appname=application.name) }}">Start</a>
+            <a id="reloadApp" class="w-1/6 mx-1 border text-center rounded p-1 bg-gray-200 hover:bg-gray-300 text-gray-500" href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">Reload</a>
+            <a id="stopApp" class="w-1/6 mx-1 border text-center rounded p-1 bg-gray-200 hover:bg-gray-300 text-gray-500" href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">Stop</a>
+        {% else %}
+            <span>Not enabled</span>
+        {% endif %}
+    </div>
+
+    <div class="section section-log">
+        <div class="section-header">Details</div>
+        <div class="section-body h-64" >
+            {{ application.__json__() }}
+        </div>
+    </div>
+
+    <div class="section section-log">
+        <div class="section-header">Logs</div>
+        <div class="section-body h-64" >
+            <code class="overflow-auto w-full text-sm leading-tight">
+                <pre>
+{{ app_out_log }}
+                </pre>
+            </code>
+        </div>
+    </div>
+
+{% endblock %}

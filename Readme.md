@@ -13,6 +13,9 @@
 
  - [ ] handle when there is no application on the dashboard
  - [ ]
+
+ todo for dashboard:
+
 ## workflow of normal user
 add an app
 wait for validation
