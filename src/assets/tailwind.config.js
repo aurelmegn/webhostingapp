@@ -17,11 +17,11 @@ module.exports = {
       primary: '#1a202c',
       secondary: '#2d3748',
       // red: '#c53030',
-      // gray: '#4a5568',
+      // grey: '#4a5568',
       // blue: '#2b6cb0',
       // teal: '#2c7a7b',
 
-      gray: {
+      grey:  {
         100: '#f7fafc',
         200: '#edf2f7',
         300: '#e2e8f0',
@@ -442,7 +442,7 @@ module.exports = {
     borderColor: ['responsive', 'hover', 'focus'],
     borderRadius: ['responsive'],
     borderStyle: ['responsive'],
-    borderWidth: ['responsive'],
+    borderWidth: ['responsive', 'last'],
     boxShadow: ['responsive', 'hover', 'focus'],
     cursor: ['responsive'],
     display: ['responsive'],
