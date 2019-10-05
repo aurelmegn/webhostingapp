@@ -8,7 +8,7 @@ geckodriver.log
 *.log
 src/node_modules
 src/public/
-supervisor/*.log
+supervisor/*.log*
 supervisor/*.pid
 supervisor/programs/*
 .coverage
