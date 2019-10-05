@@ -43,6 +43,7 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 FTP_BASE_DIR = "./tmp"
 FTP_PORT = 2121
+FTP_HOST = "ftp://localhost"
 
 # FLASK_ADMIN_SWATCH= 'flaty'
 

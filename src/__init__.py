@@ -7,6 +7,7 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 from flask_webpackext import FlaskWebpackExt, WebpackBundleProject
 
+from .utils.fa_icon_flash_filter import fa_icon_flash_filter
 from .utils.format_datetime import date_format_datetime
 
 myproject = WebpackBundleProject(
@@ -25,7 +26,7 @@ db = SQLAlchemy(app)
 
 # Template engine setup
 app.jinja_env.filters["datetime"] = date_format_datetime
-
+app.jinja_env.filters["fa_icon"] = fa_icon_flash_filter
 # debug toolbar
 toolbar = DebugToolbarExtension(app)
 FlaskWebpackExt(app)
@@ -41,6 +42,7 @@ server = ServerProxy("http://localhost:9001/RPC2")
 supervisor = server.supervisor
 
 from src.controllers import dashboard
+from src.models import roles_users
 from src.models.User import User
 from src.models.Role import Role
 

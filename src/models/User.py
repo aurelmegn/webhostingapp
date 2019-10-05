@@ -18,7 +18,7 @@ class User(db.Model, UserMixin, AlchemySerializable):
     confirmed_at = db.Column(db.DateTime())
     created_at = db.Column(db.DateTime(), nullable=False, default=datetime.utcnow())
     roles = db.relationship(
-        "Role", secondary=roles_users, backref=db.backref("users", lazy="dynamic")
+        "Role", secondary="roles_users", backref=db.backref("users", lazy="dynamic")
     )
 
     # trace properties
@@ -38,7 +38,7 @@ class User(db.Model, UserMixin, AlchemySerializable):
 
     @hybrid_method
     def get_ftp_home_dir(self):
-        base_path = app.config.get('FTP_BASE_DIR')
+        base_path = app.config.get("FTP_BASE_DIR")
         base_path = abspath(base_path)
 
         return join_path(base_path, self.username)
@@ -46,7 +46,7 @@ class User(db.Model, UserMixin, AlchemySerializable):
     @hybrid_method
     def get_supervisor_conf_dir(self):
         """generate the path to the user's conf directory for supervisor applications """
-        base_path = app.config.get('SUPERVISOR_CONFIG_DIR')
+        base_path = app.config.get("SUPERVISOR_CONFIG_DIR")
         base_path = abspath(base_path)
 
         return join_path(base_path, "programs", self.username)

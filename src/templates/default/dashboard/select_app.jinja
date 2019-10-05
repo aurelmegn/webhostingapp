@@ -2,41 +2,84 @@
 
 {% block dashboard_content %}
 
-    <div class="flex w-full border-b p-3 ">
+    <div class="flex w-full border-b border-grey-300 p-3 ">
         <div class="flex w-1/2 text-2xl">
             {{ application.name | capitalize}}
         </div>
 
-        <div class="md:w-1/4 ml-auto bg-green-500 rounded italic text-center text-white font-bold py-2">{{ application.state.value | capitalize }}</div>
+        <div class="md:w-1/4 ml-auto bg-{{ application.get_frontend_color() }}-500 rounded italic text-center text-white font-bold py-2">
+            {{ application.state_to_string() | capitalize }}
+        </div>
     </div>
-    <div class="flex w-full p-3">
-        {% if application.enabled %}
-            {% if application.state == AppState.never_started %}
-                lorem
-            {% endif %}
-            <a id="startApp" class="w-1/6 mx-1 border text-center rounded p-1 bg-gray-200 hover:bg-gray-300 text-gray-500" href="{{ url_for('app_action', action='start' ,appname=application.name) }}">Start</a>
-            <a id="reloadApp" class="w-1/6 mx-1 border text-center rounded p-1 bg-gray-200 hover:bg-gray-300 text-gray-500" href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">Reload</a>
-            <a id="stopApp" class="w-1/6 mx-1 border text-center rounded p-1 bg-gray-200 hover:bg-gray-300 text-gray-500" href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">Stop</a>
+    <div class="flex w-full py-3">
+        {% if not application.can_act() %}
+            <div class="alert info" role="alert">
+                <div class="flex">
+                    <div class="alert-icon"><i class="fa fa-2x {{ "info" | fa_icon }}"></i></div>
+                    <div class="alert-body">
+                        <p class="alert-body-title">Information</p>
+                        <p class="alert-body-text ">Upload files into the application folder and set the entrypoint before to be able to control the application</p>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <span>Not enabled</span>
+            <a id="startApp" class="app-action {{ "disabled" if not application.can_start() }}"
+               href="{{ url_for('app_action', action='start' ,appname=application.name) }}">
+                Start
+            </a>
+            <a id="reloadApp" class="app-action {{ "disabled" if not application.can_restart() }}"
+               href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">
+                Reload
+            </a>
+            <a id="stopApp" class="app-action {{ "disabled" if not application.can_stop() }}"
+               href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">
+                Stop
+            </a>
         {% endif %}
+
     </div>
 
-    <div class="section section-log">
-        <div class="section-header">Details</div>
-        <div class="section-body h-64" >
-            {{ application.__json__() }}
+    <div class="section section-details">
+        <div class="section-header flex-row">
+            <div class="">Details</div>
+            <a href="" class="ml-auto underline">Edit</a>
+        </div>
+        <div class="section-body flex-col " >
+
+        <table class="text-left w-full border-collapse">
+          <tbody>
+            <tr class="hover:bg-grey-100">
+              <td class="py-4 px-6 border-b border-grey-100">Name</td>
+              <td class="py-4 px-6 border-b border-grey-100">{{ application.name }}</td>
+            </tr>
+            <tr class="hover:bg-grey-100">
+              <td class="py-4 px-6 border-b border-grey-100">Entrypoint</td>
+              <td class="py-4 px-6 border-b border-grey-100">{{ application.entrypoint or None }}</td>
+            </tr>
+            <tr class="hover:bg-grey-100">
+              <td class="py-4 px-6 border-b-0 border-grey-100">Enabled</td>
+              <td class="py-4 px-6 border-b-0 border-grey-100">{{ application.enabled }}</td>
+            </tr>
+          </tbody>
+        </table>
+
         </div>
     </div>
 
     <div class="section section-log">
         <div class="section-header">Logs</div>
-        <div class="section-body h-64" >
-            <code class="overflow-auto w-full text-sm leading-tight">
-                <pre>
-{{ app_out_log }}
-                </pre>
-            </code>
+        <div class="section-body " >
+            {% if app_out_log != None %}
+                <code class="overflow-auto w-full text-sm leading-tight h-64">
+                    <pre>
+    {{ app_out_log }}
+                    </pre>
+                </code>
+            {% else %}
+                <div class="w-full text-center text-xl">
+                    No logs.
+                </div>
+            {% endif %}
         </div>
     </div>
 

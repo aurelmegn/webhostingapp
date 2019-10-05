@@ -21,6 +21,9 @@ def dashboard():
     from src.forms.ApplicationForm import ApplicationForm
     create_app_form = ApplicationForm()
 
+    ftp_host = app.config.get("FTP_HOST")
+    ftp_port = app.config.get("FTP_PORT")
+
     if selected_app:
 
         application = Application.query.filter_by(user=current_user, name=selected_app).first()
@@ -34,6 +37,7 @@ def dashboard():
         if application.state != AppState.never_started:
             try:
                 app_supervisor_name = application.get_supervisor_name()
+
                 err_log: [str] = supervisor.tailProcessStderrLog(app_supervisor_name, True, 4000)
                 out_log: [str] = supervisor.tailProcessStdoutLog(app_supervisor_name, True, 4000)
 
@@ -55,11 +59,11 @@ def dashboard():
             "default/dashboard/select_app.jinja", user=current_user, caform=create_app_form,
             application=application,
             AppState=AppState,
-            app_err_log=err_log,
-            app_out_log=out_log
+            app_out_log=out_log,
+            ftp_host=ftp_host, ftp_port=ftp_port
         )
     # print(apps)
 
     return render_template(
-        "default/dashboard_base.jinja", user=current_user, caform=create_app_form
+        "default/dashboard_base.jinja", user=current_user, caform=create_app_form, ftp_host=ftp_host, ftp_port=ftp_port
     )
