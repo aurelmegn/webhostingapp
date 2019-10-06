@@ -1,6 +1,6 @@
  Here is my flask boilerplate for a quick start.
  
- ## Getting started 
+## Getting started 
  
  ```sh
  virtualenv -p python3 ./env
@@ -11,8 +11,12 @@
 
  Todo:
 
- - [ ] handle when there is no application on the dashboard
- - [ ]
+-[ ] handle when there   is no application on the dashboard
+-[ ] when the user create an app, notifications for setiing up the entry point, ftp dir, and other essentials information should be created
+-[ ] add history log to the app actions
+-[ ] show the last executed action and the time it was executed on app display
+ todo for dashboard:
+
 ## workflow of normal user
 add an app
 wait for validation
@@ -23,40 +27,12 @@ start the application
 + improve the admin
 + mind how to create the virtualenv
 + mind how to issue a pip installation into the virtualenv
-
-firejail options
-
-       --cpu=cpu-number,cpu-number,cpu-number
-              Set CPU affinity.
-
-              Example:
-              $ firejail --cpu=0,1 handbrake
-       --disable-mnt
-              Blacklist /mnt, /media, /run/mount and /run/media access.
-
-              Example:
-              $ firejail --disable-mnt firefox
-       --dns=address
-              Set a DNS server for the sandbox. Up to three DNS servers can be defined.  Use this option if you don't trust the DNS setup  on  your
-              network.
-
-              Example:
-              $ firejail --dns=8.8.8.8 --dns=8.8.4.4 firefox
-
-              Note: this feature is not supported on systemd-resolved setups.
-       --hostname=name
-      Set sandbox hostname.
-
-      --private options to check
-
-      Example:
-      $ firejail --hostname=officepc firefox
-
++ use svelte js framework for animations of the page and js dom manipulaction
 
 https://dev.to/sm0ke/flask-dashboard-open-source-boilerplates-dkg
 https://colorlib.com/polygon/gentelella/index2.html
 
-# supervisor
+## supervisor
 file hierachy
 
 /supervisor
@@ -79,6 +55,6 @@ update app config .ini
 REREAD conf
 update app
 
-# reseller offer
+## reseller offer
 A2 hosting
 InMotion Hosting

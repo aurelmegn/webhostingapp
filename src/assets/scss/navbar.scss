@@ -1,12 +1,12 @@
 .nav-item{
-  @apply block mt-4 text-primary text-white
+  @apply block mt-4 text-white
   font-bold border border-b-2 border-transparent ;
   &:hover{
-    @apply bg-secondary text-white;
+    @apply bg-secondary text-white rounded;
   }
 
   &.active{
-    @apply bg-secondary text-white;
+    @apply bg-secondary text-white rounded;
   }
 }
 

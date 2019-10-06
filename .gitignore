@@ -7,10 +7,14 @@ geckodriver.log
 .idea
 *.log
 src/node_modules
-supervisor/*.log
+src/public/
+supervisor/*.log*
 supervisor/*.pid
 supervisor/programs/*
 .coverage
 htmlcov
 .vscode
 *,cover
+tmp
+*.___
+src/var/data.db

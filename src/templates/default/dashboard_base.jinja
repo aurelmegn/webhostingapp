@@ -1,0 +1,220 @@
+{% extends "base_container.jinja"%}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block cbody %}
+
+    <div id="modalContainer" class="bg-grey-10 fixed right-0 bg-transparent w-full flex flex-col justify-start items-center h-full pt-10 hidden">
+        <form id="caForm"  class="shadow-lg bg-white w-full md:w-1/4 flex flex-col p-3 rounded hidden modal_close">
+            {{ caform.hidden_tag() }}
+
+            <div class="mb-4">
+              <label class="block text-md mb-2" for="name">
+                {{ caform.name.label }}
+              </label>
+              {{ caform.name(class="form-input") }}
+                {% for error in caform.name.errors %}
+                    <p class="form-error "> {{ error }}</p>
+                {% endfor %}
+
+                <p id="nameExistError" class="form-error hidden"> The name already exists</p>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-md mb-2 " for="type">
+                {{ caform.type.label }}
+              </label>
+              {{ caform.type(class="form-select") }}
+                {% for error in caform.type.errors %}
+                    <p class="form-error "> {{ error }}</p>
+                {% endfor %}
+
+                <p id="nameExistError" class="form-error hidden"> The name already exists</p>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-md mb-2" for="description">
+                {{ caform.description.label}}
+              </label>
+              {{ caform.description(class="form-input") }}
+                {% for error in caform.description.errors %}
+                    <p class="form-error "> {{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center content-between justify-center w-full">
+                <button class="btn-red-out text-red-600 btn w-full" type="reset" id="caFormCloseBtn">
+                    Close
+                </button>
+
+                <button id="caFormSubmitBtn" class="btn-teal btn w-full" type="submit">
+                Create
+              </button>
+            </div>
+        </form>
+
+        <div id="message" class="hidden message shadow-lg bg-white w-full md:w-1/4 flex flex-col p-3 rounded hidden">
+            <div class="flex w-full message-content p-4"></div>
+            <button class="btn-grey btn w-full mt-2 close" >
+                Close
+          </button>
+        </div>
+
+    </div>
+
+{#    content of the page#}
+
+    <div class="flex flex-col md:mt-5 md:flex-row w-full my-2 justify-between rounded">
+        <div class="overview-card pr-2">
+            <span class="overview-card-body overview-card-grey">{{ user.applications | count }} Applications</span>
+        </div>
+        <div class="overview-card">
+            <span class="overview-card-body overview-card-grey ">0 Tickets</span>
+        </div>
+        <div class="overview-card pl-2">
+            <span class="overview-card-body overview-card-grey ">0 Invoices</span>
+        </div>
+    </div>
+
+
+    <div class="flex flex-row items-start justify-between content-center md:mt-5">
+
+    <div class="flex-col flex w-full md:w-1/4">
+        <div class="flex-col flex w-full md:w-full mb-5 shadow-md">
+
+            <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary text-white text-xl">
+                Applications
+{#                <a id="addApp" href="#" class="w-1/3 btn text-center bg-white text-primary p-1">Add app</a>#}
+            </div>
+
+            <div class="flex flex-col w-full border border-t-0 border-grey-300 rounded-b">
+{#                <ul class="w-full px-1">#}
+                {% for application in user.applications %}
+                    <div class=" application_list_element w-full flex flex-row mt-0 p-3 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.args.appname == application.name }}">
+
+                        <a href="{{ url_for('dashboard', appname=application.name) }}" class="appname w-4/6 break-words ">{{ application.name | capitalize }}</a>
+
+                    </div>
+                {% endfor %}
+{#                </ul>#}
+            </div>
+
+        </div>
+
+        <div class="flex-col flex w-full md:w-full mb-5 shadow-md">
+            <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary text-white text-xl italic">
+                Ftp Credentials
+{#                #}
+            </div>
+
+            <div class="flex flex-col w-full border border-t-0 border-grey-300 rounded-b">
+                <table class="text-left w-full bg-grey-100 border-collapse">
+                  <tbody>
+                    <tr class="hover:bg-grey-300 border-b border-grey-300">
+                      <td class="py-2 px-2 ">Host:</td>
+                      <td class="py-2 px-2 ">{{ ftp_host }}</td>
+                    </tr>
+                    <tr class="hover:bg-grey-300 border-b border-grey-300">
+                      <td class="py-2 px-2 ">Port:</td>
+                      <td class="py-2 px-2 ">{{ ftp_port }}</td>
+                    </tr>
+                    <tr class="hover:bg-grey-300 border-b border-grey-300">
+                      <td class="py-2 px-2 ">Username:</td>
+                      <td class="py-2 px-2 ">{{ user.username }}</td>
+                    </tr>
+                    <tr class="hover:bg-grey-300">
+                      <td class="py-2 px-2 ">Password:</td>
+                      <td class="py-2 px-2 ">Your current password</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+        <div class="flex flex-col  md:w-2/3 pb-10">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flashes flex flex-col w-full pt-5 justify-center items-center">
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}" role="alert">
+                        <div class="flex">
+                            <div class="alert-icon"><i class="fa fa-2x fa-info-circle"></i></div>
+                            <div class="alert-body">
+                                <p class="alert-body-title">{{ category | capitalize }}</p>
+                                <p class="alert-body-text ">{{ message |capitalize }}</p>
+                            </div>
+                        </div>
+                    </div>
+        {#          <li class="{{ category }}">{{ message }}</li>#}
+                {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            {% block dashboard_content %}
+
+                {% if user.applications | count == 0 %}
+                    <div class="alert info" role="alert">
+                        <div class="flex">
+                            <div class="alert-icon"><i class="fa fa-2x fa-info-circle"></i></div>
+                            <div class="alert-body">
+                                <p class="alert-body-title">Information</p>
+                                <p class="alert-body-text ">Add an application to get started</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="flex w-full border-b border-secondary p-3 text-2xl text-secondary">Welcome Back {{ user.username | capitalize }}</div>
+
+                <div class="flex w-full py-3">
+                    <a id="addApp" href="#" class="app-action">Add app</a>
+                </div>
+                <div class="section section-chart">
+                    <div class="section-header">Charts</div>
+                    <div class="section-body" >
+                        <div class="w-full text-center font-mono text-secondary">
+                            No chart.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section section-logs">
+                    <div class="section-header">Logs</div>
+                    <div class="section-body" >
+                        <div class="w-full text-center font-mono text-secondary">
+                            No logs.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section section-notification">
+                    <div class="section-header">Notifications</div>
+                    <div class="section-body" >
+                        <div class="w-full text-center font-mono text-secondary">
+                            No notification.
+                        </div>
+                    </div>
+            </div>
+            {% endblock %}
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+    {{ webpack['public/js/dashboard.js'] }}
+
+{% endblock %}
+
+{% block css %}
+    {{ super() }}
+{#    {{ webpack['public/css/dashboard.css'] }}#}
+
+{% endblock %}

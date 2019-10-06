@@ -1,0 +1,10 @@
+{% extends "base.jinja"%}
+
+{% block body %}
+    <div class="flex maincontainer w-full flex-col justify-center items-center">
+        <div class="flex container flex-col w-full md:w-3/4">
+            {% block cbody %}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

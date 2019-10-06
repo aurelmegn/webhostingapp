@@ -110,6 +110,9 @@ module.exports.caFormJsStarter = () => {
 
     let messageDiv = modalBox.querySelector("#message");
 
+    if(! addAppLink){
+        return;
+    }
     // handle the click of the add app form
     addAppLink.addEventListener('click', (e) => {
         this.showCaForm();

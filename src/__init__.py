@@ -7,6 +7,7 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 from flask_webpackext import FlaskWebpackExt, WebpackBundleProject
 
+from .utils.fa_icon_flash_filter import fa_icon_flash_filter
 from .utils.format_datetime import date_format_datetime
 
 myproject = WebpackBundleProject(
@@ -25,7 +26,7 @@ db = SQLAlchemy(app)
 
 # Template engine setup
 app.jinja_env.filters["datetime"] = date_format_datetime
-
+app.jinja_env.filters["fa_icon"] = fa_icon_flash_filter
 # debug toolbar
 toolbar = DebugToolbarExtension(app)
 FlaskWebpackExt(app)
@@ -40,7 +41,8 @@ from xmlrpc.client import ServerProxy
 server = ServerProxy("http://localhost:9001/RPC2")
 supervisor = server.supervisor
 
-from src.controllers import *
+from src.controllers import dashboard
+from src.models import roles_users
 from src.models.User import User
 from src.models.Role import Role
 
@@ -71,13 +73,13 @@ import src.admin_views
 @app.errorhandler(404)
 def not_found(error):
     app.logger.error(error)
-    return render_template("errors/404.jinja"), 404
+    return render_template("errors/404.jinja", error=error), 404
 
 
 @app.errorhandler(500)
 def not_found(error):
     app.logger.error(error)
-    return render_template("errors/500.jinja"), 500
+    return render_template("errors/500.jinja", error=error), 500
 
 
 @app.before_first_request

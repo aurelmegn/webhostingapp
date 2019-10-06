@@ -53,7 +53,7 @@ def app_info():
 @roles_required("user")
 def app_action():
     # get the app name from the request
-    app_name = request.args.get("name")
+    app_name = request.args.get("appname")
     action = request.args.get("action")
 
     actions = ["start", "stop", "restart"]
@@ -78,8 +78,11 @@ def app_action():
     print(action)
 
     try:
+
+        action_executed=False
+
         # proceed to the application action specified
-        if action == "start":
+        if action == "start" and user_app.can_start():
             # todo
             """
                 if the app has never been started 
@@ -107,28 +110,29 @@ def app_action():
                     f.write(config)
 
                 supervisor.reloadConfig()
-                supervisor.addProcess(user_app.get_supervisor_name())
+                supervisor.addProcessGroup(user_app.get_supervisor_name())
 
             else:  # if the app have been started
                 supervisor.startProcess(user_app.get_supervisor_name())
 
-            user_app.state = AppState.starting
-
-        elif action == "stop":
+            action_executed = True
+        elif action == "stop" and user_app.can_stop():
             supervisor.stopProcess(user_app.get_supervisor_name())
-            user_app.state = AppState.stopping
-        elif action == "restart":
+            # user_app.state = AppState.stopping
+
+            action_executed = True
+
+        elif action == "restart" and user_app.can_restart():
             supervisor.reloadConfig()
             supervisor.stopProcess(user_app.get_supervisor_name())
             supervisor.startProcess(user_app.get_supervisor_name())
 
-            user_app.state = AppState.starting
+            # user_app.state = AppState.starting
+            action_executed = True
 
-        db.session.add(user_app)
-        db.session.commit()
-
-        action = "stopped" if action == "stop" else action + "ed"
-        flash(f"Application {app_name} {action}", "dashboard:info")
+        if action_executed:
+            action = "stopped" if action == "stop" else action + "ed"
+            flash(f"Application {app_name} {action}", "success")
 
     except ConnectionRefusedError as e:
         app.logger.critical(str(e) + "unable to connect to supervisor instance")
@@ -140,7 +144,7 @@ def app_action():
         flash(f"Error durring application {action} operation: {e.faultString}", "error")
         # abort(500, e)
 
-    return redirect(url_for("dashboard"))
+    return redirect(request.referrer)
 
 
 def create_supervisor_config(user: User, application: Application, path: str) -> str:
