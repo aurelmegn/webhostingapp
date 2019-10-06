@@ -21,7 +21,9 @@ class AppState(Enum):
 
 
 class AppType(Enum):
-    python = "python"
+    python35 = "python_3.5"
+    python36 = "python_3.6"
+    python37 = "python_3.7"
     # php = 'php'
     # nodejs = 'nodejs'
 
@@ -51,6 +53,9 @@ class Application(db.Model, AlchemySerializable):
         except Fault:
             return AppState.never_started
 
+        except Exception:
+            return AppState.never_started
+
     @hybrid_method
     def get_supervisor_name(self):
         return self.user.username + "-" + self.name
@@ -74,15 +79,15 @@ class Application(db.Model, AlchemySerializable):
         return (
             True
             if self.state
-            in [
-                AppState.stopped,
-                AppState.backoff,
-                AppState.fatal,
-                AppState.exited,
-                AppState.never_started,
-            ]
-            and self.entry_point is not None
-            and self.enabled is True
+               in [
+                   AppState.stopped,
+                   AppState.backoff,
+                   AppState.fatal,
+                   AppState.exited,
+                   AppState.never_started,
+               ]
+               and self.entry_point is not None
+               and self.enabled is True
             else False
         )
 

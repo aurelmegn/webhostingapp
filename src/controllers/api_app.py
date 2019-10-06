@@ -3,7 +3,7 @@ from flask_security import current_user, login_required, roles_required
 
 from src.forms.ApplicationForm import ApplicationForm
 from src import app, db
-from src.models.Application import Application
+from src.models.Application import Application, AppType
 
 
 @app.route("/api/app", methods=["post"])
@@ -18,10 +18,10 @@ def api_app_post():
 
         # if request.headers
         application = Application()
-
         application_form.populate_obj(application)
-
-        print(application.__json__())
+        application.type = AppType(application.type)
+        print(application.type)
+        # print(application.__json__())
 
         # search for the same app name in the database
 
@@ -33,12 +33,15 @@ def api_app_post():
             err = {"message": "You already have an application of the same name"}
             return make_response(jsonify(err), 400)
 
+        print(application.type)
         current_user.applications.append(application)
         db.session.commit()
 
         return jsonify(application.__json__())
 
     else:
+        print(application_form.errors)
+        print(application_form.type)
         abort(401)
 
 

@@ -3,7 +3,7 @@
 {% block dashboard_content %}
 
     <div class="flex w-full border-b border-grey-300 p-3 ">
-        <div class="flex w-1/2 text-2xl">
+        <div class="flex w-1/2 text-2xl text-secondary">
             {{ application.name | capitalize}}
         </div>
 
@@ -11,7 +11,18 @@
             {{ application.state_to_string() | capitalize }}
         </div>
     </div>
-    <div class="flex w-full py-3">
+    <div class="flex flex-col w-full py-3">
+    {% if not application.enabled %}
+        <div class="alert info" role="alert">
+            <div class="flex">
+                <div class="alert-icon"><i class="fa fa-2x {{ "info" | fa_icon }}"></i></div>
+                <div class="alert-body">
+                    <p class="alert-body-title">Information</p>
+                    <p class="alert-body-text ">Your application is waiting for validation, you will be noticed when the status is updated</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
         {% if not application.can_act() %}
             <div class="alert info" role="alert">
                 <div class="flex">
@@ -42,7 +53,7 @@
     <div class="section section-details">
         <div class="section-header flex-row">
             <div class="">Details</div>
-            <a href="" class="ml-auto underline">Edit</a>
+            <a href="" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
         </div>
         <div class="section-body flex-col " >
 
@@ -51,6 +62,10 @@
             <tr class="hover:bg-grey-100">
               <td class="py-4 px-6 border-b border-grey-100">Name</td>
               <td class="py-4 px-6 border-b border-grey-100">{{ application.name }}</td>
+            </tr>
+            <tr class="hover:bg-grey-100">
+              <td class="py-4 px-6 border-b border-grey-100">Language</td>
+              <td class="py-4 px-6 border-b border-grey-100">{{ application.type.value | capitalize }}</td>
             </tr>
             <tr class="hover:bg-grey-100">
               <td class="py-4 px-6 border-b border-grey-100">Entrypoint</td>
@@ -76,7 +91,7 @@
                     </pre>
                 </code>
             {% else %}
-                <div class="w-full text-center text-xl">
+                <div class="w-full text-center font-mono">
                     No logs.
                 </div>
             {% endif %}

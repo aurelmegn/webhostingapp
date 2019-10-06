@@ -15,8 +15,8 @@
           <a href="{{ url_for('.dashboard') }}" class="nav-item  {{ 'active' if request.endpoint == 'dashboard'}} mr-4">Dashboard </a>
         {% endif %}
 
-        <a href="{{ url_for('.docs') }}" class="nav-item {{ 'active' if request.endpoint == 'docs'}} mr-4">Documentation </a>
-        <a href="{{ url_for('.blog') }}" class="nav-item {{ 'active' if request.endpoint == 'blog'}}">Blog </a>
+        <a href="{{ url_for('docs') }}" class="nav-item {{ 'active' if request.endpoint == 'docs'}} mr-4">Documentation </a>
+        <a href="{{ url_for('blog') }}" class="nav-item {{ 'active' if request.endpoint == 'blog'}}">Blog </a>
 
     </div>
     <div>
