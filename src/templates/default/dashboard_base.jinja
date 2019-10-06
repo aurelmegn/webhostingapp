@@ -77,14 +77,13 @@
     </div>
 
 
-    <div class="flex flex-row items-start justify-between content-center md:mt-5">
+    <div class="flex flex-col md:flex-row items-center md:items-start justify-between content-center md:mt-5">
 
     <div class="flex-col flex w-full md:w-1/4">
         <div class="flex-col flex w-full md:w-full mb-5 shadow-md">
 
             <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary text-white text-xl">
                 Applications
-{#                <a id="addApp" href="#" class="w-1/3 btn text-center bg-white text-primary p-1">Add app</a>#}
             </div>
 
             <div class="flex flex-col w-full border border-t-0 border-grey-300 rounded-b">
@@ -172,8 +171,9 @@
                 <div class="flex w-full border-b border-secondary p-3 text-2xl text-secondary">Welcome Back {{ user.username | capitalize }}</div>
 
                 <div class="flex w-full py-3">
-                    <a id="addApp" href="#" class="app-action">Add app</a>
+                    <a id="addApp" href="#" class="app-action w-full">Add app</a>
                 </div>
+
                 <div class="section section-chart">
                     <div class="section-header">Charts</div>
                     <div class="section-body" >
