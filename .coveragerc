@@ -2,6 +2,7 @@
 omit =
     # omit anything in a .local directory anywhere
     env/*
+    venv/*
     # omit everything in /usr
     .vscode/*
     supervisor/*

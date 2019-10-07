@@ -11,11 +11,13 @@
 
  Todo:
 
--[ ] handle when there   is no application on the dashboard
--[ ] when the user create an app, notifications for setiing up the entry point, ftp dir, and other essentials information should be created
--[ ] add history log to the app actions
--[ ] show the last executed action and the time it was executed on app display
--[ ] figure out how to create the virtualenv of different version
+- [ ] handle when there   is no application on the dashboard
+- [ ] when the user create an app, notifications for setiing up the entry point, ftp dir, and other essentials information should be created
+- [ ] add history log to the app actions
+- [ ] show the last executed action and the time it was executed on app display
+- [ ] figure out how to create the virtualenv of different version
+- [ ] animation on click on execute command
+- [ ] remove the directory of the app when issueing a command (by the client)
  todo for dashboard:
 
 ## workflow of normal user
