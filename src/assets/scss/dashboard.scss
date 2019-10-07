@@ -118,7 +118,7 @@
 }
 
 .app-action{
-  @apply w-full mx-1 text-center rounded p-1 bg-grey-200 text-grey-500;
+  @apply w-full my-1 text-center rounded p-1 bg-grey-200 text-grey-500;
 
   &:hover{
     @apply bg-grey-300;
@@ -180,7 +180,7 @@
 }
 
   .app-action{
-    @apply w-1/6;
+    @apply w-1/6 mx-1 ;
   }
 
 }

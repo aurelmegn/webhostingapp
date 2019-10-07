@@ -34,9 +34,9 @@ class Application(db.Model, AlchemySerializable):
     enabled = db.Column(db.Boolean(), default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    type = db.Column(db.Enum(AppType), nullable=False)
+    type = db.Column(db.Enum(AppType), nullable=False, default=AppType.python37)
 
-    entry_point = db.Column(db.String())
+    entrypoint = db.Column(db.String())
     port = db.Column(db.Integer())
 
     # state = db.Column(db.Enum(AppState), default=AppState.never_started)
@@ -86,7 +86,7 @@ class Application(db.Model, AlchemySerializable):
                    AppState.exited,
                    AppState.never_started,
                ]
-               and self.entry_point is not None
+               and self.entrypoint is not None
                and self.enabled is True
             else False
         )

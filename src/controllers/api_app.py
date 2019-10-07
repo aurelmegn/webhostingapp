@@ -13,15 +13,12 @@ def api_app_post():
     application_form = ApplicationForm()
 
     if application_form.validate_on_submit():
-        print(application_form.data)
         # print(application_form.object_data)
 
         # if request.headers
         application = Application()
         application_form.populate_obj(application)
         application.type = AppType(application.type)
-        print(application.type)
-        # print(application.__json__())
 
         # search for the same app name in the database
 
@@ -33,15 +30,13 @@ def api_app_post():
             err = {"message": "You already have an application of the same name"}
             return make_response(jsonify(err), 400)
 
-        print(application.type)
         current_user.applications.append(application)
         db.session.commit()
 
         return jsonify(application.__json__())
 
     else:
-        print(application_form.errors)
-        print(application_form.type)
+        app.logger.error(application_form.errors)
         abort(401)
 
 
@@ -65,7 +60,6 @@ def api_app_get():
 @login_required
 @roles_required("user")
 def api_app_reload():
-    print(request.args)
 
     # check if the requets is for an reload
     is_reload = request.args.get("reload")
