@@ -11,6 +11,7 @@
             {{ application.state_to_string() | capitalize }}
         </div>
     </div>
+
     <div class="flex flex-col w-full py-3">
     {% if not application.enabled %}
         <div class="alert info" role="alert">
@@ -35,18 +36,20 @@
             </div>
         </div>
     {% else %}
-        <a id="startApp" class="app-action {{ "disabled" if not application.can_start() }}"
-           href="{{ url_for('app_action', action='start' ,appname=application.name) }}">
-            Start
-        </a>
-        <a id="reloadApp" class="app-action {{ "disabled" if not application.can_restart() }}"
-           href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">
-            Reload
-        </a>
-        <a id="stopApp" class="app-action {{ "disabled" if not application.can_stop() }}"
-           href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">
-            Stop
-        </a>
+        <div class="flex flex-col md:flex-row">
+            <a id="startApp" class="app-action {{ "disabled" if not application.can_start() }}"
+               href="{{ url_for('app_action', action='start' ,appname=application.name) }}">
+                Start
+            </a>
+            <a id="reloadApp" class="app-action {{ "disabled" if not application.can_restart() }}"
+               href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">
+                Reload
+            </a>
+            <a id="stopApp" class="app-action {{ "disabled" if not application.can_stop() }}"
+               href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">
+                Stop
+            </a>
+        </div>
     {% endif %}
 
     </div>
