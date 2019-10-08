@@ -153,4 +153,4 @@ class Application(db.Model, AlchemySerializable):
     @hybrid_method
     def can_execute_command(self):
 
-        return self.state != AppState.never_started
+        return True

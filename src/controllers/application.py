@@ -32,7 +32,7 @@ def app_execute_cmd():
     selected_app = request.args.get("appname")
     command = request.form["command"]
 
-    session.pop("last_cmd", None)
+    session.pop(f"last_cmd_{selected_app}", None)
 
     if not (command or selected_app):
         abort(404)
@@ -51,17 +51,17 @@ def app_execute_cmd():
         try:
             bin_path = join(app_dir, "venv", "bin")
 
-            if command.split()[0] == "pip":
-                # remove the pip and replace it with python -m
-                splited_cmd = command.split()
-                splited_cmd = " ".join(splited_cmd[1:])
-
-                reformed_cmd = f"firejail --quiet --private {bin_path}/python -m pip {splited_cmd}".split()
-
-            else:
-                reformed_cmd = (
-                    f"firejail --quiet --private {bin_path}/{command}".split()
-                )
+            # if command.split()[0] == "pip":
+            #     # remove the pip and replace it with python -m
+            #     splited_cmd = command.split()
+            #     splited_cmd = " ".join(splited_cmd[1:])
+            #
+            #     reformed_cmd = f"firejail --quiet --private {bin_path}/python -m pip {splited_cmd}".split()
+            #
+            # else:
+            reformed_cmd = (
+                f"firejail --quiet --private {bin_path}/{command}".split()
+            )
 
             app.logger.debug(" ".join(reformed_cmd))
 
@@ -76,7 +76,7 @@ def app_execute_cmd():
             # app.logger.debug(output.stderr.decode("utf-8"))
             output = output.stdout.decode("utf-8")
 
-            session["last_cmd"] = {"output": output, "cmd": command}
+            session[f"last_cmd_{selected_app}"] = {"output": output, "cmd": command}
 
         except Exception as e:
             app.logger.error(e)
@@ -186,8 +186,10 @@ def app_action():
                     if isdir(env_path):
                         rmtree(env_path)
 
+                    import virtualenv
+
                     try:
-                        venv.create(env_path, system_site_packages=False, with_pip=True)
+                        virtualenv.create_environment(env_path, clear=True, no_setuptools=True, no_wheel=True)
                     except subprocess.CalledProcessError as e:
                         app.logger.error(e)
                         abort(500)
