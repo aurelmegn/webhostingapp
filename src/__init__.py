@@ -1,6 +1,6 @@
 # Import flask and template operators
 import logging
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 from flask_admin import Admin
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_security import Security, SQLAlchemyUserDatastore
@@ -92,3 +92,9 @@ def before_first_request():
     user_datastore.find_or_create_role(name='user', description='End user')
 
     db.session.commit()
+
+
+@app.before_request
+def drop_cmd_output_before_each_request():
+    # session.pop("last_cmd", None)
+    pass

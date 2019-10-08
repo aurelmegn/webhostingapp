@@ -1,12 +1,21 @@
 import subprocess
-from flask import request, abort, flash, redirect, url_for, jsonify
+from flask import (
+    request,
+    abort,
+    flash,
+    redirect,
+    url_for,
+    jsonify,
+    render_template,
+    session,
+)
 from flask_login import login_required, current_user
 from flask_security import roles_required
 from string import Template
 from xmlrpc.client import Fault
 
 from src.models.Application import AppState, AppType
-from src import app, supervisor, db
+from src import app, supervisor
 from src.models import Application
 from src.models import User
 from src.utils.find_or_create import find_or_create
@@ -14,6 +23,72 @@ from src.utils.find_or_create import find_or_create
 import venv
 from os.path import join, isdir
 from shutil import rmtree
+
+
+@app.route("/application/execute_cmd", methods=["post"])
+@login_required
+@roles_required("user")
+def app_execute_cmd():
+    selected_app = request.args.get("appname")
+    command = request.form["command"]
+
+    session.pop("last_cmd", None)
+
+    if not (command or selected_app):
+        abort(404)
+
+    application = Application.query.filter_by(
+        user=current_user, name=selected_app
+    ).first()
+
+    if not application:
+        abort(404)
+
+    # check if the application is python type
+    if application.type in [AppType.python37, AppType.python36, AppType.python35]:
+
+        app_dir = application.get_app_ftp_dir()
+        try:
+            bin_path = join(app_dir, "venv", "bin")
+
+            if command.split()[0] == "pip":
+                # remove the pip and replace it with python -m
+                splited_cmd = command.split()
+                splited_cmd = " ".join(splited_cmd[1:])
+
+                reformed_cmd = f"firejail --quiet --private {bin_path}/python -m pip {splited_cmd}".split()
+
+            else:
+                reformed_cmd = (
+                    f"firejail --quiet --private {bin_path}/{command}".split()
+                )
+
+            app.logger.debug(" ".join(reformed_cmd))
+
+            output = subprocess.run(
+                reformed_cmd,
+                stdout=subprocess.PIPE,
+                # stderr=subprocess.PIPE,
+                check=True,
+                timeout=10,  # exit after 10sec
+            )
+
+            # app.logger.debug(output.stderr.decode("utf-8"))
+            output = output.stdout.decode("utf-8")
+
+            session["last_cmd"] = {"output": output, "cmd": command}
+
+        except Exception as e:
+            app.logger.error(e)
+            flash(f"command {command} can not be executed")
+        except OSError as e:
+            app.logger.error(e)
+            flash(f"command {command} can not be executed")
+
+        # if the app is php type
+
+    return redirect(request.referrer)
+
 
 @app.route("/application/state")
 @login_required
@@ -40,7 +115,7 @@ def app_info():
     try:
         process_info = supervisor.getProcessInfo(user_app.get_supervisor_name())
 
-        # get the state of the app and update it accordingly into the database 
+        # get the state of the app and update it accordingly into the database
         return jsonify(process_info)
 
     except ConnectionRefusedError as e:
@@ -81,7 +156,7 @@ def app_action():
 
     try:
 
-        action_executed=False
+        action_executed = False
 
         # proceed to the application action specified
         if action == "start" and user_app.can_start():
@@ -99,9 +174,12 @@ def app_action():
 
                 # create virtualenv if the app is python app
 
-                if user_app.type in [AppType.python37, AppType.python36, AppType.python35]:
+                if user_app.type in [
+                    AppType.python37,
+                    AppType.python36,
+                    AppType.python35,
+                ]:
                     app_dir = user_app.get_app_ftp_dir()
-
 
                     env_path = join(app_dir, "venv")
                     # remove the venv dir on the application ftp dir
@@ -128,7 +206,7 @@ def app_action():
 
                 # create the file and fill it with the config file
                 app_conf_path = user_app.get_supervisor_conf_path()
-                with open(app_conf_path, 'w') as f:
+                with open(app_conf_path, "w") as f:
                     f.write(config)
 
                 supervisor.reloadConfig()
@@ -186,8 +264,8 @@ def create_supervisor_config(user: User, application: Application, path: str) ->
         "program_ftpdir": application.get_app_ftp_dir(),
         "username": user.username,
         "program_name": application.name,
-        "pip": join(venv_bin_folder, 'pip'),
-        "python": join(venv_bin_folder, 'python'),
+        "pip": join(venv_bin_folder, "pip"),
+        "python": join(venv_bin_folder, "python"),
     }
 
     return t.safe_substitute(parameters)

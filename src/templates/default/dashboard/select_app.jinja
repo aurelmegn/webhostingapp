@@ -3,7 +3,7 @@
 {% block dashboard_content %}
 
     <div class="flex w-full border-b border-grey-300 p-3 ">
-        <div class="flex w-1/2 text-2xl text-secondary">
+        <div class="flex w-1/2 text-2xl text-secondary-500">
             {{ application.name | capitalize}}
         </div>
 
@@ -37,22 +37,51 @@
         </div>
     {% else %}
         <div class="flex flex-col md:flex-row">
-            <a id="startApp" class="app-action {{ "disabled" if not application.can_start() }}"
+            <a id="startApp" class="app-action" {{ "hidden" if not application.can_start() }}
                href="{{ url_for('app_action', action='start' ,appname=application.name) }}">
                 Start
             </a>
-            <a id="reloadApp" class="app-action {{ "disabled" if not application.can_restart() }}"
+            <a id="reloadApp" class="app-action " {{ "hidden" if not application.can_restart() }}
                href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">
-                Reload
+                Restart
             </a>
-            <a id="stopApp" class="app-action {{ "disabled" if not application.can_stop() }}"
+            <a id="stopApp" class="app-action" {{ "hidden" if not application.can_stop() }}
                href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">
                 Stop
             </a>
+            <button id="stopApp" class="app-action " {{ "hidden" if not application.can_execute_command() }}>
+                Execute command
+            </button>
+        </div>
+
+        <div class="flex flex-row w-full">
+            <form action="{{ url_for('app_execute_cmd', appname=application.name) }}" method="post" class="w-full">
+                <div class="flex items-center border-b border-b-2 border-secondary-700 py-1 mx-1">
+                    <input type="text" class="w-full appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py1 px-2 leading-tight focus:outline-none" placeholder="Enter the command you want to execute" name="command" value="{{ session.get("last_cmd").cmd }}" required >
+{#                    <input type="text" class="form-input" placeholder="Enter the command you want to execute">#}
+                    <button class="bg-secondary-700 hover:bg-grey-700 text-sm border-2 text-white py-1 px-2 rounded" type="submit">Execute</button>
+                </div>
+            </form>
         </div>
     {% endif %}
 
     </div>
+
+    {% if session.get("last_cmd") %}
+    <div class="section section-details">
+        <div class="section-header flex-row">
+            <div class="">Output of {{ session.get("last_cmd").cmd }}</div>
+            <a href="" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
+        </div>
+        <div class="section-body flex-col " >
+            <code class="overflow-auto w-full text-sm leading-tight h-64">
+                    <pre>
+{{ session.get("last_cmd").output | string }}
+                    </pre>
+                </code>
+        </div>
+    </div>
+    {% endif %}
 
     <div class="section section-details">
         <div class="section-header flex-row">
@@ -91,7 +120,7 @@
             {% if app_out_log != None %}
                 <code class="overflow-auto w-full text-sm leading-tight h-64">
                     <pre>
-    {{ app_out_log }}
+{{ app_out_log }}
                     </pre>
                 </code>
             {% else %}
