@@ -69,10 +69,10 @@
   @apply flex flex-col w-full my-2 shadow-lg;
 
   &>.section-header{
-    @apply flex w-full bg-grey-100 rounded-t p-3 text-xl text-secondary;
+    @apply flex w-full bg-grey-100 rounded-t p-3 text-xl text-secondary-500;
   }
   &>.section-body{
-    @apply flex w-full p-2 border border-t-0 border-grey-100 rounded-b text-secondary;
+    @apply flex w-full p-2 border border-t-0 border-grey-100 rounded-b text-secondary-500;
   }
 }
 
@@ -87,11 +87,11 @@
     }
   }
 
-  .overview-card-grey {
-    @apply bg-grey-100 text-secondary;
+  .overview-card-secondary {
+    @apply bg-secondary-100 text-secondary-500;
 
     &:hover{
-       @apply bg-grey-200 ;
+       @apply bg-secondary-200 ;
     }
   }
   .overview-card-green {
@@ -180,7 +180,7 @@
 }
 
   .app-action{
-    @apply w-1/6 mx-1 ;
+    @apply w-1/4 mx-1 ;
   }
 
 }

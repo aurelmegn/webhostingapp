@@ -12,7 +12,7 @@
           <label class="block text-md mb-2" for="username">
             Username or Email
           </label>
-          {{ login_user_form.email(type="email", class="form-input placeholder-secondary ", placeholder="Username or Email") }}
+          {{ login_user_form.email(type="email", class="form-input placeholder-secondary-500 ", placeholder="Username or Email") }}
             {% for error in login_user_form.email.errors %}
                 <p class="form-error "> {{ error }}</p>
             {% endfor %}

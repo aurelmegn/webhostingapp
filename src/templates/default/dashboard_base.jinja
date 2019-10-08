@@ -66,13 +66,13 @@
 
     <div class="flex flex-col md:mt-5 md:flex-row w-full my-2 justify-between rounded">
         <div class="overview-card pr-2">
-            <span class="overview-card-body overview-card-grey">{{ user.applications | count }} Applications</span>
+            <span class="overview-card-body overview-card-secondary">{{ user.applications | count }} Applications</span>
         </div>
         <div class="overview-card">
-            <span class="overview-card-body overview-card-grey ">0 Tickets</span>
+            <span class="overview-card-body overview-card-secondary ">0 Tickets</span>
         </div>
         <div class="overview-card pl-2">
-            <span class="overview-card-body overview-card-grey ">0 Invoices</span>
+            <span class="overview-card-body overview-card-secondary ">0 Invoices</span>
         </div>
     </div>
 
@@ -82,7 +82,7 @@
     <div class="flex-col flex w-full md:w-1/4">
         <div class="flex-col flex w-full md:w-full mb-5 shadow-md">
 
-            <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary text-white text-xl">
+            <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary-500 text-white text-xl">
                 Applications
             </div>
 
@@ -101,7 +101,7 @@
         </div>
 
         <div class="flex-col flex w-full md:w-full mb-5 shadow-md">
-            <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary text-white text-xl italic">
+            <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary-500 text-white text-xl italic">
                 Ftp Credentials
 {#                #}
             </div>
@@ -169,7 +169,7 @@
                     </div>
                 {% endif %}
 
-                <div class="flex w-full border-b border-secondary p-3 text-2xl text-secondary">Welcome Back {{ user.username | capitalize }}</div>
+                <div class="flex w-full border-b border-secondary-500 p-3 text-2xl text-secondary-500">Welcome Back {{ user.username | capitalize }}</div>
 
                 <div class="flex w-full py-3">
                     <a id="addApp" href="#" class="app-action w-full">Add app</a>
@@ -178,7 +178,7 @@
                 <div class="section section-chart">
                     <div class="section-header">Charts</div>
                     <div class="section-body" >
-                        <div class="w-full text-center font-mono text-secondary">
+                        <div class="w-full text-center font-mono text-secondary-500">
                             No chart.
                         </div>
                     </div>
@@ -187,7 +187,7 @@
                 <div class="section section-logs">
                     <div class="section-header">Logs</div>
                     <div class="section-body" >
-                        <div class="w-full text-center font-mono text-secondary">
+                        <div class="w-full text-center font-mono text-secondary-500">
                             No logs.
                         </div>
                     </div>
@@ -196,7 +196,7 @@
                 <div class="section section-notification">
                     <div class="section-header">Notifications</div>
                     <div class="section-body" >
-                        <div class="w-full text-center font-mono text-secondary">
+                        <div class="w-full text-center font-mono text-secondary-500">
                             No notification.
                         </div>
                     </div>
