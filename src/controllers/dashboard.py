@@ -8,16 +8,18 @@ from src.models import Application
 from src import app, supervisor
 
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["get"])
 @login_required
 @roles_required("user")
 def dashboard():
 
-    selected_app = request.args.get('appname') or None
+    selected_app = request.args.get("appname") or None
 
     # order the applications of the user // todo
     # current_user.applications
+
     from src.forms.ApplicationForm import ApplicationForm
+
     create_app_form = ApplicationForm()
 
     ftp_host = app.config.get("FTP_HOST")
@@ -25,7 +27,9 @@ def dashboard():
 
     if selected_app:
 
-        application = Application.query.filter_by(user=current_user, name=selected_app).first()
+        application = Application.query.filter_by(
+            user=current_user, name=selected_app
+        ).first()
 
         if not application:
             abort(404)
@@ -37,8 +41,12 @@ def dashboard():
             try:
                 app_supervisor_name = application.get_supervisor_name()
 
-                err_log: [str] = supervisor.tailProcessStderrLog(app_supervisor_name, True, 4000)
-                out_log: [str] = supervisor.tailProcessStdoutLog(app_supervisor_name, True, 4000)
+                err_log: [str] = supervisor.tailProcessStderrLog(
+                    app_supervisor_name, True, 4000
+                )
+                out_log: [str] = supervisor.tailProcessStdoutLog(
+                    app_supervisor_name, True, 4000
+                )
 
                 err_log = err_log[0]
                 out_log = out_log[0]
@@ -55,13 +63,20 @@ def dashboard():
                 abort(500)
 
         return render_template(
-            "default/dashboard/select_app.jinja", user=current_user, caform=create_app_form,
+            "default/dashboard/select_app.jinja",
+            user=current_user,
+            caform=create_app_form,
             application=application,
             AppState=AppState,
             app_out_log=out_log,
-            ftp_host=ftp_host, ftp_port=ftp_port
+            ftp_host=ftp_host,
+            ftp_port=ftp_port,
         )
 
     return render_template(
-        "default/dashboard_base.jinja", user=current_user, caform=create_app_form, ftp_host=ftp_host, ftp_port=ftp_port
+        "default/dashboard_base.jinja",
+        user=current_user,
+        caform=create_app_form,
+        ftp_host=ftp_host,
+        ftp_port=ftp_port,
     )

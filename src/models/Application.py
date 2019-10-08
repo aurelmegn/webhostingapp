@@ -103,6 +103,7 @@ class Application(db.Model, AlchemySerializable):
 
         return True if self.state in [AppState.running] else False
 
+    @hybrid_method
     def can_act(self):
         print(self.can_start())
         return self.can_stop() or self.can_start() or self.can_restart()
@@ -123,6 +124,7 @@ class Application(db.Model, AlchemySerializable):
             color = "orange"
         return color
 
+    @hybrid_method
     def state_to_string(self):
 
         str_value = None
@@ -147,3 +149,8 @@ class Application(db.Model, AlchemySerializable):
             str_value = "Never started"
 
         return str_value
+
+    @hybrid_method
+    def can_execute_command(self):
+
+        return self.state != AppState.never_started
