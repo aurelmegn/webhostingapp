@@ -1,6 +1,6 @@
 # Import flask and template operators
 import logging
-from flask import Flask, render_template, session
+from flask import Flask
 from flask_admin import Admin
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_security import Security, SQLAlchemyUserDatastore
@@ -13,7 +13,6 @@ from src.utils.format_datetime import date_format_datetime
 myproject = WebpackBundleProject(
     __name__, project_folder="assets", config_path="./public/entrypoint.json"
 )
-
 app = Flask(__name__, static_folder="public")
 
 app.config.update(dict(WEBPACKEXT_PROJECT=myproject))
@@ -42,7 +41,8 @@ server = ServerProxy("http://localhost:9001/RPC2")
 supervisor = server.supervisor
 
 from src.controllers import *
-from src.models import roles_users
+
+# from src.models import roles_users
 from src.models.User import User
 from src.models.Role import Role
 
