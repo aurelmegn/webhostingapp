@@ -73,6 +73,34 @@ class Application(db.Model, AlchemySerializable):
         return join_path(self.user.get_supervisor_conf_dir(), f"{self.name}.ini")
 
     @hybrid_method
+    def get_uwsgi_conf_path(self):
+        """
+        return the path to the supervisor conf file of this application
+         """
+        return join_path(self.user.get_supervisor_conf_dir(), f"{self.name}.uwsgi.ini")
+
+    @hybrid_method
+    def get_uwsgi_sock_path(self):
+        """
+        return the path to the supervisor conf file of this application
+         """
+        return join_path(self.user.get_supervisor_conf_dir(), f"{self.name}.sock")
+
+    @hybrid_method
+    def get_out_log_path(self):
+        """
+        return the path to the supervisor conf file of this application
+         """
+        return join_path(self.user.get_supervisor_conf_dir(), f"{self.name}.out.log")
+
+    @hybrid_method
+    def get_err_log_path(self):
+        """
+        return the path to the supervisor conf file of this application
+         """
+        return join_path(self.user.get_supervisor_conf_dir(), f"{self.name}.err.log")
+
+    @hybrid_method
     def can_start(self):
         """return whether the start action can be applied to the application given it's current state"""
 
