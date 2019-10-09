@@ -20,8 +20,7 @@ from src.models import Application
 from src.models import User
 from src.utils.find_or_create import find_or_create
 
-import venv
-from os.path import join, isdir
+from os.path import join, isdir, abspath
 from shutil import rmtree
 
 
@@ -59,9 +58,7 @@ def app_execute_cmd():
             #     reformed_cmd = f"firejail --quiet --private {bin_path}/python -m pip {splited_cmd}".split()
             #
             # else:
-            reformed_cmd = (
-                f"firejail --quiet --private {bin_path}/{command}".split()
-            )
+            reformed_cmd = f"firejail --quiet --private {bin_path}/{command}".split()
 
             app.logger.debug(" ".join(reformed_cmd))
 
@@ -189,27 +186,18 @@ def app_action():
                     import virtualenv
 
                     try:
-                        virtualenv.create_environment(env_path, clear=True, no_setuptools=True, no_wheel=True)
+                        virtualenv.create_environment(
+                            env_path, clear=True, no_setuptools=True, no_wheel=True
+                        )
                     except subprocess.CalledProcessError as e:
                         app.logger.error(e)
                         abort(500)
 
-                    # subprocess.call()
-                # add the app config to supervisor config dir
-                path = app.config.get("SUPERVISOR_PROGRAM_TEMPLATE_PATH")
-                config = create_supervisor_config(current_user, user_app, path)
-                # print(config)
-                # move the config into the correct directory
+                    # write supervisor config into it destination
+                    write_supervisor_conf(application=user_app)
 
-                user_conf_dir = current_user.get_supervisor_conf_dir()
-
-                # create the directory if it does not exist
-                find_or_create(user_conf_dir)
-
-                # create the file and fill it with the config file
-                app_conf_path = user_app.get_supervisor_conf_path()
-                with open(app_conf_path, "w") as f:
-                    f.write(config)
+                    # write uwsgi config into it destination
+                    write_uwsgi_conf(application=user_app)
 
                 supervisor.reloadConfig()
                 supervisor.addProcessGroup(user_app.get_supervisor_name())
@@ -243,13 +231,32 @@ def app_action():
     except Fault as e:
         app.logger.critical(e)
         # print(e)
-        flash(f"Error durring application {action} operation: {e.faultString}", "error")
+        flash(f"Error during application {action} operation: {e.faultString}", "error")
         # abort(500, e)
 
     return redirect(request.referrer)
 
 
-def create_supervisor_config(user: User, application: Application, path: str) -> str:
+def write_uwsgi_conf(application: Application = None):
+    # create the uwsgi config file
+    uwsgi_template_path = app.config.get("UWSGI_TEMPLATE_PATH")
+    uwsgi_template_path = abspath(uwsgi_template_path)
+
+    config = create_uwsgi_conf(current_user, application, uwsgi_template_path)
+
+    # move the config into the correct directory
+    user_conf_dir = current_user.get_supervisor_conf_dir()
+
+    # create the directory if it does not exist
+    find_or_create(user_conf_dir)
+
+    # create the file and fill it with the config file
+    app_conf_path = application.get_uwsgi_conf_path()
+    with open(app_conf_path, "w") as f:
+        f.write(config)
+
+
+def create_uwsgi_conf(user: User, application: Application, path: str):
     # read the content of the file
     with open(path) as f:
         content = f.read().strip()
@@ -258,16 +265,54 @@ def create_supervisor_config(user: User, application: Application, path: str) ->
     t = Template(content)
 
     # the venv folder of the app
-    venv_bin_folder = join(application.get_app_ftp_dir(), "venv/bin/")
+    venv_folder = join(application.get_app_ftp_dir(), "venv")
     # initialise the parameters based on the current user and the application
+
     parameters = {
         "supervisor_program_name": application.get_supervisor_name(),
         "entrypoint": application.entrypoint,
         "program_ftpdir": application.get_app_ftp_dir(),
-        "username": user.username,
-        "program_name": application.name,
-        "pip": join(venv_bin_folder, "pip"),
-        "python": join(venv_bin_folder, "python"),
+        "out_log": application.get_out_log_path(),
+        "sock_path": application.get_uwsgi_sock_path(),
+        "venv": venv_folder
+    }
+
+    return t.safe_substitute(parameters)
+
+
+def write_supervisor_conf(application: Application = None):
+    # add the app config to supervisor config dir
+    supervisor_template_path = app.config.get("SUPERVISOR_PROGRAM_TEMPLATE_PATH")
+    supervisor_template_path = abspath(supervisor_template_path)
+
+    config = create_supervisor_config(current_user, application, supervisor_template_path)
+
+    # move the config into the correct directory
+    user_conf_dir = current_user.get_supervisor_conf_dir()
+
+    # create the directory if it does not exist
+    find_or_create(user_conf_dir)
+
+    # create the file and fill it with the config file
+    app_conf_path = application.get_supervisor_conf_path()
+    with open(app_conf_path, "w") as f:
+        f.write(config)
+
+
+def create_supervisor_config(application: Application, path: str) -> str:
+    # read the content of the file
+    with open(path) as f:
+        content = f.read().strip()
+
+    # initialize the template string to substitute the template
+    t = Template(content)
+
+    parameters = {
+        "supervisor_program_name": application.get_supervisor_name(),
+        "uwsgi_conf": application.get_uwsgi_conf_path(),
+        "program_ftpdir": application.get_app_ftp_dir(),
+        "out_log": application.get_out_log_path(),
+        "err_log": application.get_err_log_path(),
     }
 
     return t.safe_substitute(parameters)

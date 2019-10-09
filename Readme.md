@@ -20,6 +20,11 @@
 - [ ] remove the directory of the app when issueing a command (by the client)
  todo for dashboard:
 
+## Attention
+before serving request, start supervisor
+to support php serving and plugin with uwsgi install php-embeded
+install python-dev 
+
 ## workflow of normal user
 add an app
 wait for validation

@@ -47,5 +47,8 @@ FTP_HOST = "ftp://localhost"
 
 # FLASK_ADMIN_SWATCH= 'flaty'
 
+from os.path import abspath
 SUPERVISOR_CONFIG_DIR = "./supervisor"
-SUPERVISOR_PROGRAM_TEMPLATE_PATH = "./supervisor/programtemplate.ini"
+SUPERVISOR_USER_HOME = "{supervisor_path}/programs/{username}"
+SUPERVISOR_PROGRAM_TEMPLATE_PATH = "./supervisor/subprogram_template.ini"
+UWSGI_TEMPLATE_PATH = "./supervisor/uwsgi_template.ini"
