@@ -24,18 +24,17 @@ from os.path import join, isdir, abspath
 from shutil import rmtree
 
 
-@app.route("/application/install_requirements", methods=["post"])
+@app.route("/application/install_requirements/<string:appname>", methods=["post"])
 @login_required
 @roles_required("user")
-def app_install_requirements():
-    selected_app = request.args.get("appname")
+def app_install_requirements(appname):
     req_file_name = request.form["req_file_name"]
 
-    if not (req_file_name or selected_app):
+    if not req_file_name:
         abort(404)
 
     application = Application.query.filter_by(
-        user=current_user, name=selected_app
+        user=current_user, name=appname
     ).first()
 
     if not application:
@@ -65,34 +64,28 @@ def app_install_requirements():
             # app.logger.debug(output.stderr.decode("utf-8"))
             output = output.stdout.decode("utf-8")
 
-            flash(f"Requirements intalled sucessfully for {application.name}", "success")
+            flash(f"Requirements installed successfully for {application.name}", "success")
 
         except Exception as e:
             app.logger.error(e)
-            flash(f"An error ocurred. Can not install the requirements. Is the file name well written ?")
+            flash(f"An error occurred. Can not install the requirements. Is the file name well written ?")
         except OSError as e:
             app.logger.error(e)
-            flash(f"An error ocurred. Can not install the requirements. Is the file name well written ?")
+            flash(f"An error occurred. Can not install the requirements. Is the file name well written ?")
 
         # if the app is php type
 
     return redirect(request.referrer)
 
 
-@app.route("/application/state")
+@app.route("/application/state/<string:appname>")
 @login_required
 @roles_required("user")
-def app_info():
+def app_info(appname):
     """get a running app info"""
-    # get the app name from the request
-    app_name = request.args.get("name")
 
-    if not app_name:
-        flash(f"An error occurred", "error")
-        return redirect(url_for("dashboard"))
     # check if the user own an application of the same name
-
-    user_app = Application.query.filter_by(name=app_name, user=current_user).first()
+    user_app = Application.query.filter_by(name=appname, user=current_user).first()
 
     if not user_app:
         abort(404)
@@ -116,12 +109,11 @@ def app_info():
         abort(500)
 
 
-@app.route("/application/action")
+@app.route("/application/action/<string:appname>")
 @login_required
 @roles_required("user")
-def app_action():
+def app_action(appname):
     # get the app name from the request
-    app_name = request.args.get("appname")
     action = request.args.get("action")
 
     actions = ["start", "stop", "restart"]
@@ -129,12 +121,12 @@ def app_action():
     if not action:
         abort(400)
 
-    if not (app_name or action.lower() not in actions):
+    if not (appname or action.lower() not in actions):
         flash(f"An error occurred", "error")
         return redirect(url_for("dashboard"))
     # check if the user own an application of the same name
 
-    user_app = Application.query.filter_by(name=app_name, user=current_user).first()
+    user_app = Application.query.filter_by(name=appname, user=current_user).first()
 
     if not user_app:
         abort(404)
@@ -214,7 +206,7 @@ def app_action():
 
         if action_executed:
             action = "stopped" if action == "stop" else action + "ed"
-            flash(f"Application {app_name} {action}", "success")
+            flash(f"Application {appname} {action}", "success")
 
     except ConnectionRefusedError as e:
         app.logger.critical(str(e) + "unable to connect to supervisor instance")

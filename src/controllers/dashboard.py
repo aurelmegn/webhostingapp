@@ -76,3 +76,9 @@ def dashboard():
         ftp_host=ftp_host,
         ftp_port=ftp_port,
     )
+
+
+@app.route("/application/edit/<string:appname>")
+def app_edit(appname):
+
+    pass

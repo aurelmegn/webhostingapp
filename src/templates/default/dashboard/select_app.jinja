@@ -67,26 +67,10 @@
 
     </div>
 
-    {% if session.get("last_cmd_"+application.name) %}
-    <div class="section section-details">
-        <div class="section-header flex-row">
-            <div class="">Output of {{ session.get("last_cmd").cmd }}</div>
-            <a href="" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
-        </div>
-        <div class="section-body flex-col " >
-            <code class="overflow-auto w-full text-sm leading-tight h-64">
-                    <pre>
-{{ session.get("last_cmd_"+application.name).output | string }}
-                    </pre>
-            </code>
-        </div>
-    </div>
-    {% endif %}
-
     <div class="section section-details">
         <div class="section-header flex-row">
             <div class="">Details</div>
-            <a href="" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
+            <a href="{{ url_for("app_edit", appname=application.name) }}" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
         </div>
         <div class="section-body flex-col " >
 
