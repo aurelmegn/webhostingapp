@@ -50,14 +50,14 @@
                 Stop
             </a>
             <button id="stopApp" class="app-action " {{ "hidden" if not application.can_execute_command() }}>
-                Execute command
+                Install requirements
             </button>
         </div>
 
         <div class="flex flex-row w-full">
-            <form action="{{ url_for('app_execute_cmd', appname=application.name) }}" method="post" class="w-full">
+            <form action="{{ url_for('app_install_requirements', appname=application.name) }}" method="post" class="w-full">
                 <div class="flex items-center border-b border-b-2 border-secondary-700 py-1 mx-1">
-                    <input type="text" class="w-full appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py1 px-2 leading-tight focus:outline-none" placeholder="Enter the command you want to execute" name="command" value="{{ session.get("last_cmd").cmd }}" required >
+                    <input type="text" class="w-full appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py1 px-2 leading-tight focus:outline-none" placeholder="Requirement file name" name="req_file_name" required >
 {#                    <input type="text" class="form-input" placeholder="Enter the command you want to execute">#}
                     <button class="bg-secondary-700 hover:bg-grey-700 text-sm border-2 text-white py-1 px-2 rounded" type="submit">Execute</button>
                 </div>
@@ -131,4 +131,38 @@
         </div>
     </div>
 
+{% endblock %}
+
+
+{% block sideinfo %}
+    <div class="flex-col flex w-full md:w-full mb-5 shadow-md">
+            <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary-500 text-white text-xl italic">
+                Ftp Credentials
+{#                #}
+            </div>
+
+            <div class="flex flex-col w-full border border-t-0 border-grey-300 rounded-b">
+                <table class="text-left w-full bg-grey-100 border-collapse">
+                  <tbody>
+                    <tr class="hover:bg-grey-300 border-b border-grey-300">
+                      <td class="py-2 px-2 ">Host:</td>
+                      <td class="py-2 px-2 ">{{ ftp_host }}</td>
+                    </tr>
+                    <tr class="hover:bg-grey-300 border-b border-grey-300">
+                      <td class="py-2 px-2 ">Port:</td>
+                      <td class="py-2 px-2 ">{{ ftp_port }}</td>
+                    </tr>
+                    <tr class="hover:bg-grey-300 border-b border-grey-300">
+                      <td class="py-2 px-2 ">Username:</td>
+                      <td class="py-2 px-2 ">{{ user.username }}:{{ application.name }}</td>
+                    </tr>
+                    <tr class="hover:bg-grey-300">
+                      <td class="py-2 px-2 ">Password:</td>
+                      <td class="py-2 px-2 ">Your current password</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+
+        </div>
 {% endblock %}

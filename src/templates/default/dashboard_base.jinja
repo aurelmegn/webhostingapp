@@ -100,36 +100,9 @@
 
         </div>
 
-        <div class="flex-col flex w-full md:w-full mb-5 shadow-md">
-            <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary-500 text-white text-xl italic">
-                Ftp Credentials
-{#                #}
-            </div>
+        {% block sideinfo %}
+        {% endblock %}
 
-            <div class="flex flex-col w-full border border-t-0 border-grey-300 rounded-b">
-                <table class="text-left w-full bg-grey-100 border-collapse">
-                  <tbody>
-                    <tr class="hover:bg-grey-300 border-b border-grey-300">
-                      <td class="py-2 px-2 ">Host:</td>
-                      <td class="py-2 px-2 ">{{ ftp_host }}</td>
-                    </tr>
-                    <tr class="hover:bg-grey-300 border-b border-grey-300">
-                      <td class="py-2 px-2 ">Port:</td>
-                      <td class="py-2 px-2 ">{{ ftp_port }}</td>
-                    </tr>
-                    <tr class="hover:bg-grey-300 border-b border-grey-300">
-                      <td class="py-2 px-2 ">Username:</td>
-                      <td class="py-2 px-2 ">{{ user.username }}</td>
-                    </tr>
-                    <tr class="hover:bg-grey-300">
-                      <td class="py-2 px-2 ">Password:</td>
-                      <td class="py-2 px-2 ">Your current password</td>
-                    </tr>
-                  </tbody>
-                </table>
-            </div>
-
-        </div>
     </div>
 
 
