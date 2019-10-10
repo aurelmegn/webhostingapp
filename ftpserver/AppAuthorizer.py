@@ -77,15 +77,16 @@ class AppAuthorizer(DummyAuthorizer):
 
         with app.app_context():
             user = User.query.filter_by(username=username).first()
+            application = Application.query.filter_by(user=user, name=appname).first()
 
-            home_path = user.get_ftp_home_dir(appname)
-
+            content_path = application.get_app_ftp_content_dir()
+            print(content_path)
             # if the user ftp directory don't exist create it
             # the dir is like /tmp/username/appame/content/
-            if not isdir(home_path):
-                makedirs(home_path)
+            if not isdir(content_path):
+                makedirs(content_path)
 
-            return home_path
+            return content_path
 
     def has_user(self, username):
         """Whether the username exists in the virtual users table."""
