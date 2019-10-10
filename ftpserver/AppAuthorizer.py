@@ -1,7 +1,7 @@
 from typing import List
 
 from os.path import abspath, isdir
-from os import mkdir
+from os import mkdir, makedirs
 
 import sys
 
@@ -9,8 +9,8 @@ sys.path.append(".")
 sys.path.append("../")
 
 from flask_security.utils import verify_password
-from pyftpdlib.authorizers import DummyAuthorizer
-from src import app, User
+from pyftpdlib.authorizers import DummyAuthorizer, AuthenticationFailed
+from src import app, User, Application
 
 
 class AppAuthorizer(DummyAuthorizer):
@@ -28,18 +28,30 @@ class AppAuthorizer(DummyAuthorizer):
             msg_login="Login successful.",
             msg_quit="Goodbye.",
     ):
-        raise ShouldNotBeCalledException()
+        raise AuthenticationFailed()
+
+    def split_username_from_appname(self, username):
+        uname_parts = username.split(":")
+
+        if len(uname_parts) != 2:
+            raise AuthenticationFailed(self.msg_no_such_user)
+
+        return tuple(uname_parts)
+
 
     def add_anonymous(self, homedir, **kwargs):
-        raise ShouldNotBeCalledException()
+        raise AuthenticationFailed()
 
     def remove_user(self, username):
-        raise ShouldNotBeCalledException()
+        raise AuthenticationFailed()
 
     def override_perm(self, username, directory, perm, recursive=False):
-        raise ShouldNotBeCalledException()
+        raise AuthenticationFailed()
 
     def validate_authentication(self, username, password, handler):
+
+        username, appname = self.split_username_from_appname(username)
+
         with app.app_context():
             user = User.query.filter_by(username=username).first()
 
@@ -49,34 +61,36 @@ class AppAuthorizer(DummyAuthorizer):
             if not user:
                 raise AuthenticationFailed(self.msg_no_such_user)
             elif not user.is_active:
-                raise AccountNotEnableException()
+                raise AuthenticationFailed()
 
             if not verify_password(password, user.password):
                 raise AuthenticationFailed(self.msg_wrong_password)
 
+            application = Application.query.filter_by(user=user, name=appname).first()
+
+            if not application:
+                raise AuthenticationFailed(self.msg_no_such_user)
+
     def get_home_dir(self, username):
+
+        username, appname = self.split_username_from_appname(username)
 
         with app.app_context():
             user = User.query.filter_by(username=username).first()
 
-            home_path = user.get_ftp_home_dir()
+            home_path = user.get_ftp_home_dir(appname)
 
             # if the user ftp directory don't exist create it
+            # the dir is like /tmp/username/appame/content/
             if not isdir(home_path):
-                mkdir(home_path)
-
-            applications_paths: List[str] = [
-                a.get_app_ftp_dir() for a in user.applications
-            ]
-            # create the directories of the application of the user
-            for application_path in applications_paths:
-                if not isdir(application_path):
-                    mkdir(abspath(application_path))
+                makedirs(home_path)
 
             return home_path
 
     def has_user(self, username):
         """Whether the username exists in the virtual users table."""
+        username, appname = self.split_username_from_appname(username)
+
         user_count = User.query.filter_by(username=username).count()
         if user_count != 1:
             return False
@@ -125,23 +139,3 @@ class AppAuthorizer(DummyAuthorizer):
 
         return f"Goodbye {username}."
 
-
-# ===================================================================
-# --- exceptions
-# ===================================================================
-
-
-class AuthorizerError(Exception):
-    """Base class for authorizer exceptions."""
-
-
-class AuthenticationFailed(Exception):
-    """Exception raised when authentication fails for any reason."""
-
-
-class ShouldNotBeCalledException(Exception):
-    """should not be called"""
-
-
-class AccountNotEnableException(Exception):
-    """should not be called"""
