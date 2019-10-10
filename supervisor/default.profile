@@ -34,7 +34,7 @@ noroot
 # novideo
 protocol unix,inet,inet6
 seccomp
-#shell bash
+shell none
 # tracelog
 
 #noblacklist /
