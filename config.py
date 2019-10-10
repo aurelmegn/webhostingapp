@@ -41,7 +41,7 @@ SECURITY_UNAUTHORIZED_VIEW = "/login"
 
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-FTP_BASE_DIR = "./tmp"
+FTP_BASE_DIR = "/media/aurel/main/projects/self/clientapp/tmp"
 FTP_PORT = 2121
 FTP_HOST = "ftp://localhost"
 
@@ -52,3 +52,6 @@ SUPERVISOR_CONFIG_DIR = "./supervisor"
 SUPERVISOR_USER_HOME = "{supervisor_path}/programs/{username}"
 SUPERVISOR_PROGRAM_TEMPLATE_PATH = "./supervisor/subprogram_template.ini"
 UWSGI_TEMPLATE_PATH = "./supervisor/uwsgi_template.ini"
+FIREJAIL_PROFILE = "./supervisor/default.profile"
+
+ABS_PATH_HOME_UWSGI = "/home/aurel" # should change on production 

@@ -70,6 +70,11 @@ class Application(db.Model, AlchemySerializable):
         return abspath(join_path(user_home, self.name))
 
     @hybrid_method
+    def get_app_ftp_content_dir(self):
+        user_home = self.user.get_ftp_home_dir()
+        return abspath(join_path(user_home, self.name, "content"))
+
+    @hybrid_method
     def get_supervisor_conf_path(self):
         """
         return the path to the supervisor conf file of this application
@@ -81,14 +86,28 @@ class Application(db.Model, AlchemySerializable):
         """
         return the path to the supervisor conf file of this application
          """
-        return join_path(self.user.get_supervisor_conf_dir(), f"{self.name}.uwsgi.ini")
+        return f"{self.name}.uwsgi.ini"
+
+    @hybrid_method
+    def get_abs_uwsgi_conf_path(self):
+        """
+        return the path to the supervisor conf file of this application
+         """
+        return join_path(self.get_app_ftp_dir(),f"{self.name}.uwsgi.ini")
 
     @hybrid_method
     def get_out_log_path(self):
         """
         return the path to the log conf file of this application
          """
-        return join_path(self.get_app_ftp_dir(), f"{self.name}.out.log")
+        return f"{self.name}.out.log"
+
+    @hybrid_method
+    def get_out_for_supervisor_log_path(self):
+        """
+        return the path to the log conf file of this application
+         """
+        return join_path(self.get_app_ftp_dir(),f"{self.name}.out.log")
 
     @hybrid_method
     def get_err_log_path(self):

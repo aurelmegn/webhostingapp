@@ -24,16 +24,14 @@ from os.path import join, isdir, abspath
 from shutil import rmtree
 
 
-@app.route("/application/execute_cmd", methods=["post"])
+@app.route("/application/install_requirements", methods=["post"])
 @login_required
 @roles_required("user")
-def app_execute_cmd():
+def app_install_requirements():
     selected_app = request.args.get("appname")
-    command = request.form["command"]
+    req_file_name = request.form["req_file_name"]
 
-    session.pop(f"last_cmd_{selected_app}", None)
-
-    if not (command or selected_app):
+    if not (req_file_name or selected_app):
         abort(404)
 
     application = Application.query.filter_by(
@@ -48,31 +46,33 @@ def app_execute_cmd():
 
         app_dir = application.get_app_ftp_dir()
         try:
-            bin_path = join(app_dir, "venv", "bin")
+            bin_path = join("venv", "bin")
+            firejail_profile = abspath(app.config.get("FIREJAIL_PROFILE"))
 
-            reformed_cmd = f"firejail --quiet --private {bin_path}/{command}".split()
+            cmd = f"firejail --quiet --profile={firejail_profile} {bin_path}/python -m pip install -r {req_file_name}".split()
 
-            app.logger.debug(" ".join(reformed_cmd))
+            app.logger.debug(" ".join(cmd))
 
             output = subprocess.run(
-                reformed_cmd,
+                cmd,
                 stdout=subprocess.PIPE,
                 # stderr=subprocess.PIPE,
                 check=True,
                 timeout=10,  # exit after 10sec
+                cwd=app_dir
             )
 
             # app.logger.debug(output.stderr.decode("utf-8"))
             output = output.stdout.decode("utf-8")
 
-            session[f"last_cmd_{selected_app}"] = {"output": output, "cmd": command}
+            flash(f"Requirements intalled sucessfully for {application.name}", "success")
 
         except Exception as e:
             app.logger.error(e)
-            flash(f"command {command} can not be executed")
+            flash(f"An error ocurred. Can not install the requirements. Is the file name well written ?")
         except OSError as e:
             app.logger.error(e)
-            flash(f"command {command} can not be executed")
+            flash(f"An error ocurred. Can not install the requirements. Is the file name well written ?")
 
         # if the app is php type
 
@@ -243,7 +243,7 @@ def write_uwsgi_conf(application: Application = None):
     find_or_create(user_conf_dir)
 
     # create the file and fill it with the config file
-    app_conf_path = application.get_uwsgi_conf_path()
+    app_conf_path = application.get_abs_uwsgi_conf_path()
     with open(app_conf_path, "w") as f:
         f.write(config)
 
@@ -264,9 +264,9 @@ def create_uwsgi_conf(application: Application, path: str):
         "supervisor_program_name": application.get_supervisor_name(),
         "entrypoint": application.entrypoint,
         "program_ftpdir": application.get_app_ftp_dir(),
-        "out_log": application.get_out_log_path(),
+        "out_log": join(app.config.get("ABS_PATH_HOME_UWSGI"), application.get_out_log_path()),
         "port": application.port,
-        "venv": "venv"
+        "venv": join(app.config.get("ABS_PATH_HOME_UWSGI"),"venv") # get the absolsute path on the sandbox
     }
 
     return t.safe_substitute(parameters)
@@ -298,13 +298,15 @@ def create_supervisor_config(application: Application, path: str) -> str:
 
     # initialize the template string to substitute the template
     t = Template(content)
-
+    print(application.get_out_log_path())
     parameters = {
         "supervisor_program_name": application.get_supervisor_name(),
         "uwsgi_conf": application.get_uwsgi_conf_path(),
         "program_ftpdir": application.get_app_ftp_dir(),
-        "out_log": application.get_out_log_path(),
+        # "out_log": application.get_out_log_path(),
+        "out_for_supervisor_log": application.get_out_for_supervisor_log_path(),
         "err_log": application.get_err_log_path(),
+        "profile": abspath(app.config.get("FIREJAIL_PROFILE"))
     }
 
     return t.safe_substitute(parameters)

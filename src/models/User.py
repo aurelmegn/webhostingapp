@@ -37,11 +37,11 @@ class User(db.Model, UserMixin, AlchemySerializable):
         return "<User %r>" % self.username
 
     @hybrid_method
-    def get_ftp_home_dir(self, appname):
+    def get_ftp_home_dir(self):
         base_path = app.config.get("FTP_BASE_DIR")
         base_path = abspath(base_path)
 
-        return join_path(base_path, self.username, appname, "content")
+        return join_path(base_path, self.username)
 
     @hybrid_method
     def get_supervisor_conf_dir(self):

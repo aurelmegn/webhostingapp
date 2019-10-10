@@ -18,8 +18,9 @@
 - [ ] figure out how to create the virtualenv of different version
 - [ ] animation on click on execute command
 - [ ] remove the directory of the app when issueing a command (by the client)
-- [ ] change the ftp home dir, it's now the directory named "content" on the user apphome
-- [ ] change the authentication by using now the format username:app for the username
+- [x] change the ftp home dir, it's now the directory named "content" on the user apphome
+- [x] change the authentication by using now the format username:app for the username
+- [ ] change the venv creation directory
 - [ ]
  todo for dashboard:
 
