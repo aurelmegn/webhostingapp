@@ -50,14 +50,6 @@ def app_execute_cmd():
         try:
             bin_path = join(app_dir, "venv", "bin")
 
-            # if command.split()[0] == "pip":
-            #     # remove the pip and replace it with python -m
-            #     splited_cmd = command.split()
-            #     splited_cmd = " ".join(splited_cmd[1:])
-            #
-            #     reformed_cmd = f"firejail --quiet --private {bin_path}/python -m pip {splited_cmd}".split()
-            #
-            # else:
             reformed_cmd = f"firejail --quiet --private {bin_path}/{command}".split()
 
             app.logger.debug(" ".join(reformed_cmd))
@@ -242,7 +234,7 @@ def write_uwsgi_conf(application: Application = None):
     uwsgi_template_path = app.config.get("UWSGI_TEMPLATE_PATH")
     uwsgi_template_path = abspath(uwsgi_template_path)
 
-    config = create_uwsgi_conf(current_user, application, uwsgi_template_path)
+    config = create_uwsgi_conf(application, uwsgi_template_path)
 
     # move the config into the correct directory
     user_conf_dir = current_user.get_supervisor_conf_dir()
@@ -256,7 +248,7 @@ def write_uwsgi_conf(application: Application = None):
         f.write(config)
 
 
-def create_uwsgi_conf(user: User, application: Application, path: str):
+def create_uwsgi_conf(application: Application, path: str):
     # read the content of the file
     with open(path) as f:
         content = f.read().strip()
@@ -265,7 +257,7 @@ def create_uwsgi_conf(user: User, application: Application, path: str):
     t = Template(content)
 
     # the venv folder of the app
-    venv_folder = join(application.get_app_ftp_dir(), "venv")
+    # venv_folder = join(application.get_app_ftp_dir(), "venv")
     # initialise the parameters based on the current user and the application
 
     parameters = {
@@ -273,8 +265,8 @@ def create_uwsgi_conf(user: User, application: Application, path: str):
         "entrypoint": application.entrypoint,
         "program_ftpdir": application.get_app_ftp_dir(),
         "out_log": application.get_out_log_path(),
-        "sock_path": application.get_uwsgi_sock_path(),
-        "venv": venv_folder
+        "port": application.port,
+        "venv": "venv"
     }
 
     return t.safe_substitute(parameters)
@@ -285,7 +277,7 @@ def write_supervisor_conf(application: Application = None):
     supervisor_template_path = app.config.get("SUPERVISOR_PROGRAM_TEMPLATE_PATH")
     supervisor_template_path = abspath(supervisor_template_path)
 
-    config = create_supervisor_config(current_user, application, supervisor_template_path)
+    config = create_supervisor_config(application, supervisor_template_path)
 
     # move the config into the correct directory
     user_conf_dir = current_user.get_supervisor_conf_dir()
