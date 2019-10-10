@@ -9,6 +9,8 @@
  python run.py
  ```
 
+tcp port
+move log file
  Todo:
 
 - [ ] handle when there   is no application on the dashboard

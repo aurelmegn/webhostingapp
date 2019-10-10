@@ -1,5 +1,6 @@
 env/
 venv/
+notes
 *.pyc
 __pycache__
 app.db
