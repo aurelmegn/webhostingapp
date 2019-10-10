@@ -1,3 +1,5 @@
+from pyexpat import ExpatError
+
 from flask import render_template, request, abort
 from flask_login import login_required, current_user
 from flask_security import roles_required
@@ -6,13 +8,13 @@ from xmlrpc.client import Fault
 from src.models.Application import AppState
 from src.models import Application
 from src import app, supervisor
+from src.utils.tail import tail
 
 
 @app.route("/dashboard", methods=["get"])
 @login_required
 @roles_required("user")
 def dashboard():
-
     selected_app = request.args.get("appname") or None
 
     # order the applications of the user // todo
@@ -44,20 +46,14 @@ def dashboard():
                 err_log: [str] = supervisor.tailProcessStderrLog(
                     app_supervisor_name, True, 4000
                 )
-                out_log: [str] = supervisor.tailProcessStdoutLog(
-                    app_supervisor_name, True, 4000
-                )
+                out_log = tail(application.get_out_for_supervisor_log_path(), 1000)
 
                 err_log = err_log[0]
-                out_log = out_log[0]
-
-                # print(err_log)
-                # err_log = ''.join([str(x) for x in err_log])
-                # out_log = ''.join([str(x) for x in out_log])
+                out_log = "".join(out_log) if type(out_log) == list else out_log
 
             except OSError as e:
                 app.logger.error(e)
-                abort(500)
+                # abort(500)
             except Fault as e:
                 app.logger.error(e)
                 abort(500)
