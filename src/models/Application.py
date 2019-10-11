@@ -29,6 +29,7 @@ class AppType(Enum):
 
 
 class Application(db.Model, AlchemySerializable):
+    __name__ = "e"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
     enabled = db.Column(db.Boolean(), default=False)
@@ -36,7 +37,9 @@ class Application(db.Model, AlchemySerializable):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     type = db.Column(db.Enum(AppType), nullable=False, default=AppType.python37)
 
+    description = db.Column(db.Text())
     entrypoint = db.Column(db.String())
+    callable = db.Column(db.String())
 
     @property
     def state(self):

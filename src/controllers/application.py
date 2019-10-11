@@ -33,9 +33,7 @@ def app_install_requirements(appname):
     if not req_file_name:
         abort(404)
 
-    application = Application.query.filter_by(
-        user=current_user, name=appname
-    ).first()
+    application = Application.query.filter_by(user=current_user, name=appname).first()
 
     if not application:
         abort(404)
@@ -58,20 +56,26 @@ def app_install_requirements(appname):
                 # stderr=subprocess.PIPE,
                 check=True,
                 timeout=10,  # exit after 10sec
-                cwd=app_dir
+                cwd=app_dir,
             )
 
             # app.logger.debug(output.stderr.decode("utf-8"))
             output = output.stdout.decode("utf-8")
 
-            flash(f"Requirements installed successfully for {application.name}", "success")
+            flash(
+                f"Requirements installed successfully for {application.name}", "success"
+            )
 
         except Exception as e:
             app.logger.error(e)
-            flash(f"An error occurred. Can not install the requirements. Is the file name well written ?")
+            flash(
+                f"An error occurred. Can not install the requirements. Is the file name well written ?"
+            )
         except OSError as e:
             app.logger.error(e)
-            flash(f"An error occurred. Can not install the requirements. Is the file name well written ?")
+            flash(
+                f"An error occurred. Can not install the requirements. Is the file name well written ?"
+            )
 
         # if the app is php type
 
@@ -126,21 +130,21 @@ def app_action(appname):
         return redirect(url_for("dashboard"))
     # check if the user own an application of the same name
 
-    user_app = Application.query.filter_by(name=appname, user=current_user).first()
+    application = Application.query.filter_by(name=appname, user=current_user).first()
 
-    if not user_app:
+    if not application:
         abort(404)
 
     # check is the app is enabled
-    if not user_app.enabled:
-        abort(400)
+    if not application.enabled:
+        abort(404)
 
     try:
 
         action_executed = False
 
         # proceed to the application action specified
-        if action == "start" and user_app.can_start():
+        if action == "start" and application.can_start():
             # todo
             """
                 if the app has never been started 
@@ -151,57 +155,37 @@ def app_action(appname):
                 start it
 
             """
-            if user_app.state is AppState.never_started:
+            if application.state is AppState.never_started:
 
-                # create virtualenv if the app is python app
+                app_generate_config_and_start_subprogram(application)
+                supervisor.addProcessGroup(application.get_supervisor_name())
 
-                if user_app.type in [
-                    AppType.python37,
-                    AppType.python36,
-                    AppType.python35,
-                ]:
-                    app_dir = user_app.get_app_ftp_dir()
-
-                    env_path = join(app_dir, "venv")
-                    # remove the venv dir on the application ftp dir
-                    if isdir(env_path):
-                        rmtree(env_path)
-
-                    import virtualenv
-
-                    try:
-                        virtualenv.create_environment(
-                            env_path, clear=True, no_setuptools=True, no_wheel=True
-                        )
-                    except subprocess.CalledProcessError as e:
-                        app.logger.error(e)
-                        abort(500)
-
-                    # write supervisor config into it destination
-                    write_supervisor_conf(application=user_app)
-
-                    # write uwsgi config into it destination
-                    write_uwsgi_conf(application=user_app)
-
-                supervisor.reloadConfig()
-                supervisor.addProcessGroup(user_app.get_supervisor_name())
+            elif application.state in [
+                AppState.stopped,
+                AppState.backoff,
+                AppState.fatal,
+                AppState.unknown,
+            ]:  # if the app have been started
+                app_generate_config_and_start_subprogram(application)
+                supervisor.startProcess(application.get_supervisor_name())
 
             else:  # if the app have been started
-                supervisor.startProcess(user_app.get_supervisor_name())
+                supervisor.startProcess(application.get_supervisor_name())
 
             action_executed = True
-        elif action == "stop" and user_app.can_stop():
-            supervisor.stopProcess(user_app.get_supervisor_name())
-            # user_app.state = AppState.stopping
+        elif action == "stop" and application.can_stop():
+            supervisor.stopProcess(application.get_supervisor_name())
+            # application.state = AppState.stopping
 
             action_executed = True
 
-        elif action == "restart" and user_app.can_restart():
+        elif action == "restart" and application.can_restart():
             supervisor.reloadConfig()
-            supervisor.stopProcess(user_app.get_supervisor_name())
-            supervisor.startProcess(user_app.get_supervisor_name())
+            supervisor.stopProcess(application.get_supervisor_name())
+            app_generate_config_and_start_subprogram(application)
+            supervisor.startProcess(application.get_supervisor_name())
 
-            # user_app.state = AppState.starting
+            # application.state = AppState.starting
             action_executed = True
 
         if action_executed:
@@ -256,9 +240,13 @@ def create_uwsgi_conf(application: Application, path: str):
         "supervisor_program_name": application.get_supervisor_name(),
         "entrypoint": application.entrypoint,
         "program_ftpdir": application.get_app_ftp_dir(),
-        "out_log": join(app.config.get("ABS_PATH_HOME_UWSGI"), application.get_out_log_path()),
+        "out_log": join(
+            app.config.get("ABS_PATH_HOME_UWSGI"), application.get_out_log_path()
+        ),
         "port": application.port,
-        "venv": join(app.config.get("ABS_PATH_HOME_UWSGI"),"venv") # get the absolsute path on the sandbox
+        "venv": join(
+            app.config.get("ABS_PATH_HOME_UWSGI"), "venv"
+        ),  # get the absolsute path on the sandbox
     }
 
     return t.safe_substitute(parameters)
@@ -298,7 +286,37 @@ def create_supervisor_config(application: Application, path: str) -> str:
         # "out_log": application.get_out_log_path(),
         "out_for_supervisor_log": application.get_out_for_supervisor_log_path(),
         "err_log": application.get_err_log_path(),
-        "profile": abspath(app.config.get("FIREJAIL_PROFILE"))
+        "profile": abspath(app.config.get("FIREJAIL_PROFILE")),
     }
 
     return t.safe_substitute(parameters)
+
+
+def app_generate_config_and_start_subprogram(application):
+    # create virtualenv if the app is python app
+
+    if application.type in [AppType.python37, AppType.python36, AppType.python35]:
+        app_dir = application.get_app_ftp_dir()
+
+        env_path = join(app_dir, "venv")
+
+        # remove the venv dir on the application ftp dir
+        if not isdir(env_path):
+
+            import virtualenv
+
+            try:
+                virtualenv.create_environment(
+                    env_path, clear=True, no_setuptools=True, no_wheel=True
+                )
+            except subprocess.CalledProcessError as e:
+                app.logger.error(e)
+                abort(500)
+
+        # write supervisor config into it destination
+        write_supervisor_conf(application=application)
+
+        # write uwsgi config into it destination
+        write_uwsgi_conf(application=application)
+
+    supervisor.reloadConfig()

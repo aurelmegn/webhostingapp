@@ -13,10 +13,12 @@ class ApplicationForm(FlaskForm):
 
 
 class ApplicationEditForm(FlaskForm):
-    entrypoint = TextAreaField("entrypoint".capitalize(), validators=[DataRequired()])
 
-    def __init__(self):
-
-        super()
-        self.__delitem__("name")
-        self.__delitem__("type")
+    # def __init__(self):
+    #
+    #     super()
+    #     self.__delitem__("name")
+    #     self.__delitem__("type")
+    description = TextAreaField("description".capitalize(), validators=[])
+    entrypoint = StringField("entrypoint".capitalize(), validators=[DataRequired()])
+    callable = StringField("callable".capitalize(), validators=[DataRequired()])

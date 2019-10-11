@@ -12,108 +12,111 @@
         </div>
     </div>
 
-    <div class="flex flex-col w-full py-3">
-    {% if not application.enabled %}
-        <div class="alert info" role="alert">
-            <div class="flex">
-                <div class="alert-icon"><i class="fa fa-2x {{ "info" | fa_icon }}"></i></div>
-                <div class="alert-body">
-                    <p class="alert-body-title">Information</p>
-                    <p class="alert-body-text ">Your application is waiting for validation, you will be noticed when the status is updated</p>
+    {% block app_page_body %}
+
+        <div class="flex flex-col w-full py-3">
+        {% if not application.enabled %}
+            <div class="alert info" role="alert">
+                <div class="flex">
+                    <div class="alert-icon"><i class="fa fa-2x {{ "info" | fa_icon }}"></i></div>
+                    <div class="alert-body">
+                        <p class="alert-body-title">Information</p>
+                        <p class="alert-body-text ">Your application is waiting for validation, you will be noticed when the status is updated</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
 
-    {% if not application.can_act() %}
-        <div class="alert info" role="alert">
-            <div class="flex">
-                <div class="alert-icon"><i class="fa fa-2x {{ "info" | fa_icon }}"></i></div>
-                <div class="alert-body">
-                    <p class="alert-body-title">Information</p>
-                    <p class="alert-body-text ">Upload files into the application folder and set the entrypoint before to be able to control the application</p>
+        {% if not application.can_act() %}
+            <div class="alert info" role="alert">
+                <div class="flex">
+                    <div class="alert-icon"><i class="fa fa-2x {{ "info" | fa_icon }}"></i></div>
+                    <div class="alert-body">
+                        <p class="alert-body-title">Information</p>
+                        <p class="alert-body-text ">Upload files into the application folder and set the entrypoint before to be able to control the application</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% else %}
-        <div class="flex flex-col md:flex-row">
-            <a id="startApp" class="app-action" {{ "hidden" if not application.can_start() }}
-               href="{{ url_for('app_action', action='start' ,appname=application.name) }}">
-                Start
-            </a>
-            <a id="reloadApp" class="app-action " {{ "hidden" if not application.can_restart() }}
-               href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">
-                Restart
-            </a>
-            <a id="stopApp" class="app-action" {{ "hidden" if not application.can_stop() }}
-               href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">
-                Stop
-            </a>
-            <button id="stopApp" class="app-action " {{ "hidden" if not application.can_execute_command() }}>
-                Install requirements
-            </button>
-        </div>
+        {% else %}
+            <div class="flex flex-col md:flex-row">
+                <a id="startApp" class="app-action" {{ "hidden" if not application.can_start() }}
+                   href="{{ url_for('app_action', action='start' ,appname=application.name) }}">
+                    Start
+                </a>
+                <a id="reloadApp" class="app-action " {{ "hidden" if not application.can_restart() }}
+                   href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">
+                    Restart
+                </a>
+                <a id="stopApp" class="app-action" {{ "hidden" if not application.can_stop() }}
+                   href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">
+                    Stop
+                </a>
+                <button id="stopApp" class="app-action " {{ "hidden" if not application.can_execute_command() }}>
+                    Install requirements
+                </button>
+            </div>
 
-        <div class="flex flex-row w-full">
-            <form action="{{ url_for('app_install_requirements', appname=application.name) }}" method="post" class="w-full">
-                <div class="flex items-center border-b border-b-2 border-secondary-700 py-1 mx-1">
-                    <input type="text" class="w-full appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py1 px-2 leading-tight focus:outline-none" placeholder="Requirement file name" name="req_file_name" required >
-{#                    <input type="text" class="form-input" placeholder="Enter the command you want to execute">#}
-                    <button class="bg-secondary-700 hover:bg-grey-700 text-sm border-2 text-white py-1 px-2 rounded" type="submit">Execute</button>
-                </div>
-            </form>
-        </div>
-    {% endif %}
-
-    </div>
-
-    <div class="section section-details">
-        <div class="section-header flex-row">
-            <div class="">Details</div>
-            <a href="{{ url_for("app_edit", appname=application.name) }}" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
-        </div>
-        <div class="section-body flex-col " >
-
-        <table class="text-left w-full border-collapse">
-          <tbody>
-            <tr class="hover:bg-grey-100">
-              <td class="py-4 px-6 border-b border-grey-100">Name</td>
-              <td class="py-4 px-6 border-b border-grey-100">{{ application.name }}</td>
-            </tr>
-            <tr class="hover:bg-grey-100">
-              <td class="py-4 px-6 border-b border-grey-100">Language</td>
-              <td class="py-4 px-6 border-b border-grey-100">{{ application.type.value | capitalize }}</td>
-            </tr>
-            <tr class="hover:bg-grey-100">
-              <td class="py-4 px-6 border-b border-grey-100">Entrypoint</td>
-              <td class="py-4 px-6 border-b border-grey-100">{{ application.entrypoint or None }}</td>
-            </tr>
-            <tr class="hover:bg-grey-100">
-              <td class="py-4 px-6 border-b-0 border-grey-100">Enabled</td>
-              <td class="py-4 px-6 border-b-0 border-grey-100">{{ application.enabled }}</td>
-            </tr>
-          </tbody>
-        </table>
+            <div class="flex flex-row w-full">
+                <form action="{{ url_for('app_install_requirements', appname=application.name) }}" method="post" class="w-full">
+                    <div class="flex items-center border-b border-b-2 border-secondary-700 py-1 mx-1">
+                        <input type="text" class="w-full appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py1 px-2 leading-tight focus:outline-none" placeholder="Requirement file name" name="req_file_name" required >
+    {#                    <input type="text" class="form-input" placeholder="Enter the command you want to execute">#}
+                        <button class="bg-secondary-700 hover:bg-grey-700 text-sm border-2 text-white py-1 px-2 rounded" type="submit">Execute</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
 
         </div>
-    </div>
 
-    <div class="section section-log">
-        <div class="section-header">Logs</div>
-        <div class="section-body " >
-            {% if app_out_log != None %}
-                <code class="overflow-auto w-full text-sm leading-tight h-64">
-                    <pre>
-{{ app_out_log }}
-                    </pre>
-                </code>
-            {% else %}
-                <div class="w-full text-center font-mono">
-                    No logs.
-                </div>
-            {% endif %}
+        <div class="section section-details">
+            <div class="section-header flex-row">
+                <div class="">Details</div>
+                <a href="{{ url_for("app_edit", appname=application.name) }}" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
+            </div>
+            <div class="section-body flex-col " >
+
+            <table class="text-left w-full border-collapse">
+              <tbody>
+                <tr class="hover:bg-grey-100">
+                  <td class="py-4 px-6 border-b border-grey-100">Name</td>
+                  <td class="py-4 px-6 border-b border-grey-100">{{ application.name }}</td>
+                </tr>
+                <tr class="hover:bg-grey-100">
+                  <td class="py-4 px-6 border-b border-grey-100">Language</td>
+                  <td class="py-4 px-6 border-b border-grey-100">{{ application.type.value | capitalize }}</td>
+                </tr>
+                <tr class="hover:bg-grey-100">
+                  <td class="py-4 px-6 border-b border-grey-100">Entrypoint</td>
+                  <td class="py-4 px-6 border-b border-grey-100">{{ application.entrypoint or None }}</td>
+                </tr>
+                <tr class="hover:bg-grey-100">
+                  <td class="py-4 px-6 border-b-0 border-grey-100">Enabled</td>
+                  <td class="py-4 px-6 border-b-0 border-grey-100">{{ application.enabled }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            </div>
         </div>
-    </div>
+
+        <div class="section section-log">
+            <div class="section-header">Logs</div>
+            <div class="section-body " >
+                {% if app_out_log != None %}
+                    <code class="overflow-auto w-full text-sm leading-tight h-64">
+                        <pre>
+    {{ app_out_log }}
+                        </pre>
+                    </code>
+                {% else %}
+                    <div class="w-full text-center font-mono">
+                        No logs.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock %}
 
 {% endblock %}
 

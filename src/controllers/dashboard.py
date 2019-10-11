@@ -1,36 +1,37 @@
 from pyexpat import ExpatError
 
-from flask import render_template, request, abort
+from flask import render_template, request, abort, redirect, url_for
 from flask_login import login_required, current_user
 from flask_security import roles_required
+from wtforms.ext.sqlalchemy.orm import model_form
 from xmlrpc.client import Fault
 
+from src.forms.ApplicationForm import ApplicationEditForm, ApplicationForm
 from src.models.Application import AppState
 from src.models import Application
-from src import app, supervisor
+from src import app, supervisor, db
 from src.utils.tail import tail
+from src.controllers.application import app_generate_config_and_start_subprogram
 
 
 @app.route("/dashboard", methods=["get"])
 @login_required
 @roles_required("user")
 def dashboard():
-    selected_app = request.args.get("appname") or None
+    appname = request.args.get("appname") or None
 
     # order the applications of the user // todo
     # current_user.applications
-
-    from src.forms.ApplicationForm import ApplicationForm
 
     create_app_form = ApplicationForm()
 
     ftp_host = app.config.get("FTP_HOST")
     ftp_port = app.config.get("FTP_PORT")
 
-    if selected_app:
+    if appname:
 
         application = Application.query.filter_by(
-            user=current_user, name=selected_app
+            user=current_user, name=appname
         ).first()
 
         if not application:
@@ -78,7 +79,36 @@ def dashboard():
     )
 
 
-@app.route("/application/edit/<string:appname>")
+@app.route("/application/edit/<string:appname>", methods=["get", "post"])
 def app_edit(appname):
+    ftp_host = app.config.get("FTP_HOST")
+    ftp_port = app.config.get("FTP_PORT")
 
-    pass
+    application = Application.query.filter_by(user=current_user, name=appname).first()
+
+    if not application:
+        abort(404)
+
+    caform = ApplicationForm()
+    edit_app_form = ApplicationEditForm()
+
+    if edit_app_form.validate_on_submit():
+        edit_app_form.populate_obj(application)
+        db.session.commit()
+
+        return redirect(url_for("dashboard", appname=application.name))
+
+    edit_app_form.description.data = application.description
+    edit_app_form.callable.data = application.callable
+    edit_app_form.entrypoint.data = application.entrypoint
+
+    return render_template(
+        "default/dashboard/edit_app.jinja",
+        user=current_user,
+        edform=edit_app_form,
+        caform=caform,
+        application=application,
+        AppState=AppState,
+        ftp_host=ftp_host,
+        ftp_port=ftp_port,
+    )
