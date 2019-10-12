@@ -6,6 +6,16 @@
 
 
     <div class="mb-4">
+      <label class="block text-md mb-2" for="domain_name">
+        {{ edform.domain_name.label }}
+      </label>
+      {{ edform.domain_name(class="form-input") }}
+        {% for error in edform.domain_name.errors %}
+            <p class="form-error "> {{ error }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="mb-4">
       <label class="block text-md mb-2" for="entrypoint">
         {{ edform.entrypoint.label }}
       </label>

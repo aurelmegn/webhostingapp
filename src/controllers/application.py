@@ -1,14 +1,5 @@
 import subprocess
-from flask import (
-    request,
-    abort,
-    flash,
-    redirect,
-    url_for,
-    jsonify,
-    render_template,
-    session,
-)
+from flask import request, abort, flash, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 from flask_security import roles_required
 from string import Template
@@ -17,11 +8,10 @@ from xmlrpc.client import Fault
 from src.models.Application import AppState, AppType
 from src import app, supervisor
 from src.models import Application
-from src.models import User
 from src.utils.find_or_create import find_or_create
 
 from os.path import join, isdir, abspath
-from shutil import rmtree
+from os import kill
 
 
 @app.route("/application/install_requirements/<string:appname>", methods=["post"])
@@ -160,6 +150,9 @@ def app_action(appname):
                 app_generate_config_and_start_subprogram(application)
                 supervisor.addProcessGroup(application.get_supervisor_name())
 
+                generate_nginx_conf(application)
+                send_sig_hup_nginx()
+
             elif application.state in [
                 AppState.stopped,
                 AppState.backoff,
@@ -180,9 +173,9 @@ def app_action(appname):
             action_executed = True
 
         elif action == "restart" and application.can_restart():
-            supervisor.reloadConfig()
             supervisor.stopProcess(application.get_supervisor_name())
             app_generate_config_and_start_subprogram(application)
+            supervisor.reloadConfig()
             supervisor.startProcess(application.get_supervisor_name())
 
             # application.state = AppState.starting
@@ -246,7 +239,7 @@ def create_uwsgi_conf(application: Application, path: str):
         "port": application.port,
         "venv": join(
             app.config.get("ABS_PATH_HOME_UWSGI"), "venv"
-        ),  # get the absolsute path on the sandbox
+        ),  # get the absolute path on the sandbox
     }
 
     return t.safe_substitute(parameters)
@@ -320,3 +313,34 @@ def app_generate_config_and_start_subprogram(application):
         write_uwsgi_conf(application=application)
 
     supervisor.reloadConfig()
+
+
+def generate_nginx_conf(application: Application):
+    template_conf_path = app.config.get("NGINX_CONF_TEMPLATE_PATH")
+
+    # read the content of the file
+    with open(template_conf_path) as f:
+        content = f.read().strip()
+
+    # initialize the template string to substitute the template
+    t = Template(content)
+
+    parameters = {
+        "supervisor_program_name": application.get_supervisor_name(),
+        "port": application.port,
+        "domain_name": application.domain_name,
+    }
+
+    config = t.safe_substitute(parameters)
+    app_conf_path = application.get_abs_nginx_conf_path()
+    with open(app_conf_path, "w") as f:
+        f.write(config)
+
+
+def send_sig_hup_nginx():
+    with open(app.config.get("NGINX_PID_FILE")) as pid_content:
+        pid = int(pid_content.readline())
+
+    from signal import SIGHUP
+
+    kill(pid, SIGHUP)

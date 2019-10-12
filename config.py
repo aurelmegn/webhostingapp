@@ -24,8 +24,8 @@ WTF_CSRF_CHECK_DEFAULT = False
 # Secret key for signing cookies
 SECRET_KEY = "YMNx&VZ<:85#=61_dUr\x0b*)vL"
 
-SQLALCHEMY_DATABASE_URI = "sqlite:///./var/data.db"
-# SQLALCHEMY_DATABASE_URI = "postgresql://aurel:shift@localhost/clientapp"
+# SQLALCHEMY_DATABASE_URI = "sqlite:///./var/data.db"
+SQLALCHEMY_DATABASE_URI = "postgresql://aurel:shift@localhost/clientapp"
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 WEBPACKEXT_MANIFEST_PATH = "manifest.json"
 
@@ -47,11 +47,14 @@ FTP_HOST = "ftp://localhost"
 
 # FLASK_ADMIN_SWATCH= 'flaty'
 
-from os.path import abspath
 SUPERVISOR_CONFIG_DIR = "./supervisor"
 SUPERVISOR_USER_HOME = "{supervisor_path}/programs/{username}"
 SUPERVISOR_PROGRAM_TEMPLATE_PATH = "./supervisor/subprogram_template.ini"
 UWSGI_TEMPLATE_PATH = "./supervisor/uwsgi_template.ini"
 FIREJAIL_PROFILE = "./supervisor/default.profile"
+NGINX_CONF_TEMPLATE_PATH = "./supervisor/virtual_host_nginx.site.conf"
 
-ABS_PATH_HOME_UWSGI = "/home/aurel" # should change on production 
+ABS_PATH_HOME_UWSGI = "/home/aurel"  # should change on production
+
+NGINX_SITE_CONF = "/var/www/nginx/sites-enabled"
+NGINX_PID_FILE = "/run/nginx.pid"

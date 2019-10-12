@@ -4,7 +4,7 @@ from enum import Enum
 from sqlalchemy.ext.hybrid import hybrid_method
 from xmlrpc.client import Fault
 
-from src import db, supervisor
+from src import db, supervisor, app
 from src.models import AlchemySerializable
 
 
@@ -39,6 +39,7 @@ class Application(db.Model, AlchemySerializable):
 
     description = db.Column(db.Text())
     entrypoint = db.Column(db.String())
+    domain_name = db.Column(db.String())
     callable = db.Column(db.String())
 
     @property
@@ -61,7 +62,7 @@ class Application(db.Model, AlchemySerializable):
     def port(self):
         """get the port the application should listen on
         """
-        return 8000+self.id
+        return 8000 + self.id
 
     @hybrid_method
     def get_supervisor_name(self):
@@ -96,7 +97,15 @@ class Application(db.Model, AlchemySerializable):
         """
         return the path to the supervisor conf file of this application
          """
-        return join_path(self.get_app_ftp_dir(),f"{self.name}.uwsgi.ini")
+        return join_path(self.get_app_ftp_dir(), f"{self.name}.uwsgi.ini")
+
+    @hybrid_method
+    def get_abs_nginx_conf_path(self):
+        """
+        return the path to the supervisor conf file of this application
+         """
+        nginx_dir = app.config.get("NGINX_SITE_CONF")
+        return join_path(nginx_dir,f"{self.get_supervisor_name()}.conf")
 
     @hybrid_method
     def get_out_log_path(self):
@@ -110,7 +119,7 @@ class Application(db.Model, AlchemySerializable):
         """
         return the path to the log conf file of this application
          """
-        return join_path(self.get_app_ftp_dir(),f"{self.name}.out.log")
+        return join_path(self.get_app_ftp_dir(), f"{self.name}.out.log")
 
     @hybrid_method
     def get_err_log_path(self):
@@ -135,6 +144,7 @@ class Application(db.Model, AlchemySerializable):
                ]
                and self.entrypoint is not None
                and self.enabled is True
+               and self.domain_name is not None
             else False
         )
 
