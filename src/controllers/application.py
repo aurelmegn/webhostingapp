@@ -11,7 +11,7 @@ from src.models import Application
 from src.utils.find_or_create import find_or_create
 
 from os.path import join, isdir, abspath
-from os import kill
+from os import mknod
 
 
 @app.route("/application/install_requirements/<string:appname>", methods=["post"])
@@ -338,9 +338,5 @@ def generate_nginx_conf(application: Application):
 
 
 def send_sig_hup_nginx():
-    with open(app.config.get("NGINX_PID_FILE")) as pid_content:
-        pid = int(pid_content.readline())
-
-    from signal import SIGHUP
-
-    kill(pid, SIGHUP)
+    file_path = app.config.get("NGINX_HUP_CHECK_FILE")
+    mknod(file_path)

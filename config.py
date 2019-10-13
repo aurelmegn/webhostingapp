@@ -58,3 +58,4 @@ ABS_PATH_HOME_UWSGI = "/home/aurel"  # should change on production
 
 NGINX_SITE_CONF = "/var/www/nginx/sites-enabled"
 NGINX_PID_FILE = "/run/nginx.pid"
+NGINX_HUP_CHECK_FILE = "/tmp/.send_hup_to_nginx"
