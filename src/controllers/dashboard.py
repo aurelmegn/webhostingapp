@@ -1,9 +1,6 @@
-from pyexpat import ExpatError
-
 from flask import render_template, request, abort, redirect, url_for
 from flask_login import login_required, current_user
 from flask_security import roles_required
-from wtforms.ext.sqlalchemy.orm import model_form
 from xmlrpc.client import Fault
 
 from src.forms.ApplicationForm import ApplicationEditForm, ApplicationForm
@@ -11,7 +8,6 @@ from src.models.Application import AppState
 from src.models import Application
 from src import app, supervisor, db
 from src.utils.tail import tail
-from src.controllers.application import app_generate_config_and_start_subprogram
 
 
 @app.route("/dashboard", methods=["get"])
@@ -102,7 +98,6 @@ def app_edit(appname):
     edit_app_form.callable.data = application.callable
     edit_app_form.domain_name.data = application.domain_name
     edit_app_form.entrypoint.data = application.entrypoint
-    print(application.__json__())
 
     return render_template(
         "default/dashboard/edit_app.jinja",
