@@ -19,6 +19,9 @@
  sudo chown hosting:hosting /var/www/hosting/supervisor
 
  in nginx.conf >> include /var/www/nginx/sites-enabled/*;
+
+ run nginx_root_process.py to activate the nginx hup signal sending
+
  python run.py
  ```
 

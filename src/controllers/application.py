@@ -1,12 +1,22 @@
 import subprocess
-from flask import request, abort, flash, redirect, url_for, jsonify
+from flask import (
+    request,
+    abort,
+    flash,
+    redirect,
+    url_for,
+    jsonify,
+    render_template,
+    make_response,
+)
 from flask_login import login_required, current_user
 from flask_security import roles_required
 from string import Template
 from xmlrpc.client import Fault
 
+from src.forms.ApplicationForm import ApplicationForm
 from src.models.Application import AppState, AppType
-from src import app, supervisor
+from src import app, supervisor, db
 from src.models import Application
 from src.utils.find_or_create import find_or_create
 
@@ -196,6 +206,47 @@ def app_action(appname):
         # abort(500, e)
 
     return redirect(request.referrer)
+
+
+@app.route("/application/add", methods=["post", "get"])
+@login_required
+@roles_required("user")
+def app_add():
+    application_form = ApplicationForm()
+
+    if application_form.validate_on_submit():
+        # print(application_form.object_data)
+
+        # if request.headers
+        application = Application()
+        application_form.populate_obj(application)
+        application.type = AppType(application.type)
+
+        # search for the same app name in the database
+
+        count = application.query.filter_by(
+            user=current_user, name=application.name
+        ).count()
+
+        if count != 0:
+            flash("You already have an application of the same name", "error")
+
+            return render_template(
+                "default/dashboard/app_create.jinja",
+                addform=application_form,
+                user=current_user,
+            )
+
+        current_user.applications.append(application)
+        db.session.commit()
+
+        return redirect(url_for("dashboard", appname=application.name))
+
+    return render_template(
+        "default/dashboard/app_create.jinja",
+        addform=application_form,
+        user=current_user,
+    )
 
 
 def write_uwsgi_conf(application: Application = None):

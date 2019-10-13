@@ -4,66 +4,6 @@
 
 {% block cbody %}
 
-    <div id="modalContainer" class="bg-grey-10 fixed right-0 bg-transparent w-full flex flex-col justify-start items-center h-full pt-10 hidden">
-        <form id="caForm"  class="shadow-lg bg-white w-full md:w-1/4 flex flex-col p-3 rounded hidden modal_close">
-            {{ caform.hidden_tag() }}
-
-            <div class="mb-4">
-              <label class="block text-md mb-2" for="name">
-                {{ caform.name.label }}
-              </label>
-              {{ caform.name(class="form-input") }}
-                {% for error in caform.name.errors %}
-                    <p class="form-error "> {{ error }}</p>
-                {% endfor %}
-
-                <p id="nameExistError" class="form-error hidden"> The name already exists</p>
-            </div>
-
-            <div class="mb-4">
-              <label class="block text-md mb-2 " for="type">
-                {{ caform.type.label }}
-              </label>
-              {{ caform.type(class="form-select") }}
-                {% for error in caform.type.errors %}
-                    <p class="form-error "> {{ error }}</p>
-                {% endfor %}
-
-                <p id="nameExistError" class="form-error hidden"> The name already exists</p>
-            </div>
-
-            <div class="mb-4">
-              <label class="block text-md mb-2" for="description">
-                {{ caform.description.label}}
-              </label>
-              {{ caform.description(class="form-input") }}
-                {% for error in caform.description.errors %}
-                    <p class="form-error "> {{ error }}</p>
-                {% endfor %}
-            </div>
-
-            <div class="flex flex-col md:flex-row items-center content-between justify-center w-full">
-                <button class="btn-red-out text-red-600 btn w-full" type="reset" id="caFormCloseBtn">
-                    Close
-                </button>
-
-                <button id="caFormSubmitBtn" class="btn-teal btn w-full" type="submit">
-                Create
-              </button>
-            </div>
-        </form>
-
-        <div id="message" class="hidden message shadow-lg bg-white w-full md:w-1/4 flex flex-col p-3 rounded hidden">
-            <div class="flex w-full message-content p-4"></div>
-            <button class="btn-grey btn w-full mt-2 close" >
-                Close
-          </button>
-        </div>
-
-    </div>
-
-{#    content of the page#}
-
     <div class="flex flex-col md:mt-5 md:flex-row w-full my-2 justify-between rounded">
         <div class="overview-card pr-2">
             <span class="overview-card-body overview-card-secondary">{{ user.applications | count }} Applications</span>
@@ -93,6 +33,10 @@
 
                         <a href="{{ url_for('dashboard', appname=application.name) }}" class="appname w-4/6 break-words ">{{ application.name | capitalize }}</a>
 
+                    </div>
+                {% else %}
+                    <div class="p-2">
+                        There is no application, <a class="underline" href="{{ url_for("app_add") }}">add one</a>
                     </div>
                 {% endfor %}
 {#                </ul>#}
@@ -145,7 +89,7 @@
                 <div class="flex w-full border-b border-secondary-500 p-3 text-2xl text-secondary-500">Welcome Back {{ user.username | capitalize }}</div>
 
                 <div class="flex w-full py-3">
-                    <a id="addApp" href="#" class="app-action w-full">Add app</a>
+                    <a id="addApp" href="{{ url_for("app_add") }}" class="app-action w-full">Add app</a>
                 </div>
 
                 <div class="section section-chart">
@@ -153,15 +97,6 @@
                     <div class="section-body" >
                         <div class="w-full text-center font-mono text-secondary-500">
                             No chart.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section section-logs">
-                    <div class="section-header">Logs</div>
-                    <div class="section-body" >
-                        <div class="w-full text-center font-mono text-secondary-500">
-                            No logs.
                         </div>
                     </div>
                 </div>

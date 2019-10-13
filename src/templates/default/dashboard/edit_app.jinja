@@ -2,54 +2,53 @@
 
 {% block app_page_body%}
     <form id="defitForm"  class="w-full flex flex-col p-3" method="post" action="{{ url_for("app_edit", appname=application.name) }}">
-    {{ edform.hidden_tag() }}
+        {{ edform.hidden_tag() }}
 
+        <div class="mb-4">
+          <label class="block text-md mb-2" for="domain_name">
+            {{ edform.domain_name.label }}
+          </label>
+          {{ edform.domain_name(class="form-input") }}
+            {% for error in edform.domain_name.errors %}
+                <p class="form-error "> {{ error }}</p>
+            {% endfor %}
+        </div>
 
-    <div class="mb-4">
-      <label class="block text-md mb-2" for="domain_name">
-        {{ edform.domain_name.label }}
-      </label>
-      {{ edform.domain_name(class="form-input") }}
-        {% for error in edform.domain_name.errors %}
-            <p class="form-error "> {{ error }}</p>
-        {% endfor %}
-    </div>
+        <div class="mb-4">
+          <label class="block text-md mb-2" for="entrypoint">
+            {{ edform.entrypoint.label }}
+          </label>
+          {{ edform.entrypoint(class="form-input") }}
+            {% for error in edform.entrypoint.errors %}
+                <p class="form-error "> {{ error }}</p>
+            {% endfor %}
+        </div>
 
-    <div class="mb-4">
-      <label class="block text-md mb-2" for="entrypoint">
-        {{ edform.entrypoint.label }}
-      </label>
-      {{ edform.entrypoint(class="form-input") }}
-        {% for error in edform.entrypoint.errors %}
-            <p class="form-error "> {{ error }}</p>
-        {% endfor %}
-    </div>
+        <div class="mb-4">
+          <label class="block text-md mb-2" for="callable">
+            {{ edform.callable.label }}
+          </label>
+          {{ edform.callable(class="form-input") }}
+            {% for error in edform.callable.errors %}
+                <p class="form-error "> {{ error }}</p>
+            {% endfor %}
 
-    <div class="mb-4">
-      <label class="block text-md mb-2" for="callable">
-        {{ edform.callable.label }}
-      </label>
-      {{ edform.callable(class="form-input") }}
-        {% for error in edform.callable.errors %}
-            <p class="form-error "> {{ error }}</p>
-        {% endfor %}
+        </div>
 
-    </div>
+        <div class="mb-4">
+          <label class="block text-md mb-2" for="description">
+            {{ edform.description.label}}
+          </label>
+          {{ edform.description(class="form-input") }}
+            {% for error in edform.description.errors %}
+                <p class="form-error "> {{ error }}</p>
+            {% endfor %}
+        </div>
 
-    <div class="mb-4">
-      <label class="block text-md mb-2" for="description">
-        {{ edform.description.label}}
-      </label>
-      {{ edform.description(class="form-input") }}
-        {% for error in edform.description.errors %}
-            <p class="form-error "> {{ error }}</p>
-        {% endfor %}
-    </div>
-
-    <div class="flex flex-col md:flex-row items-center content-between justify-center w-full md:w-1/5 ml-auto">
-        <button id="edformSubmitBtn" class="btn-teal btn w-full" type="submit">
-        Save
-      </button>
-    </div>
+        <div class="flex flex-col md:flex-row items-center content-between justify-center w-full md:w-1/5 ml-auto">
+            <button id="edformSubmitBtn" class="btn-teal btn w-full" type="submit">
+            Save
+          </button>
+        </div>
 </form>
 {% endblock %}
