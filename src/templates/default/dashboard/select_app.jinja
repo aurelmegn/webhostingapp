@@ -91,6 +91,16 @@
                   <td class="py-4 px-6 border-b border-grey-100">{{ application.entrypoint or None }}</td>
                 </tr>
                 <tr class="hover:bg-grey-100">
+                  <td class="py-4 px-6 border-b border-grey-100">Domaine name</td>
+                  <td class="py-4 px-6 border-b border-grey-100">
+                      {% if application.domain_name %}
+                          <a href="http://{{ application.domain_name }}" target="_blank">{{ application.domain_name }}</a>
+                      {% else %}
+                          {{ None }}
+                      {% endif %}
+                  </td>
+                </tr>
+                <tr class="hover:bg-grey-100">
                   <td class="py-4 px-6 border-b-0 border-grey-100">Enabled</td>
                   <td class="py-4 px-6 border-b-0 border-grey-100">{{ application.enabled }}</td>
                 </tr>

@@ -14,5 +14,6 @@ class ApplicationForm(FlaskForm):
 
 class ApplicationEditForm(FlaskForm):
     description = TextAreaField("description".capitalize(), validators=[])
+    domain_name = StringField("domain name".capitalize(), validators=[])
     entrypoint = StringField("entrypoint".capitalize(), validators=[DataRequired()])
     callable = StringField("callable".capitalize(), validators=[DataRequired()])

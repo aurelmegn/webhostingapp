@@ -5,23 +5,23 @@
  ```sh
  virtualenv -p python3 ./env
  source env/bin/activate
- pip install -r requirements.txt
+ pipenv install
+
+ sudo mkdir /var/www/nginx/sites-enabled
+ sudo chown hosting:hosting /var/www/nginx/sites-enabled
+
+ sudo mkdir /var/www/hosting/nginx/sites-enabled
+ sudo mkdir /var/www/hosting/ftpfiles
+ sudo mkdir /var/www/hosting/supervisor
+
+ sudo chown hosting:hosting /var/www/nginx/sites-enabled
+ sudo chown hosting:hosting /var/www/hosting/ftpfiles
+ sudo chown hosting:hosting /var/www/hosting/supervisor
+
+ in nginx.conf >> include /var/www/nginx/sites-enabled/*;
  python run.py
  ```
 
- Todo:
-
-- [ ] handle when there   is no application on the dashboard
-- [ ] when the user create an app, notifications for setiing up the entry point, ftp dir, and other essentials information should be created
-- [ ] add history log to the app actions
-- [ ] show the last executed action and the time it was executed on app display
-- [ ] figure out how to create the virtualenv of different version
-- [ ] animation on click on execute command
-- [ ] remove the directory of the app when issueing a command (by the client)
-- [x] change the ftp home dir, it's now the directory named "content" on the user apphome
-- [x] change the authentication by using now the format username:app for the username
-- [ ] change the venv creation directory
-- [ ]
  todo for dashboard:
 
 ## Attention

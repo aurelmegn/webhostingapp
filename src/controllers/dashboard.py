@@ -100,7 +100,9 @@ def app_edit(appname):
 
     edit_app_form.description.data = application.description
     edit_app_form.callable.data = application.callable
+    edit_app_form.domain_name.data = application.domain_name
     edit_app_form.entrypoint.data = application.entrypoint
+    print(application.__json__())
 
     return render_template(
         "default/dashboard/edit_app.jinja",
