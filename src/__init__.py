@@ -6,9 +6,10 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 from flask_webpackext import FlaskWebpackExt, WebpackBundleProject
+from os import makedirs
+from os.path import join, isdir
 
-from src.utils.fa_icon_flash_filter import fa_icon_flash_filter
-from src.utils.format_datetime import date_format_datetime
+from src.utils.jinja_filters import date_format_datetime, fa_icon_flash_filter, state_to_str, from_state_color
 
 myproject = WebpackBundleProject(
     __name__, project_folder="assets", config_path="./public/entrypoint.json"
@@ -26,6 +27,8 @@ db = SQLAlchemy(app)
 # Template engine setup
 app.jinja_env.filters["datetime"] = date_format_datetime
 app.jinja_env.filters["fa_icon"] = fa_icon_flash_filter
+app.jinja_env.filters["state_str"] = state_to_str
+app.jinja_env.filters["state_color"] = from_state_color
 # debug toolbar
 toolbar = DebugToolbarExtension(app)
 FlaskWebpackExt(app)
@@ -34,37 +37,58 @@ FlaskWebpackExt(app)
 admin = Admin(app, name='myapp', template_mode='bootstrap3', url='/wtf')
 # additional configurations for the app
 
-# supervisor api var
-from xmlrpc.client import ServerProxy
-
-server = ServerProxy("http://localhost:9001/RPC2")
-supervisor = server.supervisor
-
-from src.controllers import *
-
-# from src.models import roles_users
-from src.models.User import User
-from src.models.Role import Role
-
-# Setup Flask-Security
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
-
 # log handlers
 
 # logging.basic_config(level=os.environ.get("LOGLEVEL", "CRITICAL"), handlers=)
-app_log_handler = logging.StreamHandler()
-app_log_handler.setLevel(logging.DEBUG)
+# app_log_handler = logging.StreamHandler()
+# app_log_handler.setLevel(logging.DEBUG)
 
-# app_filelog_handler = logging.FileHandler("./src/var/log/app.log")
-# app_filelog_handler.setLevel(logging.INFO)
-# app.logger.addHandler(app_filelog_handler)
+# log file
+log_dir = "./src/var/log"
+if not isdir(log_dir):
+    makedirs(log_dir)
+
+if bool(app.config.get("DEBUG")):
+    log_file = "dev.log"
+else:
+    log_file = "prod.log"
+log_file = join(log_dir, log_file)
+
+app_file_log_handler = logging.FileHandler(log_file)
+app_file_log_handler.setLevel(logging.DEBUG)
+
+app.logger.addHandler(app_file_log_handler)
 
 app.logger.setLevel(logging.DEBUG)
 # app.logger.addHandler(app_log_handler)
 
 # Sample HTTP error handling
 # app.logger.error("++++++" )
+
+# supervisor api var
+from xmlrpc.client import ServerProxy, Fault
+
+server = ServerProxy("http://localhost:9001/RPC2")
+supervisor = server.supervisor
+
+# exit if not able to connect to supervisor running instance
+try:
+    supervisor.getState()
+except (OSError, Fault) as e:
+    app.logger.error("Unable to connect to supervisor. Exiting ...")
+    app.logger.error(e)
+    exit(1)
+
+from src.controllers import *
+
+# from src.models import roles_users
+from src.models.User import User
+from src.models.Role import Role
+# from src.models.AppHistory import AppHistory
+
+# Setup Flask-Security
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
 
 # from admin interface
 import src.admin_views
@@ -93,8 +117,3 @@ def before_first_request():
 
     db.session.commit()
 
-
-@app.before_request
-def drop_cmd_output_before_each_request():
-    # session.pop("last_cmd", None)
-    pass
