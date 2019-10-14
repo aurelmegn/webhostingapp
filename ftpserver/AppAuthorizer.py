@@ -20,13 +20,13 @@ class AppAuthorizer(DummyAuthorizer):
         self.msg_anon_not_allowed = "Anonymous access not allowed."
 
     def add_user(
-            self,
-            username,
-            password,
-            homedir,
-            perm="elr",
-            msg_login="Login successful.",
-            msg_quit="Goodbye.",
+        self,
+        username,
+        password,
+        homedir,
+        perm="elr",
+        msg_login="Login successful.",
+        msg_quit="Goodbye.",
     ):
         raise AuthenticationFailed()
 
@@ -37,7 +37,6 @@ class AppAuthorizer(DummyAuthorizer):
             raise AuthenticationFailed(self.msg_no_such_user)
 
         return tuple(uname_parts)
-
 
     def add_anonymous(self, homedir, **kwargs):
         raise AuthenticationFailed()
@@ -139,4 +138,3 @@ class AppAuthorizer(DummyAuthorizer):
         """Return the user's quitting message."""
 
         return f"Goodbye {username}."
-

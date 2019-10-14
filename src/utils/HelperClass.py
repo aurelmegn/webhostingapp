@@ -11,4 +11,3 @@ class AppState(Enum):
     fatal = 200  # "fatal"
     unknown = 1000  # "unknown"
     never_started = -1  # "never_started"
-

@@ -34,7 +34,7 @@ class Application(db.Model, AlchemySerializable):
     domain_name = db.Column(db.String())
     callable = db.Column(db.String())
 
-    histories = db.relationship("AppHistory",backref="application", lazy=True)
+    histories = db.relationship("AppHistory", backref="application", lazy=True)
 
     @property
     def state(self):
@@ -129,16 +129,16 @@ class Application(db.Model, AlchemySerializable):
         return (
             True
             if self.state
-               in [
-                   AppState.stopped,
-                   AppState.backoff,
-                   AppState.fatal,
-                   AppState.exited,
-                   AppState.never_started,
-               ]
-               and self.entrypoint is not None
-               and self.enabled is True
-               and self.domain_name is not None
+            in [
+                AppState.stopped,
+                AppState.backoff,
+                AppState.fatal,
+                AppState.exited,
+                AppState.never_started,
+            ]
+            and self.entrypoint is not None
+            and self.enabled is True
+            and self.domain_name is not None
             else False
         )
 

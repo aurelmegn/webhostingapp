@@ -13,4 +13,4 @@ class AppHistory(db.Model):
     new_state = db.Column(db.Enum(AppState), nullable=False)
     old_state = db.Column(db.Enum(AppState), nullable=False)
 
-    application_id = db.Column(db.Integer, db.ForeignKey('application.id'))
+    application_id = db.Column(db.Integer, db.ForeignKey("application.id"))

@@ -1,13 +1,5 @@
 import subprocess
-from flask import (
-    request,
-    abort,
-    flash,
-    redirect,
-    url_for,
-    jsonify,
-    render_template,
-)
+from flask import request, abort, flash, redirect, url_for, jsonify, render_template
 from flask_login import login_required, current_user
 from flask_security import roles_required
 from string import Template

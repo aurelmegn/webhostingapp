@@ -26,7 +26,11 @@ def dashboard():
     ftp_host = app.config.get("FTP_HOST")
     ftp_port = app.config.get("FTP_PORT")
 
-    applications = Application.query.with_parent(current_user).order_by(desc("enabled"), asc("name")).all()
+    applications = (
+        Application.query.with_parent(current_user)
+        .order_by(desc("enabled"), asc("name"))
+        .all()
+    )
 
     if appname:
 
@@ -34,7 +38,12 @@ def dashboard():
             user=current_user, name=appname
         ).first()
 
-        histories = AppHistory.query.with_parent(application).order_by(desc("at")).limit(20).all()
+        histories = (
+            AppHistory.query.with_parent(application)
+            .order_by(desc("at"))
+            .limit(20)
+            .all()
+        )
 
         if not application:
             abort(404)
@@ -67,7 +76,7 @@ def dashboard():
             applications=applications,
             caform=create_app_form,
             application=application,
-            histories = histories,
+            histories=histories,
             AppState=AppState,
             app_out_log=out_log,
             ftp_host=ftp_host,

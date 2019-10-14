@@ -9,7 +9,9 @@ from src.models.Application import AppType
 class ApplicationForm(FlaskForm):
     name = StringField("name".capitalize(), validators=[DataRequired()])
     description = TextAreaField("description".capitalize(), validators=[DataRequired()])
-    type = SelectField("type".capitalize(), choices=all_from_enum(AppType), validators=[DataRequired()])
+    type = SelectField(
+        "type".capitalize(), choices=all_from_enum(AppType), validators=[DataRequired()]
+    )
 
 
 class ApplicationEditForm(FlaskForm):
