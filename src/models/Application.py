@@ -4,20 +4,11 @@ from enum import Enum
 from sqlalchemy.ext.hybrid import hybrid_method
 from xmlrpc.client import Fault
 
+# from src.models.AppHistory import AppHistory
 from src import db, supervisor, app
 from src.models import AlchemySerializable
-
-
-class AppState(Enum):
-    stopped = 0  # "stop"
-    starting = 10  # "starting"
-    running = 20  # "running"
-    backoff = 30  # "backoff"
-    stopping = 40  # "stopping"
-    exited = 100  # "exited"
-    fatal = 200  # "fatal"
-    unknown = 1000  # "unknown"
-    never_started = -1  # "never_started"
+from src.utils.HelperClass import AppState
+from src.utils.jinja_filters import state_to_str
 
 
 class AppType(Enum):
@@ -29,18 +20,21 @@ class AppType(Enum):
 
 
 class Application(db.Model, AlchemySerializable):
-    __name__ = "e"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), nullable=False)
     enabled = db.Column(db.Boolean(), default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    name = db.Column(db.String(), nullable=False)
     type = db.Column(db.Enum(AppType), nullable=False, default=AppType.python37)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     description = db.Column(db.Text())
     entrypoint = db.Column(db.String())
     domain_name = db.Column(db.String())
     callable = db.Column(db.String())
+
+    histories = db.relationship("AppHistory",backref="application", lazy=True)
 
     @property
     def state(self):
@@ -105,7 +99,7 @@ class Application(db.Model, AlchemySerializable):
         return the path to the supervisor conf file of this application
          """
         nginx_dir = app.config.get("NGINX_SITE_CONF")
-        return join_path(nginx_dir,f"{self.get_supervisor_name()}.conf")
+        return join_path(nginx_dir, f"{self.get_supervisor_name()}.conf")
 
     @hybrid_method
     def get_out_log_path(self):
@@ -164,48 +158,6 @@ class Application(db.Model, AlchemySerializable):
     def can_act(self):
         print(self.can_start())
         return self.can_stop() or self.can_start() or self.can_restart()
-
-    @hybrid_method
-    def get_frontend_color(self):
-
-        color = None
-        if self.state in [AppState.stopped, AppState.never_started]:
-            color = "grey"
-        elif self.state == AppState.running:
-            color = "green"
-        elif self.state in [AppState.exited, AppState.fatal, AppState.backoff]:
-            color = "red"
-        elif self.state in [AppState.starting]:
-            color = "teal"
-        elif self.state in [AppState.stopping]:
-            color = "orange"
-        return color
-
-    @hybrid_method
-    def state_to_string(self):
-
-        str_value = None
-
-        if self.state == AppState.stopped:
-            str_value = "Stopped"
-        if self.state == AppState.starting:
-            str_value = "Starting"
-        if self.state == AppState.running:
-            str_value = "Running"
-        if self.state == AppState.backoff:
-            str_value = "Backoff"
-        if self.state == AppState.stopping:
-            str_value = "Stopping"
-        if self.state == AppState.exited:
-            str_value = "Exited"
-        if self.state == AppState.fatal:
-            str_value = "Fatal"
-        if self.state == AppState.unknown:
-            str_value = "Unknown"
-        if self.state == AppState.never_started:
-            str_value = "Never started"
-
-        return str_value
 
     @hybrid_method
     def can_execute_command(self):
