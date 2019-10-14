@@ -1,10 +1,12 @@
 from flask import render_template, request, abort, redirect, url_for
 from flask_login import login_required, current_user
 from flask_security import roles_required
+from sqlalchemy import asc, desc
 from xmlrpc.client import Fault
 
+from src.models.AppHistory import AppHistory
 from src.forms.ApplicationForm import ApplicationEditForm, ApplicationForm
-from src.models.Application import AppState
+from src.utils.HelperClass import AppState
 from src.models import Application
 from src import app, supervisor, db
 from src.utils.tail import tail
@@ -24,11 +26,15 @@ def dashboard():
     ftp_host = app.config.get("FTP_HOST")
     ftp_port = app.config.get("FTP_PORT")
 
+    applications = Application.query.with_parent(current_user).order_by(desc("enabled"), asc("name")).all()
+
     if appname:
 
         application = Application.query.filter_by(
             user=current_user, name=appname
         ).first()
+
+        histories = AppHistory.query.with_parent(application).order_by(desc("at")).limit(20).all()
 
         if not application:
             abort(404)
@@ -58,8 +64,10 @@ def dashboard():
         return render_template(
             "default/dashboard/select_app.jinja",
             user=current_user,
+            applications=applications,
             caform=create_app_form,
             application=application,
+            histories = histories,
             AppState=AppState,
             app_out_log=out_log,
             ftp_host=ftp_host,
@@ -69,6 +77,7 @@ def dashboard():
     return render_template(
         "default/dashboard_base.jinja",
         user=current_user,
+        applications=applications,
         caform=create_app_form,
         ftp_host=ftp_host,
         ftp_port=ftp_port,

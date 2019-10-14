@@ -7,7 +7,6 @@ from flask import (
     url_for,
     jsonify,
     render_template,
-    make_response,
 )
 from flask_login import login_required, current_user
 from flask_security import roles_required
@@ -17,7 +16,7 @@ from xmlrpc.client import Fault
 from src.forms.ApplicationForm import ApplicationForm
 from src.models.Application import AppState, AppType
 from src import app, supervisor, db
-from src.models import Application
+from src.models import Application, AppHistory
 from src.utils.find_or_create import find_or_create
 
 from os.path import join, isdir, abspath
@@ -66,12 +65,7 @@ def app_install_requirements(appname):
                 f"Requirements installed successfully for {application.name}", "success"
             )
 
-        except Exception as e:
-            app.logger.error(e)
-            flash(
-                f"An error occurred. Can not install the requirements. Is the file name well written ?"
-            )
-        except OSError as e:
+        except (Exception, OSError) as e:
             app.logger.error(e)
             flash(
                 f"An error occurred. Can not install the requirements. Is the file name well written ?"
@@ -139,6 +133,8 @@ def app_action(appname):
     if not application.enabled:
         abort(404)
 
+    app_history = AppHistory(old_state=application.state, action=action)
+
     try:
 
         action_executed = False
@@ -204,6 +200,12 @@ def app_action(appname):
         # print(e)
         flash(f"Error during application {action} operation: {e.faultString}", "error")
         # abort(500, e)
+
+    # save the action in the history of action for the current application
+    app_history.new_state = application.state
+    application.histories.append(app_history)
+
+    db.session.commit()
 
     return redirect(request.referrer)
 

@@ -42,3 +42,4 @@ class AlchemySerializable:
 from .User import User
 from .Application import Application
 from .Role import Role
+from .AppHistory import AppHistory

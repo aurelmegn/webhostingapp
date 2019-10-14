@@ -7,8 +7,8 @@
             {{ application.name | capitalize}}
         </div>
 
-        <div class="md:w-1/4 ml-auto bg-{{ application.get_frontend_color() }}-500 rounded italic text-center text-white font-bold py-2">
-            {{ application.state_to_string() | capitalize }}
+        <div class="md:w-1/4 ml-auto bg-{{ application.state | state_color }}-500 rounded italic text-center text-white font-bold py-2">
+            {{ application.state | state_str | capitalize }}
         </div>
     </div>
 
@@ -110,13 +110,45 @@
             </div>
         </div>
 
+        <div class="section section-history">
+            <div class="section-header">State history</div>
+            <div class="section-body " >
+            {% if histories | count > 1 %}
+                <table class="text-let w-full bg-grey-100 border-collapse">
+                    <thead>
+                        <tr class="hover:bg-grey-300 border-b border-grey-300">
+                          <td class="py-0 px-2 text-center">Action</td>
+                          <td class="py-0 px-2 text-center">On State</td>
+                          <td class="py-0 px-2 text-center">Lead to</td>
+                          <td class="py-0 px-2 text-center">At</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for history in histories %}
+                        <tr class="hover:bg-grey-300 border-b border-grey-300">
+                          <td class="py-0 px-2 text-center ">{{ history.action }}</td>
+                          <td class="py-0 px-2 text-center text-{{ history.old_state | state_color }}-400">{{ history.old_state | state_str }}</td>
+                          <td class="py-0 px-2 text-center text-{{ history.new_state | state_color }}-400">{{ history.new_state | state_str}}</td>
+                          <td class="py-0 px-2 text-center text-secondary-300">{{ history.at | datetime("full") }}</td>
+                        </tr>
+                {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                    <div class="w-full text-center font-mono">
+                        No logs.
+                    </div>
+            {% endif %}
+            </div>
+        </div>
+
         <div class="section section-log">
             <div class="section-header">Logs</div>
             <div class="section-body " >
                 {% if app_out_log != None %}
                     <code class="overflow-auto w-full text-sm leading-tight h-64">
                         <pre>
-    {{ app_out_log }}
+{{ app_out_log }}
                         </pre>
                     </code>
                 {% else %}

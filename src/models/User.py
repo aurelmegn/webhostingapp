@@ -10,6 +10,8 @@ from . import roles_users, AlchemySerializable
 
 
 class User(db.Model, UserMixin, AlchemySerializable):
+    __tablename__ = "user"
+
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -31,7 +33,7 @@ class User(db.Model, UserMixin, AlchemySerializable):
     ftp_quota = db.Column(db.Numeric(), default=1)
     # application
 
-    applications = db.relationship("Application", backref="user", lazy=False)
+    applications = db.relationship("Application", backref="user", lazy=True)
 
     def __repr__(self):
         return "<User %r>" % self.username
