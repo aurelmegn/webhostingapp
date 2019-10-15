@@ -33,12 +33,12 @@
                 {% for application in applications %}
                     <div class=" application_list_element w-full flex flex-row mt-0 p-3 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.args.appname == application.name }}">
 
-                        <a href="{{ url_for('dashboard', appname=application.name) }}" class="appname w-4/6 break-words ">{{ application.name | capitalize }}</a>
+                        <a href="{{ url_for('dashboard.index', appname=application.name) }}" class="appname w-4/6 break-words ">{{ application.name | capitalize }}</a>
 
                     </div>
                 {% else %}
                     <div class="p-2">
-                        There is no application, <a class="underline" href="{{ url_for("app_add") }}">add one</a>
+                        There is no application, <a class="underline" href="{{ url_for("dashboard.app_add") }}">add one</a>
                     </div>
                 {% endfor %}
 {#                </ul>#}
@@ -90,7 +90,7 @@
                 <div class="flex w-full border-b border-secondary-500 p-3 text-2xl text-secondary-500">Welcome Back {{ user.username | capitalize }}</div>
 
                 <div class="flex w-full py-3">
-                    <a id="addApp" href="{{ url_for("app_add") }}" class="app-action w-full">Add app</a>
+                    <a id="addApp" href="{{ url_for("dashboard.app_add") }}" class="app-action w-full">Add app</a>
                 </div>
 
                 <div class="section section-chart">

@@ -58,5 +58,5 @@ admin.add_view(Default(Role, db.session))
 admin.add_view(Default(Application, db.session))
 
 with app.app_context():
-    admin.add_link(MenuLink(name='Dashboard', url=url_for('dashboard')))
+    admin.add_link(MenuLink(name='Dashboard', url=url_for('dashboard.index')))
     admin.add_link(MenuLink(name='Logout', url=url_for('security.logout')))
