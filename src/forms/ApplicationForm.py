@@ -1,9 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import *
-from wtforms.validators import DataRequired
-
 from src.forms.all_from_enum import all_from_enum
 from src.models.Application import AppType
+from wtforms import *
+from wtforms.validators import DataRequired
 
 
 class ApplicationForm(FlaskForm):

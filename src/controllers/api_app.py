@@ -1,6 +1,6 @@
-from flask import jsonify, request, make_response, abort
-from flask_security import current_user, login_required, roles_required
+from flask import abort, jsonify, make_response, request
 
+from flask_security import current_user, login_required, roles_required
 from src import app, db
 from src.forms.ApplicationForm import ApplicationForm
 from src.models.Application import Application, AppType

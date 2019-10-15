@@ -1,5 +1,4 @@
 from flask_security import RoleMixin
-
 from src import db
 from src.models import AlchemySerializable
 

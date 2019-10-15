@@ -7,6 +7,7 @@ verify_ssl = true
 black = "==19.3b0"
 coverage = "==4.5.4"
 flask-debugtoolbar = "==0.10.1"
+isort = "*"
 
 [packages]
 appdirs = "==1.4.3"
@@ -46,6 +47,8 @@ toml = "==0.10.0"
 werkzeug = "==0.15.6"
 wtforms = "==2.2.1"
 uwsgi = "*"
+flask-debugtoolbar = "*"
+isort = "*"
 
 [requires]
 python_version = "3.7"

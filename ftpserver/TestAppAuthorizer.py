@@ -1,19 +1,19 @@
 import sys
+from unittest import TestCase
 
-from ftpserver.AppAuthorizer import (
-    AppAuthorizer,
-    ShouldNotBeCalledException,
-    AuthenticationFailed,
-    AccountNotEnableException,
-)
 from tests.AppTestBase import AppTestBase
+
+from flask_security.utils import hash_password
+from ftpserver.AppAuthorizer import (
+    AccountNotEnableException,
+    AppAuthorizer,
+    AuthenticationFailed,
+    ShouldNotBeCalledException,
+)
+from src import User, app, db
 
 sys.path.append(".")
 sys.path.append("../")
-
-from flask_security.utils import hash_password
-from unittest import TestCase
-from src import app, User, db
 
 
 class TestAppAuthorizer(AppTestBase, TestCase):

@@ -1,5 +1,5 @@
 # Statement for enabling the development environment
-# ENV = "dev"
+ENV = "dev"
 DEBUG = True
 
 # Define the application directory

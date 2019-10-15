@@ -75,3 +75,14 @@
 
     </div>
 {% endblock %}
+
+{% block js %}
+    {{ super() }}
+{#    {{ webpack['public/js/settings.js'] }}#}
+
+{% endblock %}
+
+{% block css %}
+    {{ super() }}
+
+{% endblock %}

@@ -1,20 +1,29 @@
-from os.path import join as join_path, abspath
-
 from datetime import datetime
+from os.path import abspath
+from os.path import join as join_path
 
 from flask_security import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_method
+from src import app, db
 
-from src import db, app
-from . import roles_users, AlchemySerializable
+from . import AlchemySerializable, roles_users
 
 
 class User(db.Model, UserMixin, AlchemySerializable):
     __tablename__ = "user"
 
     id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+
+    # account info
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    address = db.Column(db.String(80), nullable=False)
+    country = db.Column(db.String(80), nullable=False)
+    town = db.Column(db.String(80), nullable=False)
+    number = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+
+    # application info
+    username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
     confirmed_at = db.Column(db.DateTime())

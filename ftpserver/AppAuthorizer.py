@@ -1,16 +1,14 @@
+import sys
+from os import makedirs, mkdir
+from os.path import abspath, isdir
 from typing import List
 
-from os.path import abspath, isdir
-from os import mkdir, makedirs
-
-import sys
+from flask_security.utils import verify_password
+from pyftpdlib.authorizers import AuthenticationFailed, DummyAuthorizer
+from src import Application, User, app
 
 sys.path.append(".")
 sys.path.append("../")
-
-from flask_security.utils import verify_password
-from pyftpdlib.authorizers import DummyAuthorizer, AuthenticationFailed
-from src import app, User, Application
 
 
 class AppAuthorizer(DummyAuthorizer):

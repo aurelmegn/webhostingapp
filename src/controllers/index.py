@@ -1,7 +1,7 @@
-from flask_security import logout_user
+from flask import redirect, render_template, session
 
+from flask_security import logout_user
 from src import app
-from flask import render_template, session, redirect
 
 
 @app.route("/")

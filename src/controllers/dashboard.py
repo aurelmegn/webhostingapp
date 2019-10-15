@@ -1,14 +1,15 @@
-from flask import render_template, request, abort, redirect, url_for, Blueprint
-from flask_login import login_required, current_user
-from flask_security import roles_required
-from sqlalchemy import asc, desc
 from xmlrpc.client import Fault
 
-from src.models.AppActionHistory import AppActionHistory
+from flask import Blueprint, abort, redirect, render_template, request, url_for
+
+from flask_login import current_user, login_required
+from flask_security import roles_required
+from sqlalchemy import asc, desc
+from src import app, db, supervisor
 from src.forms.ApplicationForm import ApplicationEditForm, ApplicationForm
-from src.utils.HelperClass import AppState
 from src.models import Application
-from src import app, supervisor, db
+from src.models.AppActionHistory import AppActionHistory
+from src.utils.HelperClass import AppState
 from src.utils.tail import tail
 
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")

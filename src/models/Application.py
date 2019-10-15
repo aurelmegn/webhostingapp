@@ -1,10 +1,11 @@
-from os.path import join as join_path, abspath
 from datetime import datetime
 from enum import Enum
-from sqlalchemy.ext.hybrid import hybrid_method
+from os.path import abspath
+from os.path import join as join_path
 from xmlrpc.client import Fault
 
-from src import db, supervisor, app
+from sqlalchemy.ext.hybrid import hybrid_method
+from src import app, db, supervisor
 from src.models import AlchemySerializable
 from src.utils.HelperClass import AppState
 
