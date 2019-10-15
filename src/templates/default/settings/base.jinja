@@ -1,0 +1,77 @@
+{% extends "base_container.jinja" %}
+
+{% block title %} Settings {% endblock %}
+
+{% block cbody %}
+        <div class="flex flex-col md:flex-row items-center md:items-start justify-between content-center md:mt-5">
+
+        <div class="flex-col flex w-full md:w-1/4">
+            {% block sideinfo %}
+            {% endblock %}
+            <div class="flex-col flex w-full md:w-full mb-5 shadow-md">
+
+                <div class="flex flex-row w-full w-full rounded-t p-3 bg-secondary-500 text-white text-xl">
+                    Settings
+                </div>
+
+                <div class="flex flex-col w-full border border-t-0 border-grey-300 rounded-b">
+                    <div class=" application_list_element w-full flex flex-row mt-0 p-3 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.index" }}">
+                    <a href="{{ url_for('settings.index') }}" class="appname w-4/6 break-words ">Account</a>
+
+                    </div>
+                    <div class=" application_list_element w-full flex flex-row mt-0 p-3 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.security" }}">
+                        <a href="{{ url_for('settings.security') }}" class="appname w-4/6 break-words ">Security</a>
+
+                    </div>
+                    <div class=" application_list_element w-full flex flex-row mt-0 p-3 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.notifications" }}">
+                        <a href="{{ url_for('settings.notifications') }}" class="appname w-4/6 break-words ">Notifications</a>
+
+                    </div>
+                    <div class=" application_list_element w-full flex flex-row mt-0 p-3 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.emails" }}">
+                        <a href="{{ url_for('settings.emails') }}" class="appname w-4/6 break-words ">Emails</a>
+
+                    </div>
+                    <div class=" application_list_element w-full flex flex-row mt-0 p-3 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.billing" }}">
+                        <a href="{{ url_for('settings.billing') }}" class="appname w-4/6 break-words ">Billing</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+
+        <div class="flex flex-col w-full md:w-2/3 pb-10">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flashes flex flex-col w-full pt-5 justify-center items-center">
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}" role="alert">
+                        <div class="flex">
+                            <div class="alert-icon"><i class="fa fa-2x fa-info-circle"></i></div>
+                            <div class="alert-body">
+                                <p class="alert-body-title">{{ category | capitalize }}</p>
+                                <p class="alert-body-text ">{{ message |capitalize }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+              {% endif %}
+
+            {% endwith %}
+
+            <div class="flex w-full border-b border-secondary-500 p-3 text-2xl text-secondary-500">{% block name %}{% endblock %}</div>
+            {% block settings_content %}
+
+
+
+            {% endblock %}
+        </div>
+
+    </div>
+{% endblock %}
