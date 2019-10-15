@@ -22,6 +22,10 @@ u3.roles = [r1]
 apps = [Application(name=f"app_{str(x)}", user=u) for x in range(1, 10)]
 apps2 = [Application(name=f"app_{str(x)}", user=u2) for x in range(1, 10)]
 
+apps[0].enabled = True
+apps[0].entrypoint = "foobar.py"
+apps[0].domain_name = "app1.com"
+
 with app.app_context():
     u.password = hash_password("shift")
     u2.password = hash_password("shift")

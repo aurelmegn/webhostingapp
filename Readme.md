@@ -21,6 +21,11 @@
  in nginx.conf >> include /var/www/nginx/sites-enabled/*;
 
  run nginx_root_process.py to activate the nginx hup signal sending
+ su
+ /venv/python nginx_root_process.py
+
+ run thread based workers
+
 
  python run.py
  ```

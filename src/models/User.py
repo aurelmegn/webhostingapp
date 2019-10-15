@@ -33,7 +33,9 @@ class User(db.Model, UserMixin, AlchemySerializable):
     ftp_quota = db.Column(db.Numeric(), default=1)
     # application
 
-    applications = db.relationship("Application", backref="user", lazy=True)
+    applications = db.relationship(
+        "Application", backref="user", lazy=True, cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return "<User %r>" % self.username

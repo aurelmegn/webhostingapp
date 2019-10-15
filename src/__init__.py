@@ -44,11 +44,11 @@ admin = Admin(app, name='myapp', template_mode='bootstrap3', url='/wtf')
 # app_log_handler.setLevel(logging.DEBUG)
 
 # log file
-log_dir = "./src/var/log"
+log_dir = "./var/log"
 if not isdir(log_dir):
     makedirs(log_dir)
 
-if bool(app.config.get("DEBUG")):
+if app.config.get("ENV").startswith("dev"):
     log_file = "dev.log"
 else:
     log_file = "prod.log"

@@ -4,7 +4,7 @@ from flask_security import roles_required
 from sqlalchemy import asc, desc
 from xmlrpc.client import Fault
 
-from src.models.AppHistory import AppHistory
+from src.models.AppActionHistory import AppActionHistory
 from src.forms.ApplicationForm import ApplicationEditForm, ApplicationForm
 from src.utils.HelperClass import AppState
 from src.models import Application
@@ -38,8 +38,8 @@ def dashboard():
             user=current_user, name=appname
         ).first()
 
-        histories = (
-            AppHistory.query.with_parent(application)
+        actions_histories = (
+            AppActionHistory.query.with_parent(application)
             .order_by(desc("at"))
             .limit(20)
             .all()
@@ -76,7 +76,7 @@ def dashboard():
             applications=applications,
             caform=create_app_form,
             application=application,
-            histories=histories,
+            actions_histories=actions_histories,
             AppState=AppState,
             app_out_log=out_log,
             ftp_host=ftp_host,

@@ -2,13 +2,14 @@ import subprocess
 from flask import request, abort, flash, redirect, url_for, jsonify, render_template
 from flask_login import login_required, current_user
 from flask_security import roles_required
+from sqlalchemy import desc, asc
 from string import Template
 from xmlrpc.client import Fault
 
 from src.forms.ApplicationForm import ApplicationForm
 from src.models.Application import AppState, AppType
 from src import app, supervisor, db
-from src.models import Application, AppHistory
+from src.models import Application, AppActionHistory
 from src.utils.find_or_create import find_or_create
 
 from os.path import join, isdir, abspath
@@ -125,7 +126,7 @@ def app_action(appname):
     if not application.enabled:
         abort(404)
 
-    app_history = AppHistory(old_state=application.state, action=action)
+    app_action_history = AppActionHistory(old_state=application.state, action=action)
 
     try:
 
@@ -180,6 +181,7 @@ def app_action(appname):
             action_executed = True
 
         if action_executed:
+            application.have_started_once = True
             action = "stopped" if action == "stop" else action + "ed"
             flash(f"Application {appname} {action}", "success")
 
@@ -194,8 +196,8 @@ def app_action(appname):
         # abort(500, e)
 
     # save the action in the history of action for the current application
-    app_history.new_state = application.state
-    application.histories.append(app_history)
+    app_action_history.new_state = application.state
+    application.action_histories.append(app_action_history)
 
     db.session.commit()
 
@@ -207,6 +209,12 @@ def app_action(appname):
 @roles_required("user")
 def app_add():
     application_form = ApplicationForm()
+
+    applications = (
+        Application.query.with_parent(current_user)
+        .order_by(desc("enabled"), asc("name"))
+        .all()
+    )
 
     if application_form.validate_on_submit():
         # print(application_form.object_data)
@@ -240,6 +248,7 @@ def app_add():
         "default/dashboard/app_create.jinja",
         addform=application_form,
         user=current_user,
+        applications=applications,
     )
 
 

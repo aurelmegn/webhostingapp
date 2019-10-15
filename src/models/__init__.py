@@ -42,4 +42,5 @@ class AlchemySerializable:
 from .User import User
 from .Application import Application
 from .Role import Role
-from .AppHistory import AppHistory
+from .AppActionHistory import AppActionHistory
+from .AppStateHistory import AppStateHistory

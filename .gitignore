@@ -20,3 +20,4 @@ htmlcov
 tmp
 *.___
 src/var/data.db
+var/log

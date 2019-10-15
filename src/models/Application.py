@@ -4,11 +4,9 @@ from enum import Enum
 from sqlalchemy.ext.hybrid import hybrid_method
 from xmlrpc.client import Fault
 
-# from src.models.AppHistory import AppHistory
 from src import db, supervisor, app
 from src.models import AlchemySerializable
 from src.utils.HelperClass import AppState
-from src.utils.jinja_filters import state_to_str
 
 
 class AppType(Enum):
@@ -24,6 +22,8 @@ class Application(db.Model, AlchemySerializable):
     enabled = db.Column(db.Boolean(), default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
 
+    have_started_once = db.Column(db.Boolean, default=False)
+
     name = db.Column(db.String(), nullable=False)
     type = db.Column(db.Enum(AppType), nullable=False, default=AppType.python37)
 
@@ -34,7 +34,18 @@ class Application(db.Model, AlchemySerializable):
     domain_name = db.Column(db.String())
     callable = db.Column(db.String())
 
-    histories = db.relationship("AppHistory", backref="application", lazy=True)
+    action_histories = db.relationship(
+        "AppActionHistory",
+        backref="application",
+        lazy=True,
+        cascade="all, delete-orphan",
+    )
+    state_histories = db.relationship(
+        "AppStateHistory",
+        backref="application",
+        lazy=True,
+        cascade="all, delete-orphan",
+    )
 
     @property
     def state(self):
@@ -46,10 +57,7 @@ class Application(db.Model, AlchemySerializable):
             state = process_info.get("state")
 
             return AppState(state)
-        except Fault:
-            return AppState.never_started
-
-        except Exception:
+        except (Fault, Exception):
             return AppState.never_started
 
     @property
@@ -82,21 +90,21 @@ class Application(db.Model, AlchemySerializable):
     @hybrid_method
     def get_uwsgi_conf_path(self):
         """
-        return the path to the supervisor conf file of this application
+        return the path to the uwsgi conf file of this application
          """
         return f"{self.name}.uwsgi.ini"
 
     @hybrid_method
     def get_abs_uwsgi_conf_path(self):
         """
-        return the path to the supervisor conf file of this application
+        return the path to the uwsgi conf file of this application
          """
         return join_path(self.get_app_ftp_dir(), f"{self.name}.uwsgi.ini")
 
     @hybrid_method
     def get_abs_nginx_conf_path(self):
         """
-        return the path to the supervisor conf file of this application
+        return the path to the nginx conf file of this application
          """
         nginx_dir = app.config.get("NGINX_SITE_CONF")
         return join_path(nginx_dir, f"{self.get_supervisor_name()}.conf")

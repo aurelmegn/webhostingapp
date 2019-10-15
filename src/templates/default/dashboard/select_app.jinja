@@ -111,9 +111,9 @@
         </div>
 
         <div class="section section-history">
-            <div class="section-header">State history</div>
+            <div class="section-header">Action history</div>
             <div class="section-body " >
-            {% if histories | count >= 1 %}
+            {% if actions_histories | count >= 1 %}
                 <table class="text-let w-full bg-grey-100 border-collapse">
                     <thead>
                         <tr class="hover:bg-grey-300 border-b border-grey-300">
@@ -124,7 +124,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for history in histories %}
+                    {% for history in actions_histories %}
                         <tr class="hover:bg-grey-300 border-b border-grey-300">
                             <td class="py-0 px-2 text-center text-{{ history.old_state | state_color }}-400">{{ history.old_state | state_str }}</td>
                             <td class="py-0 px-2 text-center ">{{ history.action }}</td>
