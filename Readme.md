@@ -7,16 +7,15 @@
  source env/bin/activate
  pipenv install
 
- sudo mkdir /var/www/nginx/sites-enabled
- sudo chown hosting:hosting /var/www/nginx/sites-enabled
-
  sudo mkdir /var/www/hosting/nginx/sites-enabled
  sudo mkdir /var/www/hosting/ftpfiles
  sudo mkdir /var/www/hosting/supervisor
+ sudo mkdir /var/www/hosting/conf_templates
 
  sudo chown hosting:hosting /var/www/nginx/sites-enabled
  sudo chown hosting:hosting /var/www/hosting/ftpfiles
  sudo chown hosting:hosting /var/www/hosting/supervisor
+ sudo chown hosting:hosting /var/www/hosting/conf_templates
 
  in nginx.conf >> include /var/www/nginx/sites-enabled/*;
 

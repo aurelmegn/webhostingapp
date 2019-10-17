@@ -11,7 +11,7 @@ if __name__ == "__main__":
         find_or_create(app.config.get("FTP_BASE_DIR"))
         find_or_create(join(app.config.get("SUPERVISOR_CONFIG_DIR"), "programs"))
 
-        app.run(host="0.0.0.0", port=5000)
+        app.run(host="0.0.0.0", port=5000, debug=True)
 
     except Exception as e:
         print(e)

@@ -46,6 +46,7 @@ toml = "==0.10.0"
 werkzeug = "==0.15.6"
 wtforms = "==2.2.1"
 uwsgi = "*"
+dynaconf = "*"
 
 [requires]
 python_version = "3.7"

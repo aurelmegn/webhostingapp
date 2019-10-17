@@ -8,18 +8,18 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_webpackext import FlaskWebpackExt, WebpackBundleProject
 from os import makedirs
 from os.path import join, isdir
+from dynaconf import FlaskDynaconf
 
 from src.utils.jinja_filters import date_format_datetime, fa_icon_flash_filter, state_to_str, from_state_color
 
-myproject = WebpackBundleProject(
+webpack_project = WebpackBundleProject(
     __name__, project_folder="assets", config_path="./public/entrypoint.json"
 )
+
 app = Flask(__name__, static_folder="public")
+FlaskDynaconf(app)
 
-app.config.update(dict(WEBPACKEXT_PROJECT=myproject))
-
-# Configurations
-app.config.from_object("config")
+app.config.update(dict(WEBPACKEXT_PROJECT=webpack_project))
 
 # Sql alchemy
 db = SQLAlchemy(app)
@@ -29,9 +29,6 @@ app.jinja_env.filters["datetime"] = date_format_datetime
 app.jinja_env.filters["fa_icon"] = fa_icon_flash_filter
 app.jinja_env.filters["state_str"] = state_to_str
 app.jinja_env.filters["state_color"] = from_state_color
-# debug toolbar
-toolbar = DebugToolbarExtension(app)
-FlaskWebpackExt(app)
 
 # flask admin
 admin = Admin(app, name='myapp', template_mode='bootstrap3', url='/wtf')
@@ -48,8 +45,14 @@ log_dir = "./var/log"
 if not isdir(log_dir):
     makedirs(log_dir)
 
+
 if app.config.get("ENV").startswith("dev"):
     log_file = "dev.log"
+
+    # debug toolbar
+    toolbar = DebugToolbarExtension(app)
+    FlaskWebpackExt(app)
+
 else:
     log_file = "prod.log"
 log_file = join(log_dir, log_file)

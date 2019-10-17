@@ -1,11 +1,11 @@
 # Statement for enabling the development environment
-# ENV = "dev"
+ENV = "dev"
 DEBUG = True
 
 # Define the application directory
-import os
+# import os
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Application threads. A common general assumption is
 # using 2 per available processor cores - to handle
