@@ -1,8 +1,8 @@
-from flask import render_template
+from flask import Blueprint, render_template
 
-from src import app
+blog_bp = Blueprint("blog", __name__, url_prefix="/blog")
 
 
-@app.route("/blog")
-def blog():
+@blog_bp.route("/")
+def index():
     return render_template("default/blog.jinja")

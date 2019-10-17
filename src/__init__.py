@@ -84,6 +84,16 @@ except (OSError, Fault) as e:
 
 from src.controllers import *
 
+from src.controllers.settings import settings_bp
+from src.controllers.dashboard import dashboard_bp
+from src.controllers.docs import docs_bp
+from src.controllers.blog import blog_bp
+
+app.register_blueprint(settings_bp)
+app.register_blueprint(dashboard_bp)
+app.register_blueprint(docs_bp)
+app.register_blueprint(blog_bp)
+
 # from src.models import roles_users
 from src.models.User import User
 from src.models.Role import Role

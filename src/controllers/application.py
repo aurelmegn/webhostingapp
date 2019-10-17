@@ -10,13 +10,16 @@ from flask_security import roles_required
 from sqlalchemy import asc, desc
 
 from src import app, db, supervisor
+from src.controllers.dashboard import dashboard_bp
 from src.forms.ApplicationForm import ApplicationForm
 from src.models import AppActionHistory, Application
 from src.models.Application import AppState, AppType
 from src.utils.find_or_create import find_or_create
 
 
-@app.route("/application/install_requirements/<string:appname>", methods=["post"])
+@dashboard_bp.route(
+    "/application/install_requirements/<string:appname>", methods=["post"]
+)
 @login_required
 @roles_required("user")
 def app_install_requirements(appname):
@@ -69,7 +72,7 @@ def app_install_requirements(appname):
     return redirect(request.referrer)
 
 
-@app.route("/application/state/<string:appname>")
+@dashboard_bp.route("/application/state/<string:appname>")
 @login_required
 @roles_required("user")
 def app_info(appname):
@@ -100,7 +103,7 @@ def app_info(appname):
         abort(500)
 
 
-@app.route("/application/action/<string:appname>")
+@dashboard_bp.route("/application/action/<string:appname>")
 @login_required
 @roles_required("user")
 def app_action(appname):
@@ -204,7 +207,7 @@ def app_action(appname):
     return redirect(request.referrer)
 
 
-@app.route("/application/add", methods=["post", "get"])
+@dashboard_bp.route("/application/add", methods=["post", "get"])
 @login_required
 @roles_required("user")
 def app_add():

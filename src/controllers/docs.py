@@ -1,8 +1,8 @@
-from flask import render_template
+from flask import Blueprint, render_template
 
-from src import app
+docs_bp = Blueprint("docs", __name__, url_prefix="/docs")
 
 
-@app.route("/docs")
-def docs():
+@docs_bp.route("/")
+def index():
     return render_template("default/docs.jinja")

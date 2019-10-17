@@ -1,6 +1,6 @@
 from xmlrpc.client import Fault
 
-from flask import abort, redirect, render_template, request, url_for
+from flask import Blueprint, abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from flask_security import roles_required
 from sqlalchemy import asc, desc
@@ -12,11 +12,13 @@ from src.models.AppActionHistory import AppActionHistory
 from src.utils.HelperClass import AppState
 from src.utils.tail import tail
 
+dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
-@app.route("/dashboard", methods=["get"])
+
+@dashboard_bp.route("/", methods=["get"])
 @login_required
 @roles_required("user")
-def dashboard():
+def index():
     appname = request.args.get("appname") or None
 
     # order the applications of the user // todo
@@ -94,7 +96,7 @@ def dashboard():
     )
 
 
-@app.route("/application/edit/<string:appname>", methods=["get", "post"])
+@dashboard_bp.route("/application/edit/<string:appname>", methods=["get", "post"])
 def app_edit(appname):
     ftp_host = app.config.get("FTP_HOST")
     ftp_port = app.config.get("FTP_PORT")

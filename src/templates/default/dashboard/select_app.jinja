@@ -40,15 +40,15 @@
         {% else %}
             <div class="flex flex-col md:flex-row">
                 <a id="startApp" class="app-action" {{ "hidden" if not application.can_start() }}
-                   href="{{ url_for('app_action', action='start' ,appname=application.name) }}">
+                   href="{{ url_for('dashboard.app_action', action='start' ,appname=application.name) }}">
                     Start
                 </a>
                 <a id="reloadApp" class="app-action " {{ "hidden" if not application.can_restart() }}
-                   href="{{ url_for('app_action', action='restart' ,appname=application.name) }}">
+                   href="{{ url_for('dashboard.app_action', action='restart' ,appname=application.name) }}">
                     Restart
                 </a>
                 <a id="stopApp" class="app-action" {{ "hidden" if not application.can_stop() }}
-                   href="{{ url_for('app_action', action='stop' ,appname=application.name) }}">
+                   href="{{ url_for('dashboard.app_action', action='stop' ,appname=application.name) }}">
                     Stop
                 </a>
                 <button id="stopApp" class="app-action " {{ "hidden" if not application.can_execute_command() }}>
@@ -57,7 +57,7 @@
             </div>
 
             <div class="flex flex-row w-full">
-                <form action="{{ url_for('app_install_requirements', appname=application.name) }}" method="post" class="w-full">
+                <form action="{{ url_for('dashboard.app_install_requirements', appname=application.name) }}" method="post" class="w-full">
                     <div class="flex items-center border-b border-b-2 border-secondary-700 py-1 mx-1">
                         <input type="text" class="w-full appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py1 px-2 leading-tight focus:outline-none" placeholder="Requirement file name" name="req_file_name" required >
     {#                    <input type="text" class="form-input" placeholder="Enter the command you want to execute">#}
@@ -72,7 +72,7 @@
         <div class="section section-details">
             <div class="section-header flex-row">
                 <div class="">Details</div>
-                <a href="{{ url_for("app_edit", appname=application.name) }}" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
+                <a href="{{ url_for("dashboard.app_edit", appname=application.name) }}" class="ml-auto underline"><i class="fa fa-x fa-edit"></i></a>
             </div>
             <div class="section-body flex-col " >
 
