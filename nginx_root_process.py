@@ -1,7 +1,8 @@
-from signal import SIGHUP
-from time import sleep
 from os import kill, remove
 from os.path import isfile
+from signal import SIGHUP
+from time import sleep
+
 from src import app
 
 

@@ -1,8 +1,8 @@
 # db init
 from flask_security.utils import hash_password
 
+from src import Role, User, app, db
 from src.models.Application import Application
-from src import db, User, Role, app
 
 db.drop_all()
 db.create_all()

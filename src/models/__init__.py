@@ -1,14 +1,22 @@
 import json
 
+from sqlalchemy.ext.declarative import DeclarativeMeta
+
 from src import db
+
+from .AppActionHistory import AppActionHistory
+from .Application import Application
+from .AppStateHistory import AppStateHistory
+from .Role import Role
+
+# import this later to avoid cyclic import
+from .User import User
 
 roles_users = db.Table(
     "roles_users",
     db.Column("user_id", db.Integer(), db.ForeignKey("user.id")),
     db.Column("role_id", db.Integer(), db.ForeignKey("role.id")),
 )
-
-from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
 class AlchemyEncoder(json.JSONEncoder):
@@ -36,11 +44,3 @@ class AlchemyEncoder(json.JSONEncoder):
 class AlchemySerializable:
     def __json__(self):
         return json.dumps(self, cls=AlchemyEncoder)
-
-
-# import this later to avoid cyclic import
-from .User import User
-from .Application import Application
-from .Role import Role
-from .AppActionHistory import AppActionHistory
-from .AppStateHistory import AppStateHistory

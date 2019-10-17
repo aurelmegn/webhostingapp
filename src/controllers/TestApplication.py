@@ -1,5 +1,7 @@
-from flask_security import login_user
 from unittest import TestCase
+
+from flask_security import login_user
+
 from src import app
 from tests.AppTestBase import AppTestBase
 

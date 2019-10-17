@@ -1,19 +1,19 @@
 import subprocess
-from flask import request, abort, flash, redirect, url_for, jsonify, render_template
-from flask_login import login_required, current_user
-from flask_security import roles_required
-from sqlalchemy import desc, asc
+from os import mknod
+from os.path import abspath, isdir, join
 from string import Template
 from xmlrpc.client import Fault
 
-from src.forms.ApplicationForm import ApplicationForm
-from src.models.Application import AppState, AppType
-from src import app, supervisor, db
-from src.models import Application, AppActionHistory
-from src.utils.find_or_create import find_or_create
+from flask import abort, flash, jsonify, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
+from flask_security import roles_required
+from sqlalchemy import asc, desc
 
-from os.path import join, isdir, abspath
-from os import mknod
+from src import app, db, supervisor
+from src.forms.ApplicationForm import ApplicationForm
+from src.models import AppActionHistory, Application
+from src.models.Application import AppState, AppType
+from src.utils.find_or_create import find_or_create
 
 
 @app.route("/application/install_requirements/<string:appname>", methods=["post"])

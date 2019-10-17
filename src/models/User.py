@@ -1,12 +1,13 @@
-from os.path import join as join_path, abspath
-
 from datetime import datetime
+from os.path import abspath
+from os.path import join as join_path
 
 from flask_security import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_method
 
-from src import db, app
-from . import roles_users, AlchemySerializable
+from src import app, db
+
+from . import AlchemySerializable, roles_users
 
 
 class User(db.Model, UserMixin, AlchemySerializable):
