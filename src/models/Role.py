@@ -1,7 +1,7 @@
 from flask_security import RoleMixin
 
 from src import db
-from src.models import AlchemySerializable
+from src.utils.HelperClass import AlchemySerializable
 
 
 class Role(db.Model, RoleMixin, AlchemySerializable):

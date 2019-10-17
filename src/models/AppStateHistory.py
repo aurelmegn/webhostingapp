@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from src import db
-from src.models.Application import AppState
+from src.utils.HelperClass import AppState
 
 
 class AppStateHistory(db.Model):

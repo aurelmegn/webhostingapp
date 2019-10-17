@@ -7,16 +7,7 @@ from xmlrpc.client import Fault
 from sqlalchemy.ext.hybrid import hybrid_method
 
 from src import app, db, supervisor
-from src.models import AlchemySerializable
-from src.utils.HelperClass import AppState
-
-
-class AppType(Enum):
-    python35 = "python_3.5"
-    python36 = "python_3.6"
-    python37 = "python_3.7"
-    # php = 'php'
-    # nodejs = 'nodejs'
+from src.utils.HelperClass import AlchemySerializable, AppState, AppType
 
 
 class Application(db.Model, AlchemySerializable):

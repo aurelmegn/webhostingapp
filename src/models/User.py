@@ -6,8 +6,7 @@ from flask_security import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_method
 
 from src import app, db
-
-from . import AlchemySerializable, roles_users
+from src.utils.HelperClass import AlchemySerializable
 
 
 class User(db.Model, UserMixin, AlchemySerializable):
