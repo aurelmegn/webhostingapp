@@ -33,7 +33,7 @@
                     {% for application in applications %}
                         <div class=" application_list_element w-full flex flex-row mt-0 p-3 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.args.appname == application.name }}">
 
-                            <a href="{{ url_for('dashboard.index', appname=application.name) }}" class="appname w-4/6 break-words ">{{ application.name | capitalize }}</a>
+                            <a href="{{ url_for('dashboard.index', appname=application.name) }}" class="appname break-words ">{{ application.name | capitalize }}</a>
 
                         </div>
                     {% else %}

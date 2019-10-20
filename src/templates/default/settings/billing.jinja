@@ -2,5 +2,51 @@
 
 {% block name %} Billing {% endblock %}
 {% block settings_content %}
+    <div class="flex flex-col">
+        <h2 class="text-xl ">Billing</h2>
+        <hr class="w-full border-secondary-300">
+    </div>
 
+    <div class="flex flex-col md:mt-5 md:flex-row w-full my-2 justify-between rounded">
+        <div class="overview-card-billing pr-2">
+            <div class="overview-card-body overview-card-secondary">
+                <div class="text-sm">Current monthly bill</div>
+                <div class="text-3xl w-full text-center">$0</div>
+            </div>
+        </div>
+        <div class="overview-card-billing">
+            <div class="overview-card-body overview-card-secondary ">
+                <div class="text-sm">Next payment due</div>
+                <div class="text-3xl w-full text-center">--</div>
+                <div class="text-base "><a href="">Payment history</a></div>
+            </div>
+        </div>
+        <div class="overview-card-billing pl-2">
+            <div class="overview-card-body overview-card-secondary ">
+                <div class="text-sm">Frequent actions</div>
+                <div class="text-xs"><a href="">Add history</a></div>
+                <div class="text-xs"><a href="">Update payment method</a></div>
+                <div class="text-xs"><a href="">View payment history</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col mt-4">
+        <h2 class="text-xl ">Payment Information</h2>
+        <hr class="w-full border-secondary-300">
+    </div>
+
+    <div class="flex flex-col mt-3">
+        <h2 class="text-">Payment methods</h2>
+        <hr class="w-full border-secondary-300">
+    </div>
+
+    <div class="flex flex-col mt-3">
+        <h2 class="text-">Last payment</h2>
+        <hr class="w-full border-secondary-300">
+    </div>
+    <div class="flex flex-col mt-3">
+        <h2 class="text-">Coupon</h2>
+        <hr class="w-full border-secondary-300">
+    </div>
 {% endblock %}
