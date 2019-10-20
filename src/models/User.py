@@ -18,12 +18,12 @@ class User(db.Model, UserMixin, AlchemySerializable):
     name = db.Column(db.String(80), unique=True, nullable=False)
     address = db.Column(db.String(80), nullable=False)
     country = db.Column(db.String(80), nullable=False)
-    town = db.Column(db.String(80), nullable=False)
+    city = db.Column(db.String(80), nullable=False)
     number = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
     # application info
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
     confirmed_at = db.Column(db.DateTime())
@@ -43,7 +43,11 @@ class User(db.Model, UserMixin, AlchemySerializable):
     # application
 
     applications = db.relationship(
-        "Application", backref="user", lazy=True, cascade="all, delete-orphan"
+        "Application", backref="user", lazy=False, cascade="all, delete-orphan"
+    )
+
+    emails = db.relationship(
+        "Email", backref="user", lazy=True, cascade="all, delete-orphan"
     )
 
     def __repr__(self):

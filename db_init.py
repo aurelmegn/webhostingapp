@@ -2,15 +2,47 @@
 from flask_security.utils import hash_password
 
 from src import Role, User, app, db
+from src.models import Email
 from src.models.Application import Application
 
 db.drop_all()
 db.create_all()
 
-u = User(username="admin", email="admin@mail.com", active=True)
-u2 = User(username="user1", email="user1@mail.com", active=True)
-u3 = User(username="user2", email="user2@mail.com", active=True)
+u = User(
+    username="admin",
+    active=True,
+    name="admin 1",
+    address="lol",
+    country="e",
+    city="zz",
+    number="45445",
+)
+u2 = User(
+    username="user1",
+    active=True,
+    name="user 1",
+    address="lol",
+    country="e",
+    city="zz",
+    number="47445",
+)
+u3 = User(
+    username="user2",
+    active=True,
+    name="user 2",
+    address="lol",
+    country="e",
+    city="zz",
+    number="48445",
+)
 u.active = True
+
+for a, u in enumerate([u, u2, u3]):
+    e = Email(label=f"user{a}@host.mail")
+    e.is_primary = True
+    e.receive_notifications = True
+    u.email = e.label
+    u.emails.append(e)
 
 r = Role(name="admin")
 r1 = Role(name="user")
