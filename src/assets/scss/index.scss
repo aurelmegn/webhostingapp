@@ -9,6 +9,13 @@
 
 @import "~font-awesome/scss/font-awesome";
 
+@font-face {
+   font-family: "Ubuntu";
+   src: url("../fonts/Ubuntu-R.ttf");
+   //font-weight: bold;
+}
+
 body{
-   //@apply font-mono;
+   font-family: "Ubuntu", sans-serif;
+  // @apply font-sans;
 }
