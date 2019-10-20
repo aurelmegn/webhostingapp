@@ -7,6 +7,7 @@ from src import db
 from .AppActionHistory import AppActionHistory
 from .Application import Application
 from .AppStateHistory import AppStateHistory
+from .Email import Email
 from .Role import Role
 from .role_user import roles_users
 

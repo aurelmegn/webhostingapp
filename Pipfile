@@ -8,6 +8,8 @@ black = "==19.3b0"
 coverage = "==4.5.4"
 flask-debugtoolbar = "==0.10.1"
 isort = "*"
+pep8 = "*"
+pylint = "*"
 
 [packages]
 appdirs = "==1.4.3"
@@ -50,3 +52,6 @@ dynaconf = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

@@ -3,4 +3,132 @@
 {% block name %} Emails {% endblock %}
 {% block settings_content %}
 
+    <div class="flex flex-col">
+        <h2 class="text-xl ">Emails</h2>
+        <hr class="w-full border-secondary-300">
+    </div>
+
+    <div class="md:w-full mt-5 email_list">
+
+        {% for email in user.emails %}
+            <div class="email_list_element w-full flex flex-row p-3 bg-white border border-b-0 border-grey-300 first:rounded-t last:border-b last:rounded-b">
+
+                <div class="w-full break-words ">{{ email.label}}
+                    {% if email.is_primary %}
+                        <span class="ml-2 bg-green-600 text-white rounded px-1">primary <i class="fa fa-info-circle"></i>
+                        </span>
+                    {% endif %}
+                    {% if email.receive_notifications %}
+                        <span class="ml-2 bg-grey-300 rounded px-1">receive notifications <i class="fa fa-info-circle"></i>
+                        </span>
+                    {% endif %}
+                </div>
+                <a href="{{ url_for('settings.emails', delete=email.label) }}" class="ml-auto text-red-600"><i class="fa text-2xl fa-trash-o"></i></a>
+
+            </div>
+        {% endfor %}
+    </div>
+        
+    <form id="email_form"  class="w-full flex flex-col mt-4" method="post" action="{{ url_for("settings.emails") }}">
+        {{ email_form.hidden_tag() }}
+
+        <label>Add email address</label>
+        <div class="my-1 flex flex-row w-full">
+            <div class="w-3/4">
+                {{ email_form.label(class="setting-input text-lg form-input") }}
+            </div>
+
+            <div class="w-1/4 pl-2">
+                <button id="change_info_formSubmitBtn" class="btn btn-teal w-full" type="submit">
+                Add
+            </button>
+            </div>
+
+        </div>
+        {% for error in email_form.label.errors %}
+            <p class="form-error "> {{ error }}</p>
+        {% endfor %}
+    </form>
+
+    <div class="flex flex-col mt-4">
+        <hr class="w-full border-secondary-300">
+        <span class="mt-2">Primary email address</span>
+    </div>
+
+    <form id="primary_email_form"  class="w-full flex flex-col mt-4" method="post" action="{{ url_for("settings.emails") }}">
+        {{ primary_email_form.hidden_tag() }}
+
+        <label>The primary email address will be used for account-related notifications and can be used for password resets.</label>
+        <div class="my-1 flex flex-row w-full">
+            <div class="w-3/4">
+                {{ primary_email_form.elements(class="setting-input text-lg form-input") }}
+            </div>
+
+            <div class="w-1/4 pl-2">
+                <button id="change_info_formSubmitBtn" class="btn btn-teal w-full" type="submit">
+                Add
+            </button>
+            </div>
+
+        </div>
+        {% for error in primary_email_form.elements.errors %}
+            <p class="form-error "> {{ error }}</p>
+        {% endfor %}
+    </form>
+
+
+    <div class="flex flex-col mt-4">
+        <hr class="w-full border-secondary-300">
+        <span class="mt-2">Backup email address</span>
+    </div>
+
+    <form id="backup_email_form"  class="w-full flex flex-col mt-4" method="post" action="{{ url_for("settings.emails") }}">
+        {{ backup_email_form.hidden_tag() }}
+
+        <label>Your backup email address will be used as an additional destination for security-relevant account notifications and can also be used for password resets.</label>
+        <div class="my-1 flex flex-row w-full">
+            <div class="w-3/4">
+                {{ backup_email_form.elements(class="setting-input text-lg form-input") }}
+            </div>
+
+            <div class="w-1/4 pl-2">
+                <button id="change_info_formSubmitBtn" class="btn btn-teal w-full" type="submit">
+                Add
+            </button>
+            </div>
+
+        </div>
+        {% for error in backup_email_form.elements.errors %}
+            <p class="form-error "> {{ error }}</p>
+        {% endfor %}
+    </form>
+
+
+    <div class="flex flex-col mt-4">
+        <hr class="w-full border-secondary-300">
+        <span class="mt-2 text-xl">Email Preference</span>
+    </div>
+
+        <form id="backup_email_form"  class="w-full flex flex-col mt-4" method="post" action="{{ url_for("settings.emails") }}">
+        {{ email_preference_form.hidden_tag() }}
+
+{#        <label>Your backup email address will be used as an additional destination for security-relevant account notifications and can also be used for password resets.</label>#}
+        <div class="my-1 flex flex-col w-full">
+            <div class="w-full">
+                {{ email_preference_form.elements(class="setting-input text-lg form-input") }}
+            </div>
+        </div>
+
+        {% for error in email_preference_form.elements.errors %}
+            <p class="form-error "> {{ error }}</p>
+        {% endfor %}
+
+
+        <div class="w-full flex flex-col">
+            <button id="email_preference_formSubmitBtn" class="btn btn-teal w-auto ml-auto" type="submit">
+            Update preferences</button>
+        </div>
+
+    </form>
+
 {% endblock %}

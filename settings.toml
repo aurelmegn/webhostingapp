@@ -20,7 +20,6 @@ SECURITY_LOGIN_USER_TEMPLATE = "security/login.jinja"
 
 SUPERVISOR_USER_HOME = "{supervisor_path}/programs/{username}"
 
-
 [production]
 
 SQLALCHEMY_DATABASE_URI = "postgresql://hosting:<hostingpassword>@localhost/hostingapp"
@@ -76,7 +75,7 @@ NGINX_HUP_CHECK_FILE = "/tmp/.send_hup_to_nginx"
 
 SECURITY_PASSWORD_SALT = "YMNx&VZ<:85#=61_dUr\\x0b*)vL"
 
-DEBUG_TB_ENABLED="True"
+DEBUG_TB_ENABLED="False"
 DEBUG_TB_INTERCEPT_REDIRECTS = "False"
 
 # Secret key for signing cookies
