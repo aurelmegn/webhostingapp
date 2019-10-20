@@ -16,23 +16,23 @@
 
                 <div class="flex flex-col w-full border border-t-0 border-grey-300 rounded-b">
                     <div class=" application_list_element w-full flex flex-row mt-0 p-2 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.index" }}">
-                    <a href="{{ url_for('settings.index') }}" class="appname w-4/6 break-words ">Account</a>
+                    <a href="{{ url_for('settings.index') }}" class="appname break-words ">Account</a>
 
                     </div>
                     <div class=" application_list_element w-full flex flex-row mt-0 p-2 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.security" }}">
-                        <a href="{{ url_for('settings.security') }}" class="appname w-4/6 break-words ">Security</a>
+                        <a href="{{ url_for('settings.security') }}" class="appname break-words ">Security</a>
 
                     </div>
                     <div class=" application_list_element w-full flex flex-row mt-0 p-2 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.notifications" }}">
-                        <a href="{{ url_for('settings.notifications') }}" class="appname w-4/6 break-words ">Notifications</a>
+                        <a href="{{ url_for('settings.notifications') }}" class="appname break-words ">Notifications</a>
 
                     </div>
                     <div class=" application_list_element w-full flex flex-row mt-0 p-2 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.emails" }}">
-                        <a href="{{ url_for('settings.emails') }}" class="appname w-4/6 break-words ">Emails</a>
+                        <a href="{{ url_for('settings.emails') }}" class="appname break-words ">Emails</a>
 
                     </div>
                     <div class=" application_list_element w-full flex flex-row mt-0 p-2 bg-grey-100 border-b border-grey-300 last:border-0 hover:bg-grey-300 {{ "active" if request.endpoint == "settings.billing" }}">
-                        <a href="{{ url_for('settings.billing') }}" class="appname w-4/6 break-words ">Billing</a>
+                        <a href="{{ url_for('settings.billing') }}" class="appname break-words ">Billing</a>
                     </div>
 
                 </div>
@@ -66,7 +66,7 @@
             {% endwith %}
 
 {#            <div class="w-full">#}
-            <div class="w-3/4 mt-3">
+            <div class="w-full md:w-4/5 mt-3">
                 {% block settings_content %}
                     <div class="flex w-full border-b border-secondary-500 p-3 text-2xl text-secondary-500">{% block name %}{% endblock %}</div>
                 {% endblock %}

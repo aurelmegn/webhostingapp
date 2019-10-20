@@ -98,25 +98,24 @@
        @apply bg-secondary-200 ;
     }
   }
-  .overview-card-green {
-    @apply bg-green-100 text-green-500;
+}
+
+.overview-card-billing{
+  @apply flex w-full my-1 h-32;
+
+  &>.overview-card-body{
+    @apply w-full px-5 py-6 rounded shadow cursor-pointer ;
 
     &:hover{
-       @apply bg-green-200 ;
+
     }
   }
-  .overview-card-blue {
-    @apply bg-blue-100 text-blue-500;
+
+  .overview-card-secondary {
+    @apply bg-grey-200 text-secondary-500;
 
     &:hover{
-       @apply bg-blue-200 ;
-    }
-  }
-  .overview-card-orange {
-    @apply bg-orange-100 text-orange-500;
-
-    &:hover{
-       @apply bg-orange-200 ;
+       @apply bg-grey-300 ;
     }
   }
 }

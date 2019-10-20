@@ -19,3 +19,8 @@ body{
    font-family: "Ubuntu", sans-serif;
   // @apply font-sans;
 }
+
+a{
+   @apply border-b border-dotted border-secondary-500;
+    //border-bottom: 1px black dotted;
+}
