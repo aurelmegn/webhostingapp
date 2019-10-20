@@ -103,6 +103,12 @@ def app_edit(appname):
 
     application = Application.query.filter_by(user=current_user, name=appname).first()
 
+    applications = (
+        Application.query.with_parent(current_user)
+        .order_by(desc("enabled"), asc("name"))
+        .all()
+    )
+
     if not application:
         abort(404)
 
@@ -126,6 +132,7 @@ def app_edit(appname):
         edform=edit_app_form,
         caform=caform,
         application=application,
+        applications=applications,
         AppState=AppState,
         ftp_host=ftp_host,
         ftp_port=ftp_port,

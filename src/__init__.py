@@ -50,7 +50,7 @@ if app.config.get("ENV").startswith("dev"):
     log_file = "dev.log"
 
     # debug toolbar
-    toolbar = DebugToolbarExtension(app)
+    # toolbar = DebugToolbarExtension(app)
     FlaskWebpackExt(app)
 
 else:

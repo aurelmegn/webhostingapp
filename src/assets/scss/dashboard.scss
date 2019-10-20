@@ -1,9 +1,13 @@
 
 .form-input{
-  @apply shadow appearance-none border border-grey-200 bg-grey-200 rounded w-full py-2 px-3 mb-3;
+  @apply shadow appearance-none border border-grey-200 bg-grey-100 rounded w-full py-2 px-3 ;
 
   &:focus{
     @apply bg-white  outline-none shadow-outline;
+  }
+
+  &.setting-input{
+    @apply py-1;
   }
 }
 

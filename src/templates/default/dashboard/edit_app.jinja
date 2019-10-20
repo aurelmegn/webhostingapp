@@ -1,7 +1,7 @@
 {% extends "default/dashboard/select_app.jinja" %}
 
 {% block app_page_body%}
-    <form id="defitForm"  class="w-full flex flex-col p-3" method="post" action="{{ url_for("app_edit", appname=application.name) }}">
+    <form id="defitForm"  class="w-full flex flex-col p-3" method="post" action="{{ url_for("dashboard.app_edit", appname=application.name) }}">
         {{ edform.hidden_tag() }}
 
         <div class="mb-4">

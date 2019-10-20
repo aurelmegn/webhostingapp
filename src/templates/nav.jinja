@@ -12,7 +12,7 @@
   <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto ">
     <div class="text-sm lg:flex-grow">
         {% if current_user.is_authenticated %}
-          <a href="{{ url_for('dashboard.index') }}" class="nav-item  {{ 'active' if request.endpoint == 'dashboard.dashboard'}} mr-4">Dashboard </a>
+          <a href="{{ url_for('dashboard.index') }}" class="nav-item  {{ 'active' if request.endpoint == 'dashboard.index'}} mr-4">Dashboard </a>
         {% endif %}
 
         <a href="{{ url_for('docs.index') }}" class="nav-item {{ 'active' if request.endpoint == 'docs.index'}} mr-4">Documentation </a>

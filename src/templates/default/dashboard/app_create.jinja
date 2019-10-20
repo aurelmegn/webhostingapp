@@ -1,43 +1,43 @@
 {% extends "default/dashboard_base.jinja" %}
 
 {% block dashboard_content%}
-    <form id="caForm"  class="w-full flex flex-col p-3" method="post" action="{{ url_for("app_add") }}">
+<form id="caForm"  class="w-full flex flex-col p-3" method="post" action="{{ url_for("app_add") }}">
     {{ addform.hidden_tag() }}
 
-    <div class="mb-4">
-      <label class="block text-md mb-2" for="name">
-        {{ addform.name.label }}
-      </label>
-      {{ addform.name(class="form-input") }}
-        {% for error in addform.name.errors %}
-            <p class="form-error "> {{ error }}</p>
-        {% endfor %}
-    </div>
+        <div class="mb-4">
+          <label class="block text-md mb-2" for="name">
+            {{ addform.name.label }}
+          </label>
+          {{ addform.name(class="form-input") }}
+            {% for error in addform.name.errors %}
+                <p class="form-error "> {{ error }}</p>
+            {% endfor %}
+        </div>
 
-    <div class="mb-4">
-      <label class="block text-md mb-2" for="type">
-        {{ addform.type.label }}
-      </label>
-      {{ addform.type(class="form-input") }}
-        {% for error in addform.type.errors %}
-            <p class="form-error "> {{ error }}</p>
-        {% endfor %}
-    </div>
+        <div class="mb-4">
+          <label class="block text-md mb-2" for="type">
+            {{ addform.type.label }}
+          </label>
+          {{ addform.type(class="form-input") }}
+            {% for error in addform.type.errors %}
+                <p class="form-error "> {{ error }}</p>
+            {% endfor %}
+        </div>
 
-    <div class="mb-4">
-      <label class="block text-md mb-2" for="description">
-        {{ addform.description.label}}
-      </label>
-      {{ addform.description(class="form-input") }}
-        {% for error in addform.description.errors %}
-            <p class="form-error "> {{ error }}</p>
-        {% endfor %}
-    </div>
+        <div class="mb-4">
+          <label class="block text-md mb-2" for="description">
+            {{ addform.description.label}}
+          </label>
+          {{ addform.description(class="form-input") }}
+            {% for error in addform.description.errors %}
+                <p class="form-error "> {{ error }}</p>
+            {% endfor %}
+        </div>
 
-    <div class="flex flex-col md:flex-row items-center content-between justify-center w-full md:w-1/5 ml-auto">
-        <button id="addformSubmitBtn" class="btn-teal btn w-full" type="submit">
-        Save
-      </button>
-    </div>
+        <div class="flex flex-col md:flex-row items-center content-between justify-center w-full md:w-1/5 ml-auto">
+            <button id="addformSubmitBtn" class="btn-teal btn w-full" type="submit">
+            Save
+          </button>
+        </div>
 </form>
 {% endblock %}
