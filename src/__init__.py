@@ -107,18 +107,6 @@ security = Security(app, user_datastore)
 import src.admin_views
 
 
-@app.errorhandler(404)
-def not_found(error):
-    app.logger.error(error)
-    return render_template("errors/404.jinja", error=error), 404
-
-
-@app.errorhandler(500)
-def not_found(error):
-    app.logger.error(error)
-    return render_template("errors/500.jinja", error=error), 500
-
-
 @app.before_first_request
 def before_first_request():
     # Create any database tables that don't exist yet.
@@ -129,4 +117,5 @@ def before_first_request():
     user_datastore.find_or_create_role(name='user', description='End user')
 
     db.session.commit()
+
 
