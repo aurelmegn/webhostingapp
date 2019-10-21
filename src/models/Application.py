@@ -1,5 +1,4 @@
 from datetime import datetime
-from enum import Enum
 from os.path import abspath
 from os.path import join as join_path
 from xmlrpc.client import Fault
@@ -26,6 +25,13 @@ class Application(db.Model, AlchemySerializable):
     entrypoint = db.Column(db.String())
     domain_name = db.Column(db.String())
     callable = db.Column(db.String())
+
+    payment_plans = db.relationship(
+        "PaymentPlan",
+        backref="application",
+        lazy=True,
+        # cascade="all, delete-orphan",
+    )
 
     action_histories = db.relationship(
         "AppActionHistory",
