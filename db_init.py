@@ -38,7 +38,7 @@ u3 = User(
 u.active = True
 
 for a, u in enumerate([u, u2, u3]):
-    e = Email(label=f"user{a}@host.mail")
+    e = Email(label=f"user{a}@host.com")
     e.is_primary = True
     e.receive_notifications = True
     u.email = e.label

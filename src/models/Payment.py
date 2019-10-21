@@ -10,6 +10,8 @@ class PaymentMethod(db.Model, AlchemySerializable):
     label = db.Column(db.String(120), unique=True, nullable=False)
     created_at = db.Column(db.DateTime(), default=datetime.utcnow())
 
+    payments = db.relationship("Payment", backref="payment_method", lazy=False)
+
 
 class Payment(db.Model, AlchemySerializable):
     id = db.Column(db.Integer(), primary_key=True)
@@ -19,12 +21,12 @@ class Payment(db.Model, AlchemySerializable):
     at = db.Column(db.DateTime(), default=datetime.utcnow())
     created_at = db.Column(db.DateTime(), default=datetime.utcnow())
 
-    method = db.relationship(
-        "PaymentMethod",
-        secondary="payments_methods",
-        backref=db.backref("payments", lazy="dynamic"),
+    application_id = db.Column(
+        db.Integer, db.ForeignKey("application.id"), nullable=False
     )
-
+    payment_method_id = db.Column(
+        db.Integer, db.ForeignKey("payment_method.id"), nullable=False
+    )
     payment_plan_id = db.Column(
         db.Integer, db.ForeignKey("payment_plan.id"), nullable=False
     )
@@ -34,9 +36,8 @@ class PaymentPlan(db.Model, AlchemySerializable):
     id = db.Column(db.Integer(), primary_key=True)
 
     month_frequency = db.Column(db.Integer(), nullable=False)
-    is_current_plan = db.Column(db.Boolean(), default=True)
-    next_payment = db.Column(db.DateTime(), nullable=False)
+    reduction = db.Column(db.Numeric(), default=0)
     created_at = db.Column(db.DateTime(), default=datetime.utcnow())
 
     payments = db.relationship("Payment", backref="payment_plan", lazy=True)
-    application_id = db.Column(db.Integer, db.ForeignKey("application.id"))
+    # application_id = db.Column(db.Integer, db.ForeignKey("application.id"))

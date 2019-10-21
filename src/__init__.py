@@ -115,6 +115,7 @@ def before_first_request():
     # Create the Roles "admin" and "end-user" -- unless they already exist
     user_datastore.find_or_create_role(name='admin', description='Administrator')
     user_datastore.find_or_create_role(name='user', description='End user')
+    user_datastore.find_or_create_role(name='staff', description='Staff')
 
     db.session.commit()
 

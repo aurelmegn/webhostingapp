@@ -6,8 +6,9 @@ roles_users = db.Table(
     db.Column("role_id", db.Integer(), db.ForeignKey("role.id")),
 )
 
-payments_methods = db.Table(
-    "payments_methods",
-    db.Column("payment_method_id", db.Integer(), db.ForeignKey("payment_method.id")),
-    db.Column("payment_id", db.Integer(), db.ForeignKey("payment.id")),
+applications_payments_plans = db.Table(
+    "applications_payments_plans",
+    db.Column("is_current_plan", db.Boolean(), default=True),
+    db.Column("payment_plan_id", db.Integer(), db.ForeignKey("payment_plan.id")),
+    db.Column("application_id", db.Integer(), db.ForeignKey("application.id")),
 )

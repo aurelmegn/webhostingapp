@@ -67,8 +67,13 @@
 
 {#            <div class="w-full">#}
             <div class="w-full md:w-4/5 mt-3">
+
+                <div class="flex flex-col">
+                    <h2 class="text-xl ">{% block name %}{% endblock %}</h2>
+                    <hr class="w-full border-secondary-300">
+                </div>
+
                 {% block settings_content %}
-                    <div class="flex w-full border-b border-secondary-500 p-3 text-2xl text-secondary-500">{% block name %}{% endblock %}</div>
                 {% endblock %}
             </div>
 {#            </div>#}

@@ -28,11 +28,14 @@ class Application(db.Model, AlchemySerializable):
 
     payment_plans = db.relationship(
         "PaymentPlan",
-        backref="application",
-        lazy=True,
+        secondary="applications_payments_plans",
+        backref=db.backref("applications", lazy="dynamic")
         # cascade="all, delete-orphan",
     )
 
+    payments = db.relationship(
+        "Payment", backref="application", lazy=True, cascade="all, delete-orphan"
+    )
     action_histories = db.relationship(
         "AppActionHistory",
         backref="application",

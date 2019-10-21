@@ -1,7 +1,7 @@
 {% extends "default/dashboard_base.jinja" %}
 
 {% block dashboard_content%}
-<form id="caForm"  class="w-full flex flex-col p-3" method="post" action="{{ url_for("app_add") }}">
+<form id="caForm"  class="w-full flex flex-col p-3" method="post" action="{{ url_for("dashboard.app_add") }}">
     {{ addform.hidden_tag() }}
 
         <div class="mb-4">
