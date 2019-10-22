@@ -19,3 +19,5 @@ tmp
 src/var/data.db
 var/log
 .vscode
+supervisor/supervisord.pid
+supervisor/supervisord.log

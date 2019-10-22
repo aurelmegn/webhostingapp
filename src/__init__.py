@@ -2,7 +2,6 @@
 import logging
 from flask import Flask
 from flask_admin import Admin
-from flask_debugtoolbar import DebugToolbarExtension
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 from flask_webpackext import FlaskWebpackExt, WebpackBundleProject
@@ -18,6 +17,7 @@ webpack_project = WebpackBundleProject(
 
 app = Flask(__name__, static_folder="public")
 FlaskDynaconf(app)
+FlaskWebpackExt(app)
 
 app.config.update(dict(WEBPACKEXT_PROJECT=webpack_project))
 
@@ -48,10 +48,11 @@ if not isdir(log_dir):
 
 if app.config.get("ENV").startswith("dev"):
     log_file = "dev.log"
+    
+    from flask_debugtoolbar import DebugToolbarExtension
 
     # debug toolbar
-    # toolbar = DebugToolbarExtension(app)
-    FlaskWebpackExt(app)
+    toolbar = DebugToolbarExtension(app)
 
 else:
     log_file = "prod.log"
@@ -71,7 +72,7 @@ app.logger.setLevel(logging.DEBUG)
 # supervisor api var
 from xmlrpc.client import ServerProxy, Fault
 
-server = ServerProxy("http://localhost:9001/RPC2")
+server = ServerProxy("http://localhost:7000/RPC2")
 supervisor = server.supervisor
 
 # exit if not able to connect to supervisor running instance

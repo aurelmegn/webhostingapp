@@ -23,11 +23,13 @@
  mkdir /var/www/hosting/conf_templates
  mkdir /var/www/hosting/repo
  mkdir /var/www/hosting/code
+ mkdir /var/www/hosting/log
 
  chown hosting:hosting /var/www/nginx/sites-enabled
  chown hosting:hosting /var/www/hosting/ftpfiles
  chown hosting:hosting /var/www/hosting/supervisor
  chown hosting:hosting /var/www/hosting/conf_templates
+ chown hosting:hosting /var/www/hosting/log
 
 cp /var/www/hosting/code/supervisor/supervisord.conf /var/www/hosting/supervisor/supervisord.conf
 
