@@ -1,0 +1,24 @@
+{
+  "entrypoints": {
+    "js/app": {
+      "js": [
+        "/public/runtime.a1524386.js",
+        "/public/js/app.390d50c1.js"
+      ]
+    },
+    "js/dashboard": {
+      "js": [
+        "/public/runtime.a1524386.js",
+        "/public/js/dashboard.dc8d8f6f.js"
+      ]
+    },
+    "css/app": {
+      "js": [
+        "/public/runtime.a1524386.js"
+      ],
+      "css": [
+        "/public/css/app.1e491e86.css"
+      ]
+    }
+  }
+}

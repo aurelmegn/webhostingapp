@@ -32,12 +32,12 @@ NGINX_PID_FILE = "/run/nginx.pid"
 
 [production]
 
-SQLALCHEMY_DATABASE_URI = "postgresql://hosting:<hostingpassword>@localhost/hostingapp"
+SQLALCHEMY_DATABASE_URI = "postgresql://hosting:BMtQDWcW7CoEFSNWe8PQiqotDT3@localhost/hosting"
 
 SECRET_KEY = "YMNx&VZ<:85#=61_dUr\\x0b*)vL"
 SECURITY_PASSWORD_SALT = "YMNx&VZ<:85#=61_dUr\\x0b*)vL"
 
-SERVER_NAME = "54.36.248.241:7001"
+SERVER_NAME = "54.36.248.241"
 
 # the directory with is used to hold the supervisor created programs
 SUPERVISOR_CONFIG_DIR = "/var/www/hosting/supervisor"
@@ -45,7 +45,7 @@ SUPERVISOR_CONFIG_DIR = "/var/www/hosting/supervisor"
 ABS_PATH_HOME_UWSGI = "/home/hosting"  # should change on production
 
 FTP_PORT = 2121
-FTP_HOST = "ftp://localhost"
+FTP_HOST = "ftp://54.36.248.241"
 FTP_BASE_DIR = "/var/www/hosting/ftpfiles"
 
 NGINX_SITE_CONF = "/var/www/hosting/nginx/sites-enabled"

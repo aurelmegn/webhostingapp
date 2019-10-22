@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["js/dashboard"],{"522r":function(n,e,o){"use strict";document.addEventListener("DOMContentLoaded",(function(){}))}},[["522r","runtime"]]]);
