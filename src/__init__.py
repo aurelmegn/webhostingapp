@@ -83,6 +83,15 @@ except (OSError, Fault) as e:
     app.logger.error(e)
     exit(1)
 
+# from src.models import roles_users
+from src.models.User import User
+from src.models.Role import Role
+# from src.models.AppHistory import AppHistory
+
+# Setup Flask-Security
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
+
 from src.controllers import *
 
 from src.controllers.settings import settings_bp
@@ -94,15 +103,6 @@ app.register_blueprint(settings_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(docs_bp)
 app.register_blueprint(blog_bp)
-
-# from src.models import roles_users
-from src.models.User import User
-from src.models.Role import Role
-# from src.models.AppHistory import AppHistory
-
-# Setup Flask-Security
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
 
 # from admin interface
 import src.admin_views
