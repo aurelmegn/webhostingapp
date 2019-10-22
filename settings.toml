@@ -16,9 +16,19 @@ SECURITY_POST_LOGIN_VIEW = "/dashboard"
 SECURITY_UNAUTHORIZED_VIEW = "/login"
 SECURITY_LOGIN_USER_TEMPLATE = "security/login.jinja"
 
+# Template Files
+
+SUPERVISOR_PROGRAM_TEMPLATE_PATH = "./conf_templates/subprogram_template.ini"
+# the template used to launch uwsgi programs
+UWSGI_TEMPLATE_PATH = "./conf_templates/uwsgi_template.ini"
+NGINX_CONF_TEMPLATE_PATH = "./conf_templates/virtual_host_nginx.site.conf"
+# the template used to configure the firejail profiles
+FIREJAIL_PROFILE = "./conf_templates/default.profile"
+
 # FLASK_ADMIN_SWATCH= 'flaty'
 
 SUPERVISOR_USER_HOME = "{supervisor_path}/programs/{username}"
+NGINX_PID_FILE = "/run/nginx.pid"
 
 [production]
 
@@ -29,22 +39,17 @@ SECURITY_PASSWORD_SALT = "YMNx&VZ<:85#=61_dUr\\x0b*)vL"
 
 SERVER_NAME = "localhost:5000"
 
+# the directory with is used to hold the supervisor created programs
 SUPERVISOR_CONFIG_DIR = "/var/www/hosting/supervisor"
-SUPERVISOR_PROGRAM_TEMPLATE_PATH = "/var/www/hosting/conf_templates/subprogram_template.ini"
 
-UWSGI_TEMPLATE_PATH = "/var/www/hosting/conf_templates/uwsgi_template.ini"
-ABS_PATH_HOME_UWSGI = "/home/aurel"  # should change on production
-
-FIREJAIL_PROFILE = "/var/www/hosting/conf_templates/default.profile"
+ABS_PATH_HOME_UWSGI = "/home/hosting"  # should change on production
 
 FTP_PORT = 2121
 FTP_HOST = "ftp://localhost"
 FTP_BASE_DIR = "/var/www/hosting/ftpfiles"
 
-NGINX_PID_FILE = "/run/nginx.pid"
 NGINX_SITE_CONF = "/var/www/hosting/nginx/sites-enabled"
-NGINX_HUP_CHECK_FILE = "/tmp/.send_hup_to_nginx"
-NGINX_CONF_TEMPLATE_PATH = "/var/www/hosting/conf_templates/virtual_host_nginx.site.conf"
+NGINX_HUP_CHECK_FILE = "/var/www/hosting/.send_hup_to_nginx"
 
 
 [developement]
@@ -53,15 +58,8 @@ NGINX_CONF_TEMPLATE_PATH = "/var/www/hosting/conf_templates/virtual_host_nginx.s
 SQLALCHEMY_DATABASE_URI = "postgresql://aurel:shift@localhost/clientapp"
 
 SERVER_NAME = "localhost:5000"
-
+# supervisor main conf file and directory where to store programs
 SUPERVISOR_CONFIG_DIR = "./supervisor"
-SUPERVISOR_PROGRAM_TEMPLATE_PATH = "./supervisor/subprogram_template.ini"
-
-UWSGI_TEMPLATE_PATH = "./supervisor/uwsgi_template.ini"
-
-FIREJAIL_PROFILE = "./supervisor/default.profile"
-
-NGINX_CONF_TEMPLATE_PATH = "./supervisor/virtual_host_nginx.site.conf"
 
 FTP_PORT = 2121
 FTP_HOST = "ftp://localhost"
@@ -69,7 +67,6 @@ FTP_BASE_DIR = "/media/aurel/main/projects/self/clientapp/tmp"
 
 ABS_PATH_HOME_UWSGI = "/home/aurel"  # should change on production
 
-NGINX_PID_FILE = "/run/nginx.pid"
 NGINX_SITE_CONF = "/var/www/nginx/sites-enabled"
 NGINX_HUP_CHECK_FILE = "/tmp/.send_hup_to_nginx"
 

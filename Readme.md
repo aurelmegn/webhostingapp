@@ -7,15 +7,29 @@
  source env/bin/activate
  pipenv install
 
- sudo mkdir /var/www/hosting/nginx/sites-enabled
- sudo mkdir /var/www/hosting/ftpfiles
- sudo mkdir /var/www/hosting/supervisor
- sudo mkdir /var/www/hosting/conf_templates
+ adduser --system --shell /bin/bash --disabled-login hosting 
+ 
+ addgroup hosting
+ setfacl -dR -m u:hosting:rwX /var/www/hosting
+ setfacl -dR -m g:hosting:rwX /var/www/hosting
+ 
+ setfacl -R -m u:hosting:rwX /var/www/hosting
+ setfacl -R -m g:hosting:rwX /var/www/hosting
+ 
+ 
+ mkdir /var/www/hosting/nginx/sites-enabled
+ mkdir /var/www/hosting/ftpfiles
+ mkdir /var/www/hosting/supervisor
+ mkdir /var/www/hosting/conf_templates
+ mkdir /var/www/hosting/repo
+ mkdir /var/www/hosting/code
 
- sudo chown hosting:hosting /var/www/nginx/sites-enabled
- sudo chown hosting:hosting /var/www/hosting/ftpfiles
- sudo chown hosting:hosting /var/www/hosting/supervisor
- sudo chown hosting:hosting /var/www/hosting/conf_templates
+ chown hosting:hosting /var/www/nginx/sites-enabled
+ chown hosting:hosting /var/www/hosting/ftpfiles
+ chown hosting:hosting /var/www/hosting/supervisor
+ chown hosting:hosting /var/www/hosting/conf_templates
+
+cp /var/www/hosting/code/supervisor/supervisord.conf /var/www/hosting/supervisor/supervisord.conf
 
  in nginx.conf >> include /var/www/nginx/sites-enabled/*;
 
@@ -24,7 +38,10 @@
  /venv/python nginx_root_process.py
 
  run thread based workers
-
+	
+ # in production, run
+ pipenv lock
+ pipenv install --ignore-pipfile
 
  python run.py
  ```
