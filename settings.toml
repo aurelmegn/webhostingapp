@@ -37,7 +37,7 @@ SQLALCHEMY_DATABASE_URI = "postgresql://hosting:<hostingpassword>@localhost/host
 SECRET_KEY = "YMNx&VZ<:85#=61_dUr\\x0b*)vL"
 SECURITY_PASSWORD_SALT = "YMNx&VZ<:85#=61_dUr\\x0b*)vL"
 
-SERVER_NAME = "localhost:5000"
+SERVER_NAME = "54.36.248.241:7001"
 
 # the directory with is used to hold the supervisor created programs
 SUPERVISOR_CONFIG_DIR = "/var/www/hosting/supervisor"
