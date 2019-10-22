@@ -6,10 +6,10 @@ from typing import List
 from flask_security.utils import verify_password
 from pyftpdlib.authorizers import AuthenticationFailed, DummyAuthorizer
 
-from src import Application, User, app
-
 sys.path.append(".")
 sys.path.append("../")
+
+from src import Application, User, app
 
 
 class AppAuthorizer(DummyAuthorizer):
