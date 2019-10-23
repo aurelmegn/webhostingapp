@@ -3,6 +3,23 @@ let PurgeCssPlugin = require('purgecss-webpack-plugin');
 let glob = require('glob-all');
 let path = require('path');
 
+let collectWhitelistPatterns = _ => {
+    return [
+        /^bg-red-/,
+        /^bg-green-/,
+        /^bg-grey-/,
+        /^bg-teal-/,
+        /^bg-orange-/,
+        
+        /^text-red-/,
+        /^text-green-/,
+        /^text-grey-/,
+        /^text-teal-/,
+        /^text-orange-/,
+        /^text-secondary-/,
+    ]
+}
+
 Encore
     .setOutputPath('public')
     .setPublicPath('/public')
@@ -49,6 +66,7 @@ if(Encore.isProduction()){
                     extensions: ['jinja']
                 }
             ],
+            whitelistPatterns: collectWhitelistPatterns
         }))
 
 }
