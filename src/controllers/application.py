@@ -117,7 +117,7 @@ def app_action(appname):
 
     if not (appname or action.lower() not in actions):
         flash(f"An error occurred", "error")
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("dashboard.index"))
     # check if the user own an application of the same name
 
     application = Application.query.filter_by(name=appname, user=current_user).first()
@@ -245,7 +245,7 @@ def app_add():
         current_user.applications.append(application)
         db.session.commit()
 
-        return redirect(url_for("dashboard", appname=application.name))
+        return redirect(url_for("dashboard.index", appname=application.name))
 
     return render_template(
         "default/dashboard/app_create.jinja",

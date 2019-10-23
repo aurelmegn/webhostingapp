@@ -119,7 +119,7 @@ def app_edit(appname):
         edit_app_form.populate_obj(application)
         db.session.commit()
 
-        return redirect(url_for("dashboard", appname=application.name))
+        return redirect(url_for("dashboard.index", appname=application.name))
 
     edit_app_form.description.data = application.description
     edit_app_form.callable.data = application.callable
