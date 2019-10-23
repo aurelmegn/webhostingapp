@@ -133,7 +133,7 @@ def app_action(appname):
 
     try:
 
-        action_executed = False
+        # action_executed = False
 
         # proceed to the application action specified
         if action == "start" and application.can_start():
@@ -167,12 +167,12 @@ def app_action(appname):
             else:  # if the app have been started
                 supervisor.startProcess(application.get_supervisor_name())
 
-            action_executed = True
+            # action_executed = True
         elif action == "stop" and application.can_stop():
             supervisor.stopProcess(application.get_supervisor_name())
             # application.state = AppState.stopping
 
-            action_executed = True
+            # action_executed = True
 
         elif action == "restart" and application.can_restart():
             supervisor.stopProcess(application.get_supervisor_name())
@@ -181,12 +181,12 @@ def app_action(appname):
             supervisor.startProcess(application.get_supervisor_name())
 
             # application.state = AppState.starting
-            action_executed = True
+            # action_executed = True
 
-        if action_executed:
-            application.have_started_once = True
-            action = "stopped" if action == "stop" else action + "ed"
-            flash(f"Application {appname} {action}", "success")
+        # if action_executed:
+        application.have_started_once = True
+        action = "stopped" if action == "stop" else action + "ed"
+        flash(f"Application {appname} {action}", "success")
 
     except ConnectionRefusedError as e:
         app.logger.critical(str(e) + "unable to connect to supervisor instance")
@@ -203,8 +203,7 @@ def app_action(appname):
     application.action_histories.append(app_action_history)
 
     db.session.commit()
-
-    return redirect(request.referrer)
+    return redirect(request.referrer or url_for("dashboard.index", appname=appname))
 
 
 @dashboard_bp.route("/application/add", methods=["post", "get"])
