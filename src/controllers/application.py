@@ -69,7 +69,7 @@ def app_install_requirements(appname):
 
         # if the app is php type
 
-    return redirect(request.referrer)
+    return redirect(request.referrer or url_for("dashboard.index", appname=appname))
 
 
 @dashboard_bp.route("/application/state/<string:appname>")
@@ -133,10 +133,9 @@ def app_action(appname):
 
     try:
 
-        # action_executed = False
-
         # proceed to the application action specified
         if action == "start" and application.can_start():
+
             # todo
             """
                 if the app has never been started 
@@ -167,12 +166,8 @@ def app_action(appname):
             else:  # if the app have been started
                 supervisor.startProcess(application.get_supervisor_name())
 
-            # action_executed = True
         elif action == "stop" and application.can_stop():
             supervisor.stopProcess(application.get_supervisor_name())
-            # application.state = AppState.stopping
-
-            # action_executed = True
 
         elif action == "restart" and application.can_restart():
             supervisor.stopProcess(application.get_supervisor_name())
@@ -180,13 +175,14 @@ def app_action(appname):
             supervisor.reloadConfig()
             supervisor.startProcess(application.get_supervisor_name())
 
-            # application.state = AppState.starting
-            # action_executed = True
-
-        # if action_executed:
         application.have_started_once = True
-        action = "stopped" if action == "stop" else action + "ed"
-        flash(f"Application {appname} {action}", "success")
+
+        if action != "start":
+            action = "stopped" if action == "stop" else action + "ed"
+            flash(f"Application {appname} {action}", "success")
+        else:
+            action = "is starting"
+            flash(f"Application {appname} {action}", "message")
 
     except ConnectionRefusedError as e:
         app.logger.critical(str(e) + "unable to connect to supervisor instance")

@@ -17,6 +17,12 @@ let collectWhitelistPatterns = _ => {
         /^text-teal-/,
         /^text-orange-/,
         /^text-secondary-/,
+
+        /^fa-info/,
+        /^fa-times-circle/,
+        /^fa-check-circle/,
+        /^fa-exclamation-triangle/,
+        /^fa-circle/,
     ]
 }
 
