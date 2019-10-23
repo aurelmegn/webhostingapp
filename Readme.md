@@ -10,28 +10,16 @@
  adduser --system --shell /bin/bash --disabled-login hosting 
  
  addgroup hosting
- setfacl -dR -m u:hosting:rwX /var/www/hosting
- setfacl -dR -m g:hosting:rwX /var/www/hosting
  
- setfacl -R -m u:hosting:rwX /var/www/hosting
- setfacl -R -m g:hosting:rwX /var/www/hosting
- 
- 
- mkdir /var/www/hosting/nginx/sites-enabled
- mkdir /var/www/hosting/ftpfiles
- mkdir /var/www/hosting/supervisor
- mkdir /var/www/hosting/conf_templates
- mkdir /var/www/hosting/repo
- mkdir /var/www/hosting/code
- mkdir /var/www/hosting/log
+ mkdir -p /var/www/hosting/nginx/{sites-enabled, ftpfiles, supervisor, conf_templates, repo, code, log}
 
- chown hosting:hosting /var/www/nginx/sites-enabled
- chown hosting:hosting /var/www/hosting/ftpfiles
- chown hosting:hosting /var/www/hosting/supervisor
- chown hosting:hosting /var/www/hosting/conf_templates
- chown hosting:hosting /var/www/hosting/log
+ chown hosting:hosting /var/www/hosting -R
+ 
+ setfacl -dR -m u:hosting:rwX, g:hosting:rwX /var/www/hosting
+ 
+ setfacl -R -m u:hosting:rwX, g:hosting:rwX /var/www/hosting
 
-cp /var/www/hosting/code/supervisor/supervisord.conf /var/www/hosting/supervisor/supervisord.conf
+ cp /var/www/hosting/code/supervisor/* /var/www/hosting/supervisor/
 
  in nginx.conf >> include /var/www/nginx/sites-enabled/*;
 

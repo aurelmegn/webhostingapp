@@ -49,6 +49,7 @@ toml = "==0.10.0"
 werkzeug = "==0.15.6"
 wtforms = "==2.2.1"
 dynaconf = "*"
+virtualenv = "*"
 
 [requires]
 python_version = "3.7"
