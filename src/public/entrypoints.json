@@ -2,22 +2,22 @@
   "entrypoints": {
     "js/app": {
       "js": [
-        "/public/runtime.a1524386.js",
-        "/public/js/app.390d50c1.js"
+        "/public/runtime.js",
+        "/public/js/app.js"
       ]
     },
     "js/dashboard": {
       "js": [
-        "/public/runtime.a1524386.js",
-        "/public/js/dashboard.dc8d8f6f.js"
+        "/public/runtime.js",
+        "/public/js/dashboard.js"
       ]
     },
     "css/app": {
       "js": [
-        "/public/runtime.a1524386.js"
+        "/public/runtime.js"
       ],
       "css": [
-        "/public/css/app.1e491e86.css"
+        "/public/css/app.css"
       ]
     }
   }

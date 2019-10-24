@@ -1,6 +1,6 @@
 # Import flask and template operators
 import logging
-from flask import Flask
+from flask import Flask, got_request_exception
 from flask_admin import Admin
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
@@ -120,4 +120,25 @@ def before_first_request():
 
     db.session.commit()
 
+
+import rollbar
+import rollbar.contrib.flask
+import os
+
+if app.config.get("ENV").startswith("prod"):
+    @app.before_first_request
+    def init_rollbar():
+        """init rollbar module"""
+        rollbar.init(
+            # access token for the demo app: https://rollbar.com/demo
+            'f981e8a11b4d49958c120d94094dfd00',
+            # environment name
+            app.config.get("ENV"),
+            # server root directory, makes tracebacks prettier
+            root=os.path.dirname(os.path.realpath(__file__)),
+            # flask already sets up logging
+            allow_logging_basic_config=False)
+
+        # send exceptions from `app` to rollbar, using flask's signal system.
+        got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
 

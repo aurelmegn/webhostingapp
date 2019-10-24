@@ -54,8 +54,8 @@ NGINX_HUP_CHECK_FILE = "/var/www/hosting/.send_hup_to_nginx"
 
 [developement]
 
-# SQLALCHEMY_DATABASE_URI = "sqlite:///./var/data.db"
-SQLALCHEMY_DATABASE_URI = "postgresql://aurel:shift@localhost/clientapp"
+SQLALCHEMY_DATABASE_URI = "sqlite:///./var/data.db"
+#SQLALCHEMY_DATABASE_URI = "postgresql://aurel:shift@localhost/clientapp"
 
 SERVER_NAME = "localhost:5000"
 # supervisor main conf file and directory where to store programs
